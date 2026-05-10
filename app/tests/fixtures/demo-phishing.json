@@ -1,0 +1,9 @@
+{
+  "scenario": "phishing",
+  "recipient": "B8Y1dERnVNoUUXeXA4NaCHiB9htcukMSkfHrFsTMHA7h",
+  "expectedVerdict": "RED",
+  "citedSource": "mandiant/clinksink-2024",
+  "base58": "3md7BBV9wFjYGnMWcMNyAZcjca2HGfXWZkrU8vvho66z2sJMZFcx6HZdBiAddjo2kzgBv3uZoac3domBRjJJSXkbBvokxSe3V58HtQBhFztP9tQCh5gFSf6SFJtdXT89AhPdZvnrCnfEdacCUv7iJ6tVbxVXJDagoAUXoSu8pRhEv5dAm77hK1hZp2bKCGHpkJt2v7eG3dADDJhejUa7CUnWjdDN58SdnYjMgwfw4ftT7GcS3wK5m8uWNhxiNAF5EfBjyxUwqzCc3S9xL254JvmKNWrgisc746zLw",
+  "rpcUrl": "https://api.devnet.solana.com",
+  "generatedAt": "2026-05-10T11:44:16.842Z"
+}

@@ -1,0 +1,9 @@
+{
+  "scenario": "safe",
+  "recipient": "FhJrGroWLW139w2m8DKFUvxXjE3SWCNGSVHAg6kxqbvc",
+  "expectedVerdict": "YELLOW",
+  "citedSource": null,
+  "base58": "3md7BBV9wFjYGnMWcMNyAZcjca2HGfXWZkrU8vvho66z2sJMZFcx6HZdBiAddjo2kzgBv3uZoac3domBRjJJSXkbBvokxSe3V58HtQBhFztP9tQCh5gFSf6SFJtdXT89AhPdZvnrCrwL4jS9T8YoDXoeG4WcKgUuC3nBe6ba9NxbLMf5CjqRKr33B8AM7YGGU7BYDNPomAtEed4ZUgxGPVwZKRi2tUouBEqdCjTem6TiTAjCJC4ijKzqYNAcH1nwRcSBfQWhLsi4RyJfx3euQU2tsD7QgVwqXhe6B",
+  "rpcUrl": "https://api.devnet.solana.com",
+  "generatedAt": "2026-05-10T11:44:26.039Z"
+}
