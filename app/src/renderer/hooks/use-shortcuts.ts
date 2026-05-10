@@ -10,6 +10,7 @@ import { useUi, type Route } from "@/renderer/stores/ui";
 export const SHORTCUTS: Record<Route, { keys: string; label: string }> = {
   welcome: { keys: "meta+9", label: "⌘ 9" },
   review: { keys: "meta+n", label: "⌘ N" },
+  send: { keys: "meta+s", label: "⌘ S" },
   queue: { keys: "meta+1", label: "⌘ 1" },
   history: { keys: "meta+2", label: "⌘ 2" },
   search: { keys: "meta+k", label: "⌘ K" },
@@ -25,6 +26,7 @@ export function useShortcuts(): void {
 
   useHotkeys(SHORTCUTS.welcome.keys, () => setRoute("welcome"), opts);
   useHotkeys(SHORTCUTS.review.keys, () => setRoute("review"), opts);
+  useHotkeys(SHORTCUTS.send.keys, () => setRoute("send"), opts);
   useHotkeys(SHORTCUTS.queue.keys, () => setRoute("queue"), opts);
   useHotkeys(SHORTCUTS.history.keys, () => setRoute("history"), opts);
   useHotkeys(SHORTCUTS.search.keys, () => setRoute("search"), opts);

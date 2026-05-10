@@ -54,6 +54,10 @@ export const argus = {
     import: (input: ChannelInput<"wallet.import">) => invoke("wallet.import", input),
     unlock: (input: ChannelInput<"wallet.unlock">) => invoke("wallet.unlock", input),
     lock: () => invoke("wallet.lock", undefined),
+    balance: () => invoke("wallet.balance", undefined),
+    airdrop: (input: ChannelInput<"wallet.airdrop">) => invoke("wallet.airdrop", input),
+    buildTransfer: (input: ChannelInput<"wallet.buildTransfer">) =>
+      invoke("wallet.buildTransfer", input),
   },
   review: {
     start: (input: ChannelInput<"review.start">) => invoke("review.start", input),

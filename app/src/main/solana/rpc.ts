@@ -11,14 +11,26 @@ import { ArgusError } from "@/shared/errors";
 import { allow, isAllowed } from "@/main/net/allowlist";
 import { logger } from "@/main/log";
 
-// Default to mainnet. The Settings page will let users swap; until then this
-// is the single source of truth in the main process.
-const DEFAULT_URL = "https://api.mainnet-beta.solana.com";
+// Default to devnet for the v1 demo: judges can airdrop test SOL freely,
+// broadcasts get real signatures + Solscan-resolvable links, and a fresh
+// install demonstrates the full sign loop without funding a mainnet wallet.
+// The Settings page will let users swap to mainnet when balances matter.
+const DEFAULT_URL = "https://api.devnet.solana.com";
 
 const cache = new Map<string, Connection>();
 let activeUrl = DEFAULT_URL;
 
 allow(new URL(DEFAULT_URL).hostname);
+allow("api.mainnet-beta.solana.com"); // Pre-allow mainnet so a future toggle doesn't trip the gate.
+
+/** Cluster label derived from the active URL, surfaced through the Wallet
+ *  IPC so the renderer can display "Devnet" / "Mainnet" near the balance. */
+export function activeCluster(): "devnet" | "mainnet" | "testnet" | "custom" {
+  if (activeUrl.includes("devnet")) return "devnet";
+  if (activeUrl.includes("testnet")) return "testnet";
+  if (activeUrl.includes("mainnet")) return "mainnet";
+  return "custom";
+}
 
 export function getConnection(url: string = activeUrl): Connection {
   if (!isAllowed(url)) {

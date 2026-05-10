@@ -62,3 +62,40 @@ export function useLockWallet() {
     onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
   });
 }
+
+const BALANCE_KEY = ["wallet", "balance"] as const;
+
+/** Polls the active RPC for the unlocked wallet's SOL balance. Refetches
+ *  every 8 s; surfaces the active cluster name so the renderer can label
+ *  "Devnet" / "Mainnet" without a second IPC. */
+export function useWalletBalance(enabled: boolean) {
+  return useQuery<ChannelOutput<"wallet.balance">>({
+    queryKey: BALANCE_KEY,
+    queryFn: () => argus.wallet.balance(),
+    enabled,
+    refetchInterval: enabled ? 8000 : false,
+    staleTime: 5000,
+  });
+}
+
+export function useAirdrop() {
+  const qc = useQueryClient();
+  return useMutation<
+    ChannelOutput<"wallet.airdrop">,
+    Error,
+    ChannelInput<"wallet.airdrop">
+  >({
+    mutationFn: (input) => argus.wallet.airdrop(input),
+    onSuccess: () => qc.invalidateQueries({ queryKey: BALANCE_KEY }),
+  });
+}
+
+export function useBuildTransfer() {
+  return useMutation<
+    ChannelOutput<"wallet.buildTransfer">,
+    Error,
+    ChannelInput<"wallet.buildTransfer">
+  >({
+    mutationFn: (input) => argus.wallet.buildTransfer(input),
+  });
+}

@@ -6,6 +6,7 @@ import HistoryRoute from "@/renderer/routes/history";
 import QueueRoute from "@/renderer/routes/queue";
 import ReviewRoute from "@/renderer/routes/review";
 import SearchRoute from "@/renderer/routes/search";
+import SendRoute from "@/renderer/routes/send";
 import SettingsRoute from "@/renderer/routes/settings";
 import SetupRoute from "@/renderer/routes/setup";
 import StackRoute from "@/renderer/routes/stack";
@@ -45,6 +46,8 @@ function renderRoute(route: ReturnType<typeof useUi.getState>["route"]) {
       return <SetupRoute />;
     case "review":
       return <ReviewRoute />;
+    case "send":
+      return <SendRoute />;
     case "queue":
       return <QueueRoute />;
     case "history":

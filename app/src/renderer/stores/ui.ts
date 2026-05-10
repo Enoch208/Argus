@@ -4,6 +4,7 @@ export type Route =
   | "welcome"
   | "setup"
   | "review"
+  | "send"
   | "queue"
   | "history"
   | "search"

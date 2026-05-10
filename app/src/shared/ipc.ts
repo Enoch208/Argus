@@ -113,6 +113,35 @@ export const channels = {
     output: z.object({ ok: z.literal(true) }),
   },
 
+  /** Live SOL balance + active cluster, fetched from the configured RPC. The
+   *  WalletPill polls this; the Send form reads it for max-amount validation. */
+  "wallet.balance": {
+    input: z.void(),
+    output: z.object({
+      lamports: z.number().int().nonnegative(),
+      sol: z.number().nonnegative(),
+      cluster: z.enum(["devnet", "mainnet", "testnet", "custom"]),
+    }),
+  },
+
+  /** Devnet-only — request a free SOL airdrop so demo flows work without
+   *  funding a real wallet. Refuses on mainnet. */
+  "wallet.airdrop": {
+    input: z.object({ sol: z.number().positive().max(2) }),
+    output: z.object({ signature: z.string() }),
+  },
+
+  /** Construct an unsigned SOL transfer base58. The renderer pipes the
+   *  result through `review.start` so the user reviews their own outgoing
+   *  transfer with the AI co-pilot before approving. */
+  "wallet.buildTransfer": {
+    input: z.object({
+      to: z.string().min(32).max(64),
+      amountSol: z.number().positive(),
+    }),
+    output: z.object({ raw: z.string() }),
+  },
+
   /** Begins the review pipeline for a pasted base58 transaction and / or
    *  a dragged screenshot. Either input fires alone; both can fire together
    *  (paste a screenshot of the dApp UI alongside the base58 it's about to

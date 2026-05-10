@@ -201,10 +201,12 @@ npm run build
 Implemented:
 
 - Wallet create / import / unlock / lock.
+- Live balance + cluster pill in the sidebar; one-click devnet airdrop so a fresh wallet can fund itself for the demo.
+- Native Send flow — the wallet builds a SOL transfer in-app and routes it through the *same* verdict pipeline as a pasted base58 before signing. Every signature this wallet produces goes through Argus's AI co-pilot first; the promise stops being figurative.
 - Model downloader with resumable downloads and SHA verification.
 - Transaction decode, simulation, sign, and broadcast.
 - SQLite review ledger with Queue, History, and Search.
-- Local scam-intel and URL intel.
+- Local scam-intel and URL intel (2,247-entry Phantom blocklist + 35 on-chain entities: 19 wallets / 6 programs / 10 mints from Mandiant CLINKSINK + SolanaFM).
 - Screenshot OCR and drag / paste review flow.
 - Personal-history retrieval.
 - Local QVAC explainer with deterministic fallback.

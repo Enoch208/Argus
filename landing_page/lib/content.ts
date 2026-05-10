@@ -188,7 +188,7 @@ export const PIPELINE_CARDS: PipelineCard[] = [
     icon: Connect,
     title: "Cross-reference",
     blurb:
-      "65 hand-curated wallet/program/mint entries from Mandiant CLINKSINK + SolanaFM, plus 2,247 domains from the live Phantom blocklist scrape, plus BGE-embedded personal history — all converging on a single severity.",
+      "35 wallet/program/mint entries from Mandiant CLINKSINK + SolanaFM, plus 2,247 domains from the Phantom blocklist scrape, plus BGE-embedded personal history — all converging on a single severity.",
     variant: "orbit",
   },
   {

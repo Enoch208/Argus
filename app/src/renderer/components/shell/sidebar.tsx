@@ -1,5 +1,6 @@
 import { useUi, type Route } from "@/renderer/stores/ui";
 import {
+  ArrowUpRight,
   Bot,
   FileSearch,
   Layers,
@@ -10,7 +11,7 @@ import {
   type Icon,
 } from "@/renderer/design/icons";
 import { SHORTCUTS } from "@/renderer/hooks/use-shortcuts";
-import { useWallet } from "@/renderer/hooks/use-wallet";
+import { useWallet, useWalletBalance } from "@/renderer/hooks/use-wallet";
 import { cn } from "@/renderer/lib/cn";
 
 interface NavItem {
@@ -24,6 +25,7 @@ interface NavItem {
 // actually-registered hotkey.
 const ITEMS: NavItem[] = [
   { route: "review", label: "Review", icon: View },
+  { route: "send", label: "Send", icon: ArrowUpRight },
   { route: "queue", label: "Queue", icon: Layers },
   { route: "history", label: "History", icon: Bot },
   { route: "search", label: "Search", icon: FileSearch },
@@ -149,6 +151,7 @@ function WalletPill() {
   const state = data?.state ?? "uninitialised";
   const connected = state === "unlocked";
   const address = data?.address ?? null;
+  const balance = useWalletBalance(connected);
   const label =
     state === "unlocked" ? "Active" : state === "locked" ? "Locked" : "Not initialised";
   const subtitle = address && state !== "uninitialised" ? short(address) : null;
@@ -183,8 +186,13 @@ function WalletPill() {
         <Wallet size={14} className={connected ? "text-emerald-300" : "text-white/70"} />
       </div>
       <div className="flex min-w-0 flex-col leading-tight">
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-white/45">
+        <span className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-white/45">
           {label}
+          {connected && balance.data && (
+            <span className="rounded-sm border border-white/[0.07] px-1 py-px text-[8.5px] tracking-[0.16em] text-white/55">
+              {balance.data.cluster}
+            </span>
+          )}
         </span>
         <span
           className={cn(
@@ -194,7 +202,9 @@ function WalletPill() {
               : "text-white/55 group-hover:text-white/75",
           )}
         >
-          {subtitle ?? (state === "uninitialised" ? "Set up wallet" : "—")}
+          {connected && balance.data
+            ? `${formatSol(balance.data.sol)} SOL · ${subtitle}`
+            : (subtitle ?? (state === "uninitialised" ? "Set up wallet" : "—"))}
         </span>
       </div>
     </button>
@@ -204,4 +214,12 @@ function WalletPill() {
 function short(address: string): string {
   if (address.length <= 9) return address;
   return `${address.slice(0, 4)}…${address.slice(-4)}`;
+}
+
+/** Sub-1 SOL displays in 4 decimals; ≥1 SOL displays in 2. Trailing zeros
+ *  are stripped to keep the pill terse. */
+function formatSol(sol: number): string {
+  if (sol === 0) return "0";
+  if (sol < 1) return sol.toFixed(4).replace(/\.?0+$/, "");
+  return sol.toFixed(2).replace(/\.?0+$/, "");
 }
