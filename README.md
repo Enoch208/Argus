@@ -210,11 +210,11 @@ Implemented:
 - Local QVAC explainer with deterministic fallback.
 - Voice command and readback paths.
 
-Queued:
+Product direction:
 
-- Multilingual verdict explanations.
-- Periodic background refresh of threat corpora.
-- Deeper multimodal screenshot reasoning once projection-model loading is fully wired.
+- Broader language support for verdict explanations.
+- Automatic refresh for bundled threat intelligence.
+- Deeper screenshot reasoning for brand and interface impersonation.
 
 ## Security Posture
 
