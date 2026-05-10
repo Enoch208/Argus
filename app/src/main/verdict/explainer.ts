@@ -5,19 +5,16 @@
  * only rewrite those facts into clearer prose; its JSON is schema-validated
  * and falls back to a deterministic explanation on any miss.
  *
- * Runtime: `node-llama-cpp` v3 — ADR-0010. ESM-only, dynamic-imported once
- * per main-process lifetime, then memoised. Same pattern as
- * [WDK manager](../wallet/manager.ts).
- *
- * Lifecycle: the model is loaded lazily on first verdict (eager-load on app
- * boot would block first-paint by a few seconds while llama.cpp mmap's the
- * weights). One model + one context survives for the process lifetime; we
- * create a fresh `LlamaChatSession` per verdict so prompts don't leak.
+ * Runtime: `@qvac/sdk` (ADR-0010, revised). The SDK wraps `@qvac/llm-llamacpp`,
+ * so the GGUF we already download (`qwen3-1.7b-instruct-q4_k_m.gguf`) is the
+ * exact file the explainer runs against — no second download, no second
+ * runtime.
  */
 
 import { z } from "zod";
 import { logger } from "@/main/log";
-import { isAlreadyComplete, loadManifest, modelPath } from "@/main/models/store";
+import { complete } from "@/main/llm/qvac";
+import { isAlreadyComplete, loadManifest } from "@/main/models/store";
 import type {
   BalanceDelta,
   DecodedInstruction,
@@ -44,73 +41,19 @@ export interface ExplainVerdictInput {
 }
 
 // ---------------------------------------------------------------------------
-// node-llama-cpp loader (ESM, dynamic-imported, memoised)
-// ---------------------------------------------------------------------------
-
-interface LlamaSessionFactory {
-  prompt(text: string): Promise<string>;
-  dispose(): Promise<void> | void;
-}
-
-let sessionFactoryPromise: Promise<LlamaSessionFactory | null> | null = null;
-function loadSessionFactory(modelFile: string): Promise<LlamaSessionFactory | null> {
-  if (sessionFactoryPromise) return sessionFactoryPromise;
-  sessionFactoryPromise = (async () => {
-    try {
-      const { getLlama, LlamaChatSession } = await import("node-llama-cpp");
-      const llama = await getLlama();
-      const model = await llama.loadModel({ modelPath: modelFile });
-      const context = await model.createContext();
-      logger.info("llama.cpp model loaded", { path: modelFile });
-      return {
-        async prompt(text: string) {
-          // Fresh session per call — avoids unbounded chat-history accrual.
-          const session = new LlamaChatSession({
-            contextSequence: context.getSequence(),
-          });
-          const out = await session.prompt(text, {
-            // Deterministic enough for JSON output, leaves a little room.
-            temperature: 0.2,
-            maxTokens: 480,
-          });
-          session.dispose();
-          return out;
-        },
-        async dispose() {
-          await model.dispose();
-        },
-      };
-    } catch (err) {
-      logger.error("llama.cpp init failed", {
-        msg: err instanceof Error ? err.message : "?",
-      });
-      return null;
-    }
-  })();
-  return sessionFactoryPromise;
-}
-
-// ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
 
 export async function explainVerdict(
   input: ExplainVerdictInput,
 ): Promise<VerdictExplanation> {
-  const model = await explainerModel();
-  const fallback = deterministicExplanation(input, model.id);
+  const ready = await explainerReady();
+  const fallback = deterministicExplanation(input, EXPLAINER_MODEL_ID);
 
-  if (!model.ready || !model.path) {
-    return { ...fallback, status: "model-missing" };
-  }
-
-  const factory = await loadSessionFactory(model.path);
-  if (!factory) {
-    return { ...fallback, status: "runtime-error" };
-  }
+  if (!ready) return { ...fallback, status: "model-missing" };
 
   try {
-    const draft = await runLocalModel(factory, input);
+    const draft = await runQvac(input);
     if (!draft) return { ...fallback, status: "invalid-output" };
     return {
       source: "qvac",
@@ -119,7 +62,7 @@ export async function explainVerdict(
       plainEnglish: draft.plainEnglish,
       risks: draft.risks,
       recommendation: draft.recommendation,
-      model: model.id,
+      model: EXPLAINER_MODEL_ID,
     };
   } catch (err) {
     logger.warn("qvac explainer failed; deterministic fallback used", {
@@ -129,26 +72,18 @@ export async function explainVerdict(
   }
 }
 
-async function explainerModel(): Promise<{
-  id: string;
-  path: string | null;
-  ready: boolean;
-}> {
+async function explainerReady(): Promise<boolean> {
   const manifest = await loadManifest();
   const m = manifest.models.find((x) => x.id === EXPLAINER_MODEL_ID);
-  if (!m) return { id: EXPLAINER_MODEL_ID, path: null, ready: false };
-  return {
-    id: m.id,
-    path: modelPath(m.filename),
-    ready: isAlreadyComplete(m.filename, m.sizeBytes),
-  };
+  if (!m) return false;
+  return isAlreadyComplete(m.filename, m.sizeBytes);
 }
 
-async function runLocalModel(
-  factory: LlamaSessionFactory,
+async function runQvac(
   input: ExplainVerdictInput,
 ): Promise<z.infer<typeof ModelDraft> | null> {
-  const out = await factory.prompt(buildPrompt(input));
+  const out = await complete(EXPLAINER_MODEL_ID, systemPrompt(), userPrompt(input));
+  if (out === null) return null; // SDK runtime issue → caller maps to fallback
   const json = extractJson(out);
   if (!json) return null;
   try {
@@ -157,6 +92,43 @@ async function runLocalModel(
   } catch {
     return null;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Prompt construction (unchanged shape)
+// ---------------------------------------------------------------------------
+
+function systemPrompt(): string {
+  return [
+    "You are Argus, a local Solana transaction reviewer.",
+    "Use only the facts in JSON. Do not add facts, program names, amounts, addresses, citations, or safety claims not present.",
+    "Return strict JSON only with keys: title, plainEnglish, risks, recommendation.",
+    "Tone: concise, premium, calm. Avoid hype. If uncertain, say what remains uncertain.",
+  ].join("\n");
+}
+
+function userPrompt(input: ExplainVerdictInput): string {
+  const facts = {
+    level: input.level,
+    summary: input.summary,
+    citations: input.citations,
+    instructions: input.instructions.map((ix) => ({
+      kind: ix.kind,
+      summary: ix.summary,
+      programId: ix.programId,
+      details: ix.details,
+    })),
+    deltas: input.deltas,
+    simulation: input.simFailed ? { ok: false, error: input.simFailed } : { ok: true },
+  };
+  return JSON.stringify(facts);
+}
+
+function extractJson(text: string): string | null {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start === -1 || end === -1 || end <= start) return null;
+  return text.slice(start, end + 1);
 }
 
 // ---------------------------------------------------------------------------
@@ -179,36 +151,6 @@ function deterministicExplanation(
     recommendation: recommendationFor(input.level),
     model: modelId,
   };
-}
-
-function buildPrompt(input: ExplainVerdictInput): string {
-  const facts = {
-    level: input.level,
-    summary: input.summary,
-    citations: input.citations,
-    instructions: input.instructions.map((ix) => ({
-      kind: ix.kind,
-      summary: ix.summary,
-      programId: ix.programId,
-      details: ix.details,
-    })),
-    deltas: input.deltas,
-    simulation: input.simFailed ? { ok: false, error: input.simFailed } : { ok: true },
-  };
-  return [
-    "You are Argus, a local Solana transaction reviewer.",
-    "Use only the facts in JSON. Do not add facts, program names, amounts, addresses, citations, or safety claims not present.",
-    "Return strict JSON only with keys: title, plainEnglish, risks, recommendation.",
-    "Tone: concise, premium, calm. Avoid hype. If uncertain, say what remains uncertain.",
-    JSON.stringify(facts),
-  ].join("\n\n");
-}
-
-function extractJson(text: string): string | null {
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
-  if (start === -1 || end === -1 || end <= start) return null;
-  return text.slice(start, end + 1);
 }
 
 function titleFor(level: VerdictLevel): string {

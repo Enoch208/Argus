@@ -4,6 +4,7 @@ import { logger } from "./log";
 import { registerModelsHandlers } from "./ipc/handlers/models";
 import { registerReviewHandlers } from "./ipc/handlers/review";
 import { registerWalletHandlers } from "./ipc/handlers/wallet";
+import { shutdownQvac } from "./llm/qvac";
 import { registry } from "./models/registry";
 import { createMainWindow } from "./window";
 
@@ -58,6 +59,19 @@ app.whenReady().then(async () => {
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
+});
+
+// Stop the QVAC worker before Electron tears down the main process. Tracked
+// awaits inside `before-quit` block app.quit(); we event.preventDefault() once
+// to drain, then quit again. Idempotent — `shutdownQvac` is safe to call
+// multiple times.
+let qvacShutdown: Promise<void> | null = null;
+app.on("before-quit", (event) => {
+  if (qvacShutdown) return;
+  event.preventDefault();
+  qvacShutdown = shutdownQvac()
+    .catch((err) => logger.warn("qvac shutdown error", { msg: String(err) }))
+    .finally(() => app.quit());
 });
 
 app.on("second-instance", () => {

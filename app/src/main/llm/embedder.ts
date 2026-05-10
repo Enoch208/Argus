@@ -1,17 +1,17 @@
 /**
  * Local embedding boundary.
  *
- * Wraps `node-llama-cpp`'s embedding context around the bundled
- * bge-small-en-v1.5 GGUF (manifest id `bge-small-en-v1-5`). Same dynamic-import
- * pattern as [verdict/explainer.ts](../verdict/explainer.ts):
- *   - load on first call, memoise for the process lifetime
- *   - any failure returns `null` so callers can fall back deterministically
+ * Backed by `@qvac/sdk` ([qvac.ts](./qvac.ts)). Same shape as before — the
+ * history-RAG module ([review/history-rag.ts](../review/history-rag.ts))
+ * doesn't need to know whether QVAC or a local fallback served the call.
  *
- * Vector shape is whatever bge-small emits (384-d), normalised inside
- * `cosineFloat32` so callers don't need to care.
+ * If the SDK can't initialise or the embedder model isn't downloaded yet,
+ * `getEmbedder` returns `null` and the caller falls back to the lexical
+ * cosine path. See ADR-0010 (revised) and ADR-0014.
  */
+import { embed as qvacEmbed } from "@/main/llm/qvac";
 import { logger } from "@/main/log";
-import { isAlreadyComplete, loadManifest, modelPath } from "@/main/models/store";
+import { isAlreadyComplete, loadManifest } from "@/main/models/store";
 
 const EMBEDDER_MODEL_ID = "bge-small-en-v1-5";
 
@@ -35,24 +35,18 @@ async function loadEmbedder(): Promise<Embedder | null> {
     });
     return null;
   }
-  try {
-    const { getLlama } = await import("node-llama-cpp");
-    const llama = await getLlama();
-    const model = await llama.loadModel({ modelPath: modelPath(m.filename) });
-    const context = await model.createEmbeddingContext();
-    logger.info("embedder loaded", { path: m.filename });
-    return {
-      async embed(text: string): Promise<Float32Array> {
-        const { vector } = await context.getEmbeddingFor(text.slice(0, 4_000));
-        return Float32Array.from(vector);
-      },
-    };
-  } catch (err) {
-    logger.error("embedder init failed", {
-      msg: err instanceof Error ? err.message : "?",
-    });
-    return null;
-  }
+  // Probe with a tiny string; if QVAC can't serve embeddings, surface that
+  // now so `getEmbedder` can return null and the lexical fallback engages.
+  const probe = await qvacEmbed(EMBEDDER_MODEL_ID, "argus");
+  if (!probe) return null;
+  logger.info("embedder ready (qvac)", { dims: probe.length });
+  return {
+    async embed(text: string): Promise<Float32Array> {
+      const vec = await qvacEmbed(EMBEDDER_MODEL_ID, text);
+      if (!vec) throw new Error("qvac embed returned null mid-flight");
+      return vec;
+    },
+  };
 }
 
 export function cosineFloat32(a: Float32Array, b: Float32Array): number {
