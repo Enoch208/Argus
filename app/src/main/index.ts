@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { logger } from "./log";
 import { registerModelsHandlers } from "./ipc/handlers/models";
 import { registerReviewHandlers } from "./ipc/handlers/review";
+import { registerVoiceHandlers } from "./ipc/handlers/voice";
 import { registerWalletHandlers } from "./ipc/handlers/wallet";
 import { shutdownQvac } from "./llm/qvac";
 import { registry } from "./models/registry";
@@ -47,6 +48,7 @@ app.whenReady().then(async () => {
   registerWalletHandlers();
   registerModelsHandlers();
   registerReviewHandlers();
+  registerVoiceHandlers();
 
   spawnMainWindow();
 

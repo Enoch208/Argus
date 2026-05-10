@@ -173,6 +173,38 @@ export const channels = {
     output: z.array(ReviewRecord),
   },
 
+  /** Voice-command transcription. Renderer captures audio (any browser
+   *  format Whisper.cpp can decode) as base64 and calls this; main runs
+   *  `@qvac/sdk` `transcribe` and returns the recognised text plus a
+   *  parsed action for the caller to act on. The action is `null` when the
+   *  utterance doesn't match an "approve" / "block" command. */
+  "voice.transcribe": {
+    input: z.object({
+      audio: z.string().min(1),
+      mime: z
+        .enum(["audio/webm", "audio/ogg", "audio/wav", "audio/mp4", "audio/mpeg"])
+        .optional(),
+    }),
+    output: z.object({
+      text: z.string(),
+      action: z.enum(["approve", "block"]).nullable(),
+    }),
+  },
+
+  /** Verdict readback via `@qvac/sdk` `textToSpeech`. First call triggers
+   *  the Chatterbox model download (~1 GB, SDK-managed); subsequent calls
+   *  reuse the cache. Returns 24 kHz mono PCM samples; the renderer
+   *  re-builds them as an AudioBuffer and plays via AudioContext.
+   *  Returns `samples: []` when the model isn't ready or synthesis fails
+   *  — the caller surfaces a disabled / error state. */
+  "voice.speak": {
+    input: z.object({ text: z.string().min(1).max(1200) }),
+    output: z.object({
+      samples: z.array(z.number()),
+      sampleRate: z.number().int().positive(),
+    }),
+  },
+
   /** Snapshot of every model's progress. Polled by the Setup screen. */
   "models.status": {
     input: z.void(),

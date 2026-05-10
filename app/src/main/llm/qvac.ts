@@ -73,7 +73,7 @@ function loadRuntime(): Promise<QvacRuntime | null> {
  */
 async function ensureLoaded(
   manifestId: string,
-  modelType: "llm" | "embeddings",
+  modelType: "llm" | "embeddings" | "whisper",
 ): Promise<{ runtime: QvacRuntime; modelId: string } | null> {
   if (stopped) return null;
   const runtime = await loadRuntime();
@@ -231,6 +231,111 @@ export async function ocrImage(
     return resolved.map((b) => ({ text: b.text, confidence: b.confidence }));
   } catch (err) {
     logger.warn("qvac ocr failed", {
+      msg: err instanceof Error ? err.message : "?",
+    });
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Voice — Whisper STT (`@qvac/sdk` `transcribe`).
+//
+// Our manifest already ships `ggml-base.en.bin` (whisper-base-en) which is
+// byte-identical to QVAC's `WHISPER_EN_BASE_Q0F16` descriptor. The local
+// path is what the SDK loads — same lazy lifecycle pattern as the other
+// model surfaces.
+// ---------------------------------------------------------------------------
+
+const WHISPER_MODEL_ID = "whisper-base-en";
+
+/**
+ * Transcribe a recorded audio buffer (any format Whisper.cpp can read —
+ * 16 kHz mono PCM is ideal but WAV / OGG / FLAC also work). Returns
+ * `null` if the SDK / model isn't ready; the caller has a no-voice path.
+ */
+export async function transcribeAudio(
+  audio: NodeBuffer | Uint8Array,
+): Promise<string | null> {
+  const handle = await ensureLoaded(WHISPER_MODEL_ID, "whisper");
+  if (!handle) return null;
+  try {
+    const text = await handle.runtime.sdk.transcribe({
+      modelId: handle.modelId,
+      audioChunk: Buffer.from(audio),
+    });
+    return text.trim();
+  } catch (err) {
+    logger.warn("qvac transcribe failed", {
+      msg: err instanceof Error ? err.message : "?",
+    });
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Voice — Chatterbox TTS via the SDK's registered descriptor.
+//
+// The SDK's `loadModel({ modelSrc: TTS_EN_ES_CHATTERBOX_Q4F16, modelType: "tts" })`
+// path auto-resolves the companion model files (tokenizer, speech encoder,
+// embed tokens, conditional decoder, reference audio) via the model
+// registry. First call downloads ~1 GB; subsequent calls reuse the cache.
+//
+// Returned PCM samples are 24 kHz mono float — the renderer plays them via
+// AudioContext.createBuffer with sampleRate 24000.
+// ---------------------------------------------------------------------------
+
+const TTS_SAMPLE_RATE = 24_000;
+
+async function ensureTtsLoaded(runtime: QvacRuntime): Promise<string | null> {
+  const cacheKey = "__tts_chatterbox";
+  const cached = runtime.loaded.get(cacheKey);
+  if (cached) return cached;
+  try {
+    const id = await runtime.sdk.loadModel({
+      modelSrc: runtime.sdk.TTS_EN_ES_CHATTERBOX_Q4F16,
+      modelType: "tts",
+    });
+    runtime.loaded.set(cacheKey, id);
+    logger.info("qvac tts pipeline loaded", { id });
+    return id;
+  } catch (err) {
+    logger.warn("qvac tts loadModel failed", {
+      msg: err instanceof Error ? err.message : "?",
+    });
+    return null;
+  }
+}
+
+export interface TtsAudio {
+  /** PCM samples as a regular `number[]` (the SDK's wire format). The
+   *  renderer copies them into a Float32Array before piping into
+   *  AudioContext. */
+  samples: number[];
+  sampleRate: number;
+}
+
+/**
+ * Synthesize speech for the verdict explanation. Returns `null` if the
+ * Chatterbox model isn't loaded (first call is ~1 GB download), the SDK
+ * runtime isn't up, or the synthesis errors. Callers must surface a
+ * disabled / error state — there is no fallback voice.
+ */
+export async function synthesizeSpeech(text: string): Promise<TtsAudio | null> {
+  if (stopped) return null;
+  const runtime = await loadRuntime();
+  if (!runtime) return null;
+  const modelId = await ensureTtsLoaded(runtime);
+  if (!modelId) return null;
+  try {
+    const result = runtime.sdk.textToSpeech({
+      modelId,
+      text: text.trim(),
+      stream: false,
+    });
+    const samples = await result.buffer;
+    return { samples, sampleRate: TTS_SAMPLE_RATE };
+  } catch (err) {
+    logger.warn("qvac tts synthesis failed", {
       msg: err instanceof Error ? err.message : "?",
     });
     return null;

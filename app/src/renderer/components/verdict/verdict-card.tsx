@@ -1,4 +1,5 @@
 import { AlertCircle, Cancel, Tick, type Icon } from "@/renderer/design/icons";
+import { ReadAloud } from "@/renderer/components/verdict/read-aloud";
 import { cn } from "@/renderer/lib/cn";
 import { type as t, surface } from "@/renderer/design/tokens";
 import type { Verdict, VerdictLevel } from "@/shared/types/verdict";

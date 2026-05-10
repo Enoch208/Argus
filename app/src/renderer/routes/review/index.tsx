@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Cancel } from "@/renderer/design/icons";
 import { type as t } from "@/renderer/design/tokens";
 import { cn } from "@/renderer/lib/cn";
 import { REVIEW_COPY } from "@/renderer/content/review";
 import { VerdictCard } from "@/renderer/components/verdict/verdict-card";
+import { VoiceCommand } from "@/renderer/components/verdict/voice-command";
 import {
   useApproveReview,
   useBlockReview,
@@ -35,6 +36,17 @@ export default function ReviewRoute() {
 
   const valid = looksLikeBase58(raw) || image !== null;
   const actionPending = approve.isPending || block.isPending;
+  const verdictId = review.data?.id;
+
+  const onVoiceAction = useCallback(
+    (action: "approve" | "block") => {
+      if (!verdictId) return;
+      if (actionPending || approve.isSuccess || block.isSuccess) return;
+      if (action === "approve") approve.mutate({ id: verdictId });
+      else block.mutate({ id: verdictId });
+    },
+    [verdictId, actionPending, approve, block],
+  );
 
   // Window-level Cmd+V paste capture for images. Pastes into the textarea
   // still flow as text via the input's own onChange; image clipboard items
@@ -163,23 +175,29 @@ export default function ReviewRoute() {
             <>
               <VerdictCard verdict={review.data} />
               {reviewHasTransaction ? (
-                <div className="flex flex-wrap items-center gap-3">
-                  <button
-                    type="button"
-                    disabled={actionPending || approve.isSuccess || block.isSuccess}
-                    onClick={() => approve.mutate({ id: review.data.id })}
-                    className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-white px-5 py-2.5 text-[13px] font-normal text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_16px_40px_-24px_rgba(255,255,255,0.9)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    {approve.isPending ? "Signing..." : REVIEW_COPY.approveButton}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={actionPending || approve.isSuccess || block.isSuccess}
-                    onClick={() => block.mutate({ id: review.data.id })}
-                    className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.03] px-5 py-2.5 text-[13px] font-normal text-white/82 transition hover:border-white/22 hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    {block.isPending ? "Blocking..." : REVIEW_COPY.blockButton}
-                  </button>
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      disabled={actionPending || approve.isSuccess || block.isSuccess}
+                      onClick={() => approve.mutate({ id: review.data.id })}
+                      className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-white px-5 py-2.5 text-[13px] font-normal text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_16px_40px_-24px_rgba(255,255,255,0.9)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {approve.isPending ? "Signing..." : REVIEW_COPY.approveButton}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={actionPending || approve.isSuccess || block.isSuccess}
+                      onClick={() => block.mutate({ id: review.data.id })}
+                      className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.03] px-5 py-2.5 text-[13px] font-normal text-white/82 transition hover:border-white/22 hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {block.isPending ? "Blocking..." : REVIEW_COPY.blockButton}
+                    </button>
+                    <VoiceCommand
+                      disabled={actionPending || approve.isSuccess || block.isSuccess}
+                      onAction={onVoiceAction}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 text-[13px] font-light text-white/55">

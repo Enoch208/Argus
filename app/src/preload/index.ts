@@ -25,6 +25,8 @@ const channelNames = [
   "review.queue",
   "review.history",
   "review.search",
+  "voice.transcribe",
+  "voice.speak",
   "models.status",
   "models.start",
   "models.pause",

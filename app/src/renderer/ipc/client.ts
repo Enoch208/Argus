@@ -63,6 +63,11 @@ export const argus = {
     history: () => invoke("review.history", undefined),
     search: (input: ChannelInput<"review.search">) => invoke("review.search", input),
   },
+  voice: {
+    transcribe: (input: ChannelInput<"voice.transcribe">) =>
+      invoke("voice.transcribe", input),
+    speak: (input: ChannelInput<"voice.speak">) => invoke("voice.speak", input),
+  },
   models: {
     status: () => invoke("models.status", undefined),
     start: () => invoke("models.start", undefined),
