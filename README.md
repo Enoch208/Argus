@@ -72,6 +72,8 @@ flowchart TB
             LLM["completion()<br/>Qwen3-1.7B"]
             Embed["embed()<br/>bge-small-en-v1.5"]
             QOcr["ocr()<br/>CRAFT + Latin"]
+            STT["transcribe()<br/>Whisper base.en"]
+            TTS["textToSpeech()<br/>Chatterbox q4f16"]
         end
 
         Pipeline --> QVAC
@@ -131,8 +133,9 @@ Every model invocation goes through the **official [@qvac/sdk](https://www.npmjs
 | `@qvac/sdk` · `completion` | Verdict-explainer LLM (Qwen3-1.7B) | **live** | [src/main/verdict/explainer.ts](app/src/main/verdict/explainer.ts) |
 | `@qvac/sdk` · `embed` | Personal-history RAG over your prior signed/blocked reviews (bge-small, 384-d cosine) | **live** | [src/main/llm/embedder.ts](app/src/main/llm/embedder.ts) |
 | `@qvac/sdk` · `ocr` | EasyOCR pipeline (CRAFT detector + Latin recognizer) over screenshot bytes | **live** | [src/main/ocr/extractor.ts](app/src/main/ocr/extractor.ts) |
-| `@qvac/sdk` · `transcribe` | Voice command — "approve" / "block" on the queued review | queued | reserved |
-| `@qvac/sdk` · `textToSpeech` | Spoken verdict readback for hands-free / accessibility | queued | reserved |
+| `@qvac/sdk` · `transcribe` | Voice command — say "approve" or "block" on the queued review (Whisper base.en) | **live** | [src/main/ipc/handlers/voice.ts](app/src/main/ipc/handlers/voice.ts) |
+| `@qvac/sdk` · `textToSpeech` | Verdict readback through the renderer's AudioContext (Chatterbox q4f16) | **live** | [src/renderer/components/verdict/read-aloud.tsx](app/src/renderer/components/verdict/read-aloud.tsx) |
+| `@qvac/sdk` · `translate` | Multi-language verdict explanations | queued | reserved |
 
 The adapter layer is one file, [src/main/llm/qvac.ts](app/src/main/llm/qvac.ts):
 
@@ -141,13 +144,15 @@ The adapter layer is one file, [src/main/llm/qvac.ts](app/src/main/llm/qvac.ts):
 const sdk = await import("@qvac/sdk");
 await sdk.startQVACProvider();
 
-// Load a GGUF or ONNX by absolute path; SDK assigns a stable model id.
+// Load a GGUF or ONNX by absolute path or registered descriptor.
 const modelId = await sdk.loadModel({ modelSrc, modelType });
 
-// Three call sites — all of them in the verdict pipeline.
-const out      = await sdk.completion({ modelId, history, ... });
+// Five call sites in the verdict + voice paths.
+const out           = await sdk.completion({ modelId, history, ... });
 const { embedding } = await sdk.embed({ modelId, text });
 const { blocks }    = sdk.ocr({ modelId, image });
+const text          = await sdk.transcribe({ modelId, audioChunk });
+const { buffer }    = sdk.textToSpeech({ modelId, text, stream: false });
 ```
 
 If the SDK can't initialise — bare-globals polyfill incompatibility, missing model — every helper returns `null` and the verdict pipeline degrades to its deterministic explanation. **The pipeline never hard-fails on a model error.**
@@ -210,11 +215,13 @@ npm run build            # electron-vite + electron-builder (DMG / EXE)
 - ☑ Brand-impersonation citation (OCR-derived, independent of blocklist hits)
 - ☑ Personal-history RAG via `@qvac/sdk` `embed` (bge-small, with deterministic lexical fallback)
 - ☑ Local explainer LLM via `@qvac/sdk` `completion` (Qwen3-1.7B, JSON-schema-validated, deterministic fallback)
+- ☑ Voice command — `@qvac/sdk` `transcribe` (Whisper base.en) parses "approve" / "block" on the queued review
+- ☑ Verdict readback — `@qvac/sdk` `textToSpeech` (Chatterbox q4f16) via renderer AudioContext
 - ☑ Three end-to-end demo scripts
 
 ## What's queued
 
-- ☐ Voice mode — `@qvac/sdk` `transcribe` ("approve"/"block") + `textToSpeech` (verdict readback)
+- ☐ `@qvac/sdk` `translate` — multilingual verdict explanations
 - ☐ Multimodal vision over screenshots — pending QVAC SDK projection-model loading on this version
 - ☐ Phantom-blocklist full ~2,300-entry scrape
 
@@ -233,7 +240,7 @@ Detailed model in [docs/SECURITY.md](app/docs/SECURITY.md). Architectural decisi
 
 Submitted to:
 
-- **Tether Frontier Side Track** ($10K USDt) — meaningful `@qvac/sdk` integration: 3 of 6 SDK capabilities live (`completion`, `embed`, `ocr`), 2 queued (`transcribe`, `textToSpeech`).
+- **Tether Frontier Side Track** ($10K USDt) — meaningful `@qvac/sdk` integration: **5 of 6 SDK capabilities live** (`completion`, `embed`, `ocr`, `transcribe`, `textToSpeech`); `translate` queued.
 - **Solana Frontier Hackathon** main pool.
 
 Deadline: **May 11, 2026, 23:59 UTC**.

@@ -238,17 +238,17 @@ export const QVAC_ROWS: QvacRow[] = [
   },
   {
     icon: Mic,
-    module: "@qvac/transcription-whispercpp",
-    use: "Voice-mode 'approve' / 'block' command transcription.",
-    path: "reserved",
-    status: "reserved",
+    module: "@qvac/sdk · transcribe",
+    use: "Voice command — say 'approve' or 'block' on the queued review. MediaRecorder → @qvac/transcription-whispercpp → keyword match.",
+    path: "src/main/ipc/handlers/voice.ts",
+    status: "live",
   },
   {
     icon: VolumeHigh,
-    module: "@qvac/tts-onnx",
-    use: "Spoken verdict readback for hands-free and accessibility modes.",
-    path: "reserved",
-    status: "reserved",
+    module: "@qvac/sdk · textToSpeech",
+    use: "Verdict readback through the renderer's AudioContext. Chatterbox q4f16, multilingual.",
+    path: "src/renderer/components/verdict/read-aloud.tsx",
+    status: "live",
   },
 ];
 

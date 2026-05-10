@@ -23,11 +23,11 @@ export function QvacMatrix() {
         </div>
         <div className="lg:col-span-7 flex items-end">
           <p className={`${type.body} max-w-[520px]`}>
-            Every model on the verdict path runs through the official{" "}
-            <code className="font-mono text-white/85">@qvac/sdk</code> — LLM,
-            embeddings, and OCR are live; voice is queued. Plus WDK for Solana
-            key derivation, signing, and broadcast. Every output feeds the
-            verdict or one of its citations.
+            Five of six SDK capabilities on the call path: LLM, embeddings,
+            OCR, transcription, and text-to-speech all run through{" "}
+            <code className="font-mono text-white/85">@qvac/sdk</code> on
+            device. Plus WDK for Solana key derivation, signing, and broadcast.
+            Every output feeds the verdict or one of its citations.
           </p>
         </div>
       </div>

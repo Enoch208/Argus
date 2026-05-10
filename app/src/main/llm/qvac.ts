@@ -291,9 +291,11 @@ async function ensureTtsLoaded(runtime: QvacRuntime): Promise<string | null> {
   const cached = runtime.loaded.get(cacheKey);
   if (cached) return cached;
   try {
+    // Descriptor-based overload: `modelType` is inferred from the descriptor's
+    // `addon` field. We don't pass it explicitly — the SDK's overload picker
+    // narrows based on the descriptor literal type.
     const id = await runtime.sdk.loadModel({
       modelSrc: runtime.sdk.TTS_EN_ES_CHATTERBOX_Q4F16,
-      modelType: "tts",
     });
     runtime.loaded.set(cacheKey, id);
     logger.info("qvac tts pipeline loaded", { id });

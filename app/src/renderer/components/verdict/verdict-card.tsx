@@ -79,9 +79,12 @@ export function VerdictCard({ verdict }: { verdict: Verdict }) {
           <h3 className="text-[13px] font-light text-white/88">
             {verdict.explanation.title}
           </h3>
-          <span className="shrink-0 rounded-full border border-white/[0.08] bg-white/[0.035] px-2 py-1 font-mono text-[9.5px] uppercase tracking-[0.18em] text-white/36">
-            {verdict.explanation.source === "qvac" ? "QVAC" : "Local"}
-          </span>
+          <div className="flex shrink-0 items-center gap-2">
+            <ReadAloud text={verdict.explanation.plainEnglish} />
+            <span className="shrink-0 rounded-full border border-white/[0.08] bg-white/[0.035] px-2 py-1 font-mono text-[9.5px] uppercase tracking-[0.18em] text-white/36">
+              {verdict.explanation.source === "qvac" ? "QVAC" : "Local"}
+            </span>
+          </div>
         </div>
         <p className="text-[13px] font-light leading-[1.65] text-white/58">
           {verdict.explanation.plainEnglish}
