@@ -1,24 +1,26 @@
 /**
- * Screenshot → OCR text → URL list.
+ * Screenshot → OCR text → URL list + brand mention list.
  *
- * ADR-0013. Tesseract.js v5 (pure WASM) handles printed UI text reliably
- * for the demo path (`magic-edenn.io` etc.). The boundary is one function:
- * `extractUrlsFromImage(imageBytes) → { text, domains }`. When PaddleOCR
- * lands as the production runtime, only the worker call below changes.
+ * Runtime: `@qvac/ocr-onnx` via the QVAC SDK's EasyOCR pipeline (CRAFT
+ * detector + Latin recognizer). The boundary is one function:
+ * `extractUrlsFromImage(imageBytes) → { text, domains, brands }`. When the
+ * SDK / model isn't available we return an empty result rather than throwing
+ * — the verdict pipeline keeps running and the screenshot signals simply
+ * don't fire.
  *
- * Lifecycle: Tesseract creates a per-call worker, recognises, terminates.
- * Cold start ~2s (downloads the eng-latin model on first use); subsequent
- * calls reuse Tesseract's cached model. We don't pool workers because
- * verdict throughput is human-paced (one screenshot at a time).
+ * Lifecycle: SDK loads the OCR pipeline lazily (first screenshot triggers a
+ * model download via QVAC's registry); subsequent calls reuse the loaded
+ * pipeline. Same lazy pattern as the LLM and embedder paths.
  */
 
 import type { Buffer as NodeBuffer } from "node:buffer";
-import type * as Tesseract from "tesseract.js";
+import { ocrImage, type OcrBlock } from "@/main/llm/qvac";
 import { logger } from "@/main/log";
 
 export interface OcrResult {
-  /** Whole recognised text. The verdict pipeline doesn't render this; it's
-   *  available for diagnostics + future fuzzy matching. */
+  /** Whole recognised text, joined from per-block QVAC output. The verdict
+   *  pipeline doesn't render this; it's available for diagnostics + future
+   *  fuzzy matching. */
   text: string;
   /** Normalised, deduped, lowercased domain list extracted from the text. */
   domains: string[];
@@ -28,35 +30,30 @@ export interface OcrResult {
   brands: string[];
 }
 
-// Cached dynamic import. Tesseract.js is CJS, but lazy-loading keeps boot
-// fast — the WASM blob loads only when an image actually arrives.
-let workerFactoryPromise: Promise<typeof Tesseract> | null = null;
-function loadTesseract(): Promise<typeof Tesseract> {
-  if (!workerFactoryPromise) {
-    workerFactoryPromise = import("tesseract.js");
-  }
-  return workerFactoryPromise;
-}
+const EMPTY_RESULT: OcrResult = { text: "", domains: [], brands: [] };
 
 export async function extractUrlsFromImage(
   imageBytes: NodeBuffer | Uint8Array,
 ): Promise<OcrResult> {
-  const tesseract = await loadTesseract();
-  const worker = await tesseract.createWorker("eng");
-  try {
-    const { data } = await worker.recognize(Buffer.from(imageBytes));
-    const text = data.text ?? "";
-    const domains = extractDomains(text);
-    const brands = extractBrands(text);
-    logger.info("ocr extraction complete", {
-      chars: text.length,
-      domains: domains.length,
-      brands: brands.length,
-    });
-    return { text, domains, brands };
-  } finally {
-    await worker.terminate();
+  const blocks = await ocrImage(imageBytes);
+  if (!blocks) {
+    logger.info("ocr unavailable; verdict continues without screenshot signals");
+    return EMPTY_RESULT;
   }
+  const text = blocksToText(blocks);
+  const domains = extractDomains(text);
+  const brands = extractBrands(text);
+  logger.info("ocr extraction complete", {
+    blocks: blocks.length,
+    chars: text.length,
+    domains: domains.length,
+    brands: brands.length,
+  });
+  return { text, domains, brands };
+}
+
+function blocksToText(blocks: OcrBlock[]): string {
+  return blocks.map((b) => b.text).join(" ");
 }
 
 // ---------------------------------------------------------------------------

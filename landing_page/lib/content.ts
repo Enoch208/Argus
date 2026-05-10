@@ -231,8 +231,8 @@ export const QVAC_ROWS: QvacRow[] = [
   },
   {
     icon: FileSearch,
-    module: "Tesseract.js v5 (WASM)",
-    use: "OCR over screenshot bytes. Returns URLs + brand mentions for the impersonation cross-reference.",
+    module: "@qvac/sdk · ocr",
+    use: "EasyOCR pipeline (CRAFT detector + Latin recognizer) over screenshot bytes. Returns URLs + brand mentions for the impersonation cross-reference.",
     path: "src/main/ocr/extractor.ts",
     status: "live",
   },

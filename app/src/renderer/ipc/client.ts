@@ -92,16 +92,6 @@ const previewModels: ModelProgress[] = [
     error: null,
   },
   {
-    id: "paddle-ocr-mobile",
-    name: "PaddleOCR mobile",
-    role: "Screenshot OCR",
-    vram: "35 MB",
-    sizeBytes: 7_830_888,
-    downloadedBytes: 0,
-    state: "queued",
-    error: null,
-  },
-  {
     id: "piper-medium-en",
     name: "Piper-medium-en",
     role: "Verdict readback",

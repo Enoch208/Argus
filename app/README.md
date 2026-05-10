@@ -64,7 +64,7 @@ Argus runs on the **official [QVAC SDK](https://www.npmjs.com/package/@qvac/sdk)
 |---|---|---|
 | Verdict explainer | `Qwen3-1.7B-Q4_K_M.gguf` (via `@qvac/llm-llamacpp`) | [src/main/verdict/explainer.ts](src/main/verdict/explainer.ts) |
 | Personal-history RAG embeddings | `bge-small-en-v1.5-q4_k_m.gguf` (via `@qvac/embed-llamacpp`) | [src/main/llm/embedder.ts](src/main/llm/embedder.ts) |
-| Screenshot text extraction | Tesseract.js v5 (WASM, in-process) | [src/main/ocr/extractor.ts](src/main/ocr/extractor.ts) |
+| Screenshot text extraction | `@qvac/ocr-onnx` (CRAFT detector + Latin recognizer) | [src/main/ocr/extractor.ts](src/main/ocr/extractor.ts) |
 | Voice transcription | `whisper-base.en` (via `@qvac/transcription-whispercpp`) | reserved |
 | Voice readback | Piper (via `@qvac/tts-onnx`) | reserved |
 
@@ -109,7 +109,7 @@ npm run test            # vitest (decoder + url-intel + history-rag)
 - ☑ Transaction decode + simulate — System / SPL / Token-2022 / ATA, unknown-program YELLOW path
 - ☑ Sign + broadcast — confirmed status surfaced as a Solscan link
 - ☑ Local scam-intel — 65 real entries from Mandiant CLINKSINK + SolanaFM (program / wallet / mint tables)
-- ☑ OCR + URL allow-list — Tesseract.js v5 + 34-entry in-memory store + Levenshtein-1 fuzzy match
+- ☑ OCR + URL allow-list — `@qvac/sdk` ocr() (CRAFT + Latin) + 34-entry in-memory store + Levenshtein-1 fuzzy match
 - ☑ Brand-impersonation detection — OCR-derived "brand mentioned, canonical domain absent" signal with its own citation and severity policy
 - ☑ Personal-history RAG — `bge-small` embeddings with bag-of-words fallback for cold-start
 - ☑ Local explainer LLM — `Qwen3-1.7B` via `@qvac/sdk`, deterministic fallback on schema miss

@@ -22,6 +22,7 @@
  */
 
 import type * as QvacSdk from "@qvac/sdk";
+import { Buffer, type Buffer as NodeBuffer } from "node:buffer";
 import { logger } from "@/main/log";
 import { isAlreadyComplete, loadManifest, modelPath } from "@/main/models/store";
 
@@ -31,6 +32,12 @@ interface QvacRuntime {
   sdk: Sdk;
   /** Map manifest model id → SDK model id (the SDK assigns ids on load). */
   loaded: Map<string, string>;
+  /** SDK model id for the OCR pipeline once it's been registered. The OCR
+   *  pipeline is loaded once for the process lifetime — it bundles the CRAFT
+   *  detector + the Latin recognizer under a single SDK model id. */
+  ocrModelId: string | null;
+  /** Single-flight latch: only one `loadModel` call for OCR can run at once. */
+  ocrLoading: Promise<string | null> | null;
 }
 
 let runtimePromise: Promise<QvacRuntime | null> | null = null;
@@ -43,7 +50,12 @@ function loadRuntime(): Promise<QvacRuntime | null> {
       const sdk = await import("@qvac/sdk");
       await sdk.startQVACProvider();
       logger.info("qvac provider started");
-      return { sdk, loaded: new Map() };
+      return {
+        sdk,
+        loaded: new Map(),
+        ocrModelId: null,
+        ocrLoading: null,
+      };
     } catch (err) {
       logger.error("qvac provider failed to start", {
         msg: err instanceof Error ? err.message : "?",
@@ -151,6 +163,74 @@ export async function embed(
   } catch (err) {
     logger.warn("qvac embed failed", {
       id: manifestId,
+      msg: err instanceof Error ? err.message : "?",
+    });
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// OCR — `@qvac/ocr-onnx` via the SDK's EasyOCR pipeline (CRAFT detector +
+// Latin recognizer). Models are pulled by the SDK's registry on first call;
+// our own manifest doesn't track them because the SDK ships the descriptors.
+// ---------------------------------------------------------------------------
+
+export interface OcrBlock {
+  text: string;
+  confidence?: number;
+}
+
+async function ensureOcrLoaded(runtime: QvacRuntime): Promise<string | null> {
+  if (runtime.ocrModelId) return runtime.ocrModelId;
+  if (runtime.ocrLoading) return runtime.ocrLoading;
+  runtime.ocrLoading = (async () => {
+    try {
+      const id = await runtime.sdk.loadModel({
+        modelSrc: runtime.sdk.OCR_LATIN_RECOGNIZER,
+        modelType: "ocr",
+        modelConfig: {
+          langList: ["en"],
+          detectorModelSrc: runtime.sdk.OCR_CRAFT_DETECTOR,
+        },
+      });
+      runtime.ocrModelId = id;
+      logger.info("qvac ocr pipeline loaded", { id });
+      return id;
+    } catch (err) {
+      logger.error("qvac ocr loadModel failed", {
+        msg: err instanceof Error ? err.message : "?",
+      });
+      return null;
+    } finally {
+      runtime.ocrLoading = null;
+    }
+  })();
+  return runtime.ocrLoading;
+}
+
+/**
+ * Run OCR over an image buffer. Returns extracted text blocks (in reading
+ * order) or `null` if the SDK / OCR pipeline isn't available — callers must
+ * have a no-OCR path (the verdict pipeline already skips OCR signals when
+ * this returns null).
+ */
+export async function ocrImage(
+  image: NodeBuffer | Uint8Array,
+): Promise<OcrBlock[] | null> {
+  if (stopped) return null;
+  const runtime = await loadRuntime();
+  if (!runtime) return null;
+  const modelId = await ensureOcrLoaded(runtime);
+  if (!modelId) return null;
+  try {
+    const { blocks } = runtime.sdk.ocr({
+      modelId,
+      image: Buffer.from(image),
+    });
+    const resolved = await blocks;
+    return resolved.map((b) => ({ text: b.text, confidence: b.confidence }));
+  } catch (err) {
+    logger.warn("qvac ocr failed", {
       msg: err instanceof Error ? err.message : "?",
     });
     return null;

@@ -1,6 +1,5 @@
 import {
   Cpu,
-  FileSearch,
   Layers,
   Mic,
   Sphere,
@@ -26,7 +25,6 @@ export const MODEL_ICONS: Record<string, Icon> = {
   "qwen3-1-7b-q4": Cpu,
   "whisper-base-en": Mic,
   "piper-medium-en": Sphere,
-  "paddle-ocr-mobile": FileSearch,
   "bge-small-en-v1-5": Layers,
 };
 
