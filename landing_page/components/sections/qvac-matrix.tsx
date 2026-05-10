@@ -16,16 +16,18 @@ export function QvacMatrix() {
         <div className="lg:col-span-5 flex flex-col gap-5">
           <SectionMarker num={QVAC_MARKER.num} label={QVAC_MARKER.label} />
           <h2 className={type.h2}>
-            Six modules.
+            One SDK.
             <br />
             One pipeline.
           </h2>
         </div>
         <div className="lg:col-span-7 flex items-end">
           <p className={`${type.body} max-w-[520px]`}>
-            QVAC across LLM, vision, OCR, embeddings, STT, and TTS — plus WDK
-            for Solana key derivation, signing, and broadcast. Every output
-            feeds the verdict or one of its citations.
+            Every model on the verdict path runs through the official{" "}
+            <code className="font-mono text-white/85">@qvac/sdk</code> — LLM and
+            embeddings live, voice queued. Plus WDK for Solana key derivation,
+            signing, and broadcast. Every output feeds the verdict or one of its
+            citations.
           </p>
         </div>
       </div>
@@ -34,12 +36,17 @@ export function QvacMatrix() {
         <ul className="divide-y divide-white/[0.06]">
           {QVAC_ROWS.map((r, i) => {
             const Icon = r.icon;
+            const reserved = r.status === "reserved";
             return (
               <li
                 key={r.module}
                 data-scroll-reveal="surface"
                 style={{ "--scroll-delay": `${i * 45}ms` } as CSSProperties}
-                className="grid grid-cols-1 lg:grid-cols-12 items-start lg:items-center gap-3 lg:gap-6 px-6 py-5 hover:bg-white/[0.015] transition-colors"
+                className={`grid grid-cols-1 lg:grid-cols-12 items-start lg:items-center gap-3 lg:gap-6 px-6 py-5 transition-colors ${
+                  reserved
+                    ? "opacity-55 hover:opacity-75"
+                    : "hover:bg-white/[0.015]"
+                }`}
               >
                 <div className="flex items-center gap-3 lg:col-span-4">
                   <span className={surface.iconBox}>
@@ -48,6 +55,11 @@ export function QvacMatrix() {
                   <span className="font-mono text-[12.5px] text-white/85">
                     {r.module}
                   </span>
+                  {reserved && (
+                    <span className="ml-1 inline-flex items-center rounded-full border border-white/15 px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-white/55">
+                      Queued
+                    </span>
+                  )}
                 </div>
                 <p className={`${type.bodySm} lg:col-span-6`}>{r.use}</p>
                 <code className="text-[11px] text-white/35 font-mono lg:col-span-2 lg:text-right">

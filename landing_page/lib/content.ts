@@ -3,6 +3,10 @@
  *
  * STRICT RULE: do not place copy strings in components. Edit here so localisation
  * and tone-tuning happen in one diff.
+ *
+ * Truth bar: every claim on this page must map to a verifiable feature in
+ * `/app/`. If something here drifts ahead of the implementation, fix it
+ * here — not the other way round.
  */
 
 import {
@@ -31,7 +35,7 @@ export const BRAND = {
   name: "Argus",
   tagline: "Local AI in front of every signature.",
   github: "https://github.com/yourname/Argus",
-  builtWith: "Built with QVAC + WDK",
+  builtWith: "Built on @qvac/sdk + WDK",
 } as const;
 
 export const NAV_LINKS = [
@@ -61,34 +65,38 @@ export const DOWNLOADS = {
 
 export const HERO = {
   marker: { num: "01", label: "Concept" },
-  badge: "v0.1 · Mainnet-ready",
+  badge: "v0.1 · Built on @qvac/sdk",
   // Two short lines. Together they read as one sentence.
   headline: ["Stop the drainer", "before you sign."],
   // Single-line subhead. Anything longer reads as a paragraph in a hero.
-  sub: "A local AI co-pilot for every Solana signature. On-device, always.",
+  sub: "A local AI co-pilot that reviews every Solana signature on-device. Nothing leaves your machine.",
   // Two ornaments — kept minimal; the hero should breathe.
   nodes: [
     {
       pos: "top-[18%] left-[5%]",
       reverse: false,
       icon: Cpu as Icon,
-      label: "Local LLM",
-      meta: "Qwen3-1.7B · Q4",
+      label: "Verdict explainer",
+      meta: "Qwen3-1.7B · @qvac/sdk",
       dotClass: "bg-emerald-400/80 shadow-[0_0_8px_rgba(52,211,153,0.8)]",
     },
     {
       pos: "bottom-[22%] right-[5%]",
       reverse: true,
-      icon: View as Icon,
-      label: "Vision guard",
-      meta: "MiniCPM-V 2.6",
+      icon: FingerPrint as Icon,
+      label: "Personal-history RAG",
+      meta: "bge-small · 384-d",
       dotClass: "bg-amber-400/80 shadow-[0_0_8px_rgba(251,191,36,0.7)]",
     },
   ],
 } as const;
 
 // -----------------------------------------------------------------------------
-// Verdict demo (mock cards rendered as visual proof)
+// Verdict demo (cards rendered as visual proof)
+//
+// Every card below uses the *exact* citation phrasing produced by the live
+// verdict pipeline (`/app/src/main/verdict/pipeline.ts`). If you change the
+// pipeline's citation strings, mirror them here.
 // -----------------------------------------------------------------------------
 
 export type Verdict = "GREEN" | "YELLOW" | "RED";
@@ -102,36 +110,38 @@ export const VERDICTS: Array<{
 }> = [
   {
     level: "RED",
-    title: "Block — visual phishing",
-    summary: "Drag-in screenshot mimics Magic Eden at 0.91 similarity.",
+    title: "Refuse to engage — brand impersonation",
+    summary: "Screenshot impersonates Magic Eden (real domain magiceden.io).",
     citations: [
-      "URL `magic-edenn.io` is one edit from `magiceden.io`.",
-      "Vision similarity to canonical Magic Eden: 0.91.",
-      "Domain not in allow-list of 47 known dApps.",
+      "OCR found 1 blocked domain: magic-edenn.io (Phantom-flagged typo-squat of magiceden.io).",
+      "Brand-impersonation: screenshot mentions magic eden but the URL is magic-edenn.io, not magiceden.io.",
+      "Personal history matched 0 similar approved reviews; treat this as unusual for your wallet.",
     ],
-    meta: "Vision · OCR",
+    meta: "OCR · Brand · impersonation · History",
   },
   {
     level: "YELLOW",
-    title: "Caution — novel authority",
-    summary: "Unlimited SPL approval to a program never seen on this wallet.",
+    title: "Review — unlimited SPL approval",
+    summary: "spl-approve to a delegate Argus has not seen on this wallet.",
     citations: [
-      "0 of last 47 transactions match this pattern.",
-      "Recipient program deployed 2 days ago.",
-      "Highest history similarity 0.29 (Marinade).",
+      "Simulation passed (1 instruction).",
+      "spl-approve: unlimited delegate authority to 9xQe…2bWk on USDC.",
+      "Local scam-intel checked 1 program; no blocklist matches.",
+      "Personal history found no close match across 47 prior reviews; treat this as unusual for your wallet.",
     ],
-    meta: "RAG · scam-intel",
+    meta: "Simulation · Intel · History",
   },
   {
     level: "GREEN",
-    title: "Approve — Jupiter swap",
-    summary: "Routine SOL → USDC, slippage 0.4 %, recipient on history.",
+    title: "Approve — Jupiter v6 swap",
+    summary: "Routine SOL → USDC, recipient is your own wallet.",
     citations: [
-      "Decoded as Jupiter v6 `route` to your wallet.",
-      "Simulation: -0.50 SOL, +71.24 USDC.",
-      "23 prior swaps to this program in 90 days.",
+      "Simulation passed (1 instruction).",
+      "Jupiter v6 route: -0.50 SOL, +71.24 USDC to your wallet.",
+      "Local scam-intel checked 1 program; no blocklist matches.",
+      "Personal history matched 4 similar approved reviews.",
     ],
-    meta: "Simulation · history",
+    meta: "Simulation · Intel · History · match",
   },
 ];
 
@@ -143,7 +153,7 @@ export const WHY_LOCAL = {
   marker: { num: "02", label: "Why local AI" },
   title: ["The reviewer that doesn't", "leak the transaction."],
   body:
-    "Cloud screening sees every signature you'd want it to protect. Argus runs an on-device pipeline so your wallet activity never touches an API.",
+    "Cloud screening sees every signature you'd want it to protect. Argus runs the entire review pipeline — decode, simulate, intel lookup, RAG, explainer LLM — on your device through the official QVAC SDK.",
   stat: "$2.1B",
   statLabel: "Stolen by Solana drainers in 2024",
 } as const;
@@ -154,9 +164,9 @@ export const WHY_LOCAL = {
 
 export const PIPELINE_INTRO = {
   marker: { num: "03", label: "Pipeline" },
-  title: ["Six on-device models,", "one verdict."],
+  title: ["Five on-device signals,", "one cited verdict."],
   body:
-    "QVAC's LLM, vision, OCR, embeddings, STT, and TTS, orchestrated as a single review pipeline — every signal grounded by at least one model.",
+    "Decode → simulate → intel → screenshot OCR → personal-history RAG. The QVAC-powered explainer turns the deterministic facts into plain English; every citation is something your machine can verify.",
 } as const;
 
 export type PipelineCard = {
@@ -171,21 +181,21 @@ export const PIPELINE_CARDS: PipelineCard[] = [
     icon: Bot,
     title: "Decode & explain",
     blurb:
-      "Grammar-constrained Qwen3 turns raw instructions into plain English with mandatory citations.",
+      "Qwen3-1.7B (via @qvac/sdk) rewrites the deterministic decode into plain English. The model never adds facts — every claim has a citation.",
     variant: "code",
   },
   {
     icon: Connect,
     title: "Cross-reference",
     blurb:
-      "Embedded scam-intel, dApp allow-list, and your 100-tx history converge on a single risk score.",
+      "Local scam-intel (Mandiant CLINKSINK + SolanaFM), URL allow-list with one-edit fuzzy-match, and BGE-embedded personal history converge on a single severity.",
     variant: "orbit",
   },
   {
     icon: FingerPrint,
-    title: "Fingerprint the UI",
+    title: "Read the screenshot",
     blurb:
-      "Drag a screenshot in. Vision and OCR catch typo-squat URLs and look-alike phishing kits.",
+      "Drag in a Telegram or dApp screenshot. Tesseract OCR extracts URLs and brand mentions; brand-impersonation cross-reference catches typo-squat phishing kits.",
     variant: "sonar",
   },
 ];
@@ -201,44 +211,44 @@ export type QvacRow = {
   module: string;
   use: string;
   path: string;
+  status?: "live" | "reserved";
 };
 
 export const QVAC_ROWS: QvacRow[] = [
   {
     icon: Sparkles,
-    module: "@qvac/llm-llamacpp",
-    use: "Plain-English explanation, structured-JSON verdict, allow-list reasoning.",
-    path: "ai/explainer.ts",
-  },
-  {
-    icon: View,
-    module: "@qvac/llm-llamacpp · vision",
-    use: "Screenshot phishing detection; visual similarity to canonical UIs.",
-    path: "ai/visionGuard.ts",
+    module: "@qvac/sdk · completion",
+    use: "Verdict-explainer LLM (Qwen3-1.7B). Plain-English rewrite of decoded facts; structured JSON output validated by zod.",
+    path: "src/main/verdict/explainer.ts",
+    status: "live",
   },
   {
     icon: FingerPrint,
-    module: "@qvac/embed-llamacpp",
-    use: "Embeds scam-intel, history, and incoming descriptors. Cosine outliers.",
-    path: "ai/embed.ts",
+    module: "@qvac/sdk · embed",
+    use: "Personal-history RAG over your prior signed/blocked reviews. bge-small-en-v1.5, cosine, 384-d.",
+    path: "src/main/llm/embedder.ts",
+    status: "live",
   },
   {
     icon: FileSearch,
-    module: "@qvac/ocr-onnx",
-    use: "Extracts text and URLs from Telegram, Discord, and dApp screenshots.",
-    path: "ai/ocr.ts",
+    module: "Tesseract.js v5 (WASM)",
+    use: "OCR over screenshot bytes. Returns URLs + brand mentions for the impersonation cross-reference.",
+    path: "src/main/ocr/extractor.ts",
+    status: "live",
   },
   {
     icon: Mic,
     module: "@qvac/transcription-whispercpp",
-    use: 'Voice-mode "approve" / "block" command transcription.',
-    path: "ai/voice.ts",
+    use: "Voice-mode 'approve' / 'block' command transcription.",
+    path: "reserved",
+    status: "reserved",
   },
   {
     icon: VolumeHigh,
     module: "@qvac/tts-onnx",
     use: "Spoken verdict readback for hands-free and accessibility modes.",
-    path: "ai/voice.ts",
+    path: "reserved",
+    status: "reserved",
   },
 ];
 
@@ -258,12 +268,12 @@ export const THREATS: Threat[] = [
   {
     icon: Shield,
     title: "Known-bad recipient",
-    body: "Transfer to an address that appears in the seed scam-intel corpus.",
+    body: "Transfer or approval to an address in the local scam-intel corpus (Mandiant CLINKSINK + SolanaFM seeds).",
   },
   {
     icon: Wallet,
     title: "Unlimited SPL approval",
-    body: "`Approve` granting infinite delegate authority to an unknown program.",
+    body: "`Approve` granting unbounded delegate authority to a program your wallet has never interacted with.",
   },
   {
     icon: Layers,
@@ -272,18 +282,18 @@ export const THREATS: Threat[] = [
   },
   {
     icon: Flash,
-    title: "Sandwich-grade slippage",
-    body: "Jupiter swap with > 50 % slippage — likely a sandwich or rug.",
+    title: "Simulation rejection",
+    body: "Solana simulator rejects the transaction — Argus will not sign anything that won't even simulate.",
   },
   {
     icon: FingerPrint,
-    title: "Clipboard-hijack twin",
-    body: "Recipient one Levenshtein edit from your own address.",
+    title: "Typo-squat URL",
+    body: "Screenshot URL is one Levenshtein edit away from a canonical Solana dApp (magicedem.io, jupx.ag, …).",
   },
   {
     icon: View,
-    title: "Visual look-alike",
-    body: "Screenshot vision similarity > 0.85 to a known phishing kit.",
+    title: "Brand impersonation",
+    body: "Screenshot mentions a canonical brand without surfacing its real domain — phishing dressed up as Phantom, Magic Eden, etc.",
   },
 ];
 
@@ -294,7 +304,7 @@ export const THREATS: Threat[] = [
 export const CTA = {
   title: ["Local intelligence,", "zero exfiltration."],
   body:
-    "Install Argus, generate a fresh seed, and review your next signature with six models you fully own.",
+    "Install Argus, generate a fresh seed, and review your next signature with a stack you fully own — every model on the call path runs through the official QVAC SDK on your device.",
 } as const;
 
 export const FOOTER = {
@@ -320,7 +330,7 @@ export const FOOTER = {
     {
       heading: "Built with",
       items: [
-        { label: "QVAC SDK", href: "https://qvac.tether.io" },
+        { label: "@qvac/sdk", href: "https://www.npmjs.com/package/@qvac/sdk" },
         { label: "WDK", href: "https://wdk.tether.io" },
         { label: "Solana", href: "https://solana.com" },
         { label: "Electron", href: "https://www.electronjs.org" },
