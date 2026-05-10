@@ -1,0 +1,6762 @@
+{
+  "version": 1,
+  "fetchedAt": "2026-05-10T13:59:46.462Z",
+  "source": "github.com/phantom/blocklist",
+  "license": "Apache-2.0",
+  "commit": "5030186d0671f173eefc8a0be696d64b7b30ecbc",
+  "commitDate": "2026-05-08T14:07:36Z",
+  "blocklist": [
+    {
+      "domain": "blogpost-opensea.io"
+    },
+    {
+      "domain": "phantomweb.app"
+    },
+    {
+      "domain": "aurory.app"
+    },
+    {
+      "domain": "solvision.io"
+    },
+    {
+      "domain": "staratlas.art"
+    },
+    {
+      "domain": "starsatlas.com"
+    },
+    {
+      "domain": "sollet.cc"
+    },
+    {
+      "domain": "raydlum.io"
+    },
+    {
+      "domain": "aurorynft.com"
+    },
+    {
+      "domain": "solletweb.io"
+    },
+    {
+      "domain": "i-sollet.com"
+    },
+    {
+      "domain": "fancyfrenchienft.art"
+    },
+    {
+      "domain": "solanawebwallet.online"
+    },
+    {
+      "domain": "phahtom.commetapiex-ciaim.com"
+    },
+    {
+      "domain": "server-syncwallet.com"
+    },
+    {
+      "domain": "staratias.app"
+    },
+    {
+      "domain": "raydium.network"
+    },
+    {
+      "domain": "grapesnetwork.me"
+    },
+    {
+      "domain": "staratias.art"
+    },
+    {
+      "domain": "soistarter.org"
+    },
+    {
+      "domain": "audius-nft.top"
+    },
+    {
+      "domain": "aurory.me"
+    },
+    {
+      "domain": "degenapes.app"
+    },
+    {
+      "domain": "phantom-app.online"
+    },
+    {
+      "domain": "phantomwallet.net"
+    },
+    {
+      "domain": "dapps-node.com"
+    },
+    {
+      "domain": "phantom-app.link"
+    },
+    {
+      "domain": "solanaoutage.com"
+    },
+    {
+      "domain": "walletconnectdapps.net"
+    },
+    {
+      "domain": "staratlas.cx"
+    },
+    {
+      "domain": "web-phantom.app"
+    },
+    {
+      "domain": "0120tt.com"
+    },
+    {
+      "domain": "pnanton.app"
+    },
+    {
+      "domain": "phantuomn.app"
+    },
+    {
+      "domain": "phantom-web.app"
+    },
+    {
+      "domain": "sonalt.com"
+    },
+    {
+      "domain": "phantomwallets.net"
+    },
+    {
+      "domain": "officialsolananft.com"
+    },
+    {
+      "domain": "extension-phantom.app"
+    },
+    {
+      "domain": "phantomwebapp.io"
+    },
+    {
+      "domain": "raydium.space"
+    },
+    {
+      "domain": "degentrashpandas.cc"
+    },
+    {
+      "domain": "dappintegrate.app"
+    },
+    {
+      "domain": "solnftpresale.com"
+    },
+    {
+      "domain": "solananftlaunch.com"
+    },
+    {
+      "domain": "solamiun.io"
+    },
+    {
+      "domain": "phantom-beta.app"
+    },
+    {
+      "domain": "solananftsale.com"
+    },
+    {
+      "domain": "raydiums.net"
+    },
+    {
+      "domain": "phantomwebapp.com"
+    },
+    {
+      "domain": "webdapp-phantom.app"
+    },
+    {
+      "domain": "pnantom.com"
+    },
+    {
+      "domain": "phantom-walletweb.app"
+    },
+    {
+      "domain": "phantomlite.app"
+    },
+    {
+      "domain": "solanium.im"
+    },
+    {
+      "domain": "solanium-blockasset.com"
+    },
+    {
+      "domain": "moolah-monkeys.vercel.app"
+    },
+    {
+      "domain": "sollet.ch"
+    },
+    {
+      "domain": "phantom-recover.app"
+    },
+    {
+      "domain": "walletsvalidators.net"
+    },
+    {
+      "domain": "walletconnectee.com"
+    },
+    {
+      "domain": "fractalproctol.online"
+    },
+    {
+      "domain": "webphantom.app"
+    },
+    {
+      "domain": "solanasmonkey.business"
+    },
+    {
+      "domain": "phantom-betaweb.app"
+    },
+    {
+      "domain": "xmasnftevent.com"
+    },
+    {
+      "domain": "xmasnftdrop.com"
+    },
+    {
+      "domain": "solanaxmasevent.com"
+    },
+    {
+      "domain": "solxmasevent.com"
+    },
+    {
+      "domain": "solnftfork.com"
+    },
+    {
+      "domain": "solananftgift.com"
+    },
+    {
+      "domain": "freexmasnft.com"
+    },
+    {
+      "domain": "xmasairdrop.com"
+    },
+    {
+      "domain": "getsolananft.com"
+    },
+    {
+      "domain": "solanaxmas.com"
+    },
+    {
+      "domain": "solanaxmasgift.com"
+    },
+    {
+      "domain": "metasolnft.com"
+    },
+    {
+      "domain": "solanagift.com"
+    },
+    {
+      "domain": "claimxmasnft.com"
+    },
+    {
+      "domain": "anatolyevent.com"
+    },
+    {
+      "domain": "solnftbase.com"
+    },
+    {
+      "domain": "sol-event.org"
+    },
+    {
+      "domain": "solnftminting.com"
+    },
+    {
+      "domain": "solanium.ist"
+    },
+    {
+      "domain": "unwrapnftgift.com"
+    },
+    {
+      "domain": "solnftdrop.com"
+    },
+    {
+      "domain": "nftmintarea.com"
+    },
+    {
+      "domain": "solanium.at"
+    },
+    {
+      "domain": "officialsolanamint.com"
+    },
+    {
+      "domain": "mintconnectpad.online"
+    },
+    {
+      "domain": "officialsolanadrop.com"
+    },
+    {
+      "domain": "solnftpresent.com"
+    },
+    {
+      "domain": "officialsolanatoken.com"
+    },
+    {
+      "domain": "multichainwalletconnect.com"
+    },
+    {
+      "domain": "phantomwebs.app"
+    },
+    {
+      "domain": "mintsolananft.com"
+    },
+    {
+      "domain": "phantomlab.su"
+    },
+    {
+      "domain": "officialsoldrop.com"
+    },
+    {
+      "domain": "claimsolnft.com"
+    },
+    {
+      "domain": "kongracers.live"
+    },
+    {
+      "domain": "solnftgiveaway.com"
+    },
+    {
+      "domain": "starlaunchstake.app"
+    },
+    {
+      "domain": "magiceden.site"
+    },
+    {
+      "domain": "solanium.website"
+    },
+    {
+      "domain": "easywalletfix.net"
+    },
+    {
+      "domain": "officialsolanarares.com"
+    },
+    {
+      "domain": "metapiex.com"
+    },
+    {
+      "domain": "officialsolanamints.com"
+    },
+    {
+      "domain": "officialsolgift.com"
+    },
+    {
+      "domain": "magieden.com"
+    },
+    {
+      "domain": "officialsolmint.com"
+    },
+    {
+      "domain": "mintthegift.com"
+    },
+    {
+      "domain": "officialgiftsolana.com"
+    },
+    {
+      "domain": "officialmintnft.com"
+    },
+    {
+      "domain": "solanium.ltd"
+    },
+    {
+      "domain": "officialnftsolana.com"
+    },
+    {
+      "domain": "maglcedem.io"
+    },
+    {
+      "domain": "officialnftsol.com"
+    },
+    {
+      "domain": "solnftgift.com"
+    },
+    {
+      "domain": "solananftmint.com"
+    },
+    {
+      "domain": "solananftevent.com"
+    },
+    {
+      "domain": "solanartnft.io"
+    },
+    {
+      "domain": "officialnftgift.com"
+    },
+    {
+      "domain": "solanagift.net"
+    },
+    {
+      "domain": "solanarl.io"
+    },
+    {
+      "domain": "officialsolanamint.net"
+    },
+    {
+      "domain": "officialsoldrop.net"
+    },
+    {
+      "domain": "magiciden.com"
+    },
+    {
+      "domain": "solonarte.com"
+    },
+    {
+      "domain": "nft-magiceden.su"
+    },
+    {
+      "domain": "mint-magiceden.io"
+    },
+    {
+      "domain": "officialsolmint.net"
+    },
+    {
+      "domain": "officialmintnft.net"
+    },
+    {
+      "domain": "phantom-airdrop.app"
+    },
+    {
+      "domain": "walletbridgedapps.com"
+    },
+    {
+      "domain": "app.solonarte.com"
+    },
+    {
+      "domain": "colohdrt.com"
+    },
+    {
+      "domain": "phantomdrop.live"
+    },
+    {
+      "domain": "solananftgift.net"
+    },
+    {
+      "domain": "magiciden.io"
+    },
+    {
+      "domain": "magic-eden.org"
+    },
+    {
+      "domain": "solananftevent.net"
+    },
+    {
+      "domain": "-magiceden.io"
+    },
+    {
+      "domain": "solsea.cc"
+    },
+    {
+      "domain": "walletbridgeapps.org"
+    },
+    {
+      "domain": "magiceden.ac"
+    },
+    {
+      "domain": "magic-edens.org"
+    },
+    {
+      "domain": "magisodan.top"
+    },
+    {
+      "domain": "officialsolanagift.net"
+    },
+    {
+      "domain": "solsea.la"
+    },
+    {
+      "domain": "mint-magiceden.com"
+    },
+    {
+      "domain": "solsea.ia"
+    },
+    {
+      "domain": "magiceden.la"
+    },
+    {
+      "domain": "officialsolananft.net"
+    },
+    {
+      "domain": "solsea.in"
+    },
+    {
+      "domain": "officialsolgift.net"
+    },
+    {
+      "domain": "magicqeden.com"
+    },
+    {
+      "domain": "maqiiceden.com"
+    },
+    {
+      "domain": "magicentnft.com"
+    },
+    {
+      "domain": "meyicaden.com"
+    },
+    {
+      "domain": "magiden.com"
+    },
+    {
+      "domain": "magicedenart.com"
+    },
+    {
+      "domain": "magic-eden.online"
+    },
+    {
+      "domain": "officialsolnft.net"
+    },
+    {
+      "domain": "magicedem.com"
+    },
+    {
+      "domain": "magiceden.gift"
+    },
+    {
+      "domain": "solsea.cx"
+    },
+    {
+      "domain": "magicndent.org"
+    },
+    {
+      "domain": "phantom-wallet.org"
+    },
+    {
+      "domain": "magicedan.co"
+    },
+    {
+      "domain": "maggiceden.io"
+    },
+    {
+      "domain": "officialmintgift.net"
+    },
+    {
+      "domain": "solseo.io"
+    },
+    {
+      "domain": "solseo.in"
+    },
+    {
+      "domain": "officialsolanadrop.net"
+    },
+    {
+      "domain": "officialsolanarares.net"
+    },
+    {
+      "domain": "getsolananft.net"
+    },
+    {
+      "domain": "claimsolnft.net"
+    },
+    {
+      "domain": "solnftdrop.net"
+    },
+    {
+      "domain": "claimnftgift.com"
+    },
+    {
+      "domain": "officialgiftsolana.net"
+    },
+    {
+      "domain": "solnftpresent.net"
+    },
+    {
+      "domain": "officialnftsol.net"
+    },
+    {
+      "domain": "solananftlaunch.net"
+    },
+    {
+      "domain": "officialnftsolana.net"
+    },
+    {
+      "domain": "magiceidens.com"
+    },
+    {
+      "domain": "solnftgiveaway.net"
+    },
+    {
+      "domain": "solnftminting.net"
+    },
+    {
+      "domain": "solnftgift.net"
+    },
+    {
+      "domain": "solananftmint.net"
+    },
+    {
+      "domain": "officialsolanamints.net"
+    },
+    {
+      "domain": "magieden.eu"
+    },
+    {
+      "domain": "fractol.eu"
+    },
+    {
+      "domain": "fractai.is"
+    },
+    {
+      "domain": "magicaden.eu"
+    },
+    {
+      "domain": "solanagiftsnft.net"
+    },
+    {
+      "domain": "solanagiftsnft.com"
+    },
+    {
+      "domain": "solanagifts.net"
+    },
+    {
+      "domain": "solananftgifts.net"
+    },
+    {
+      "domain": "solananftgifts.com"
+    },
+    {
+      "domain": "claimsolanagift.net"
+    },
+    {
+      "domain": "claimsolanagift.com"
+    },
+    {
+      "domain": "getsolanagift.com"
+    },
+    {
+      "domain": "getsolanagift.net"
+    },
+    {
+      "domain": "claimgiftsolana.com"
+    },
+    {
+      "domain": "claimgiftsolana.net"
+    },
+    {
+      "domain": "salsea.eu"
+    },
+    {
+      "domain": "solanaclaimgift.com"
+    },
+    {
+      "domain": "solanaclaimgift.net"
+    },
+    {
+      "domain": "solanagiftclaim.com"
+    },
+    {
+      "domain": "solanagiftclaim.net"
+    },
+    {
+      "domain": "claimgiftsol.com"
+    },
+    {
+      "domain": "claimgiftsol.net"
+    },
+    {
+      "domain": "magglceden.io"
+    },
+    {
+      "domain": "solclaimgift.com"
+    },
+    {
+      "domain": "solclaimgift.net"
+    },
+    {
+      "domain": "claimairdropsolana.com"
+    },
+    {
+      "domain": "claimairdropsolana.net"
+    },
+    {
+      "domain": "solanaclaimairdrop.com"
+    },
+    {
+      "domain": "solanaclaimairdrop.net"
+    },
+    {
+      "domain": "solanaeventairdrop.com"
+    },
+    {
+      "domain": "solanaeventairdrop.net"
+    },
+    {
+      "domain": "solgiftclaim.com"
+    },
+    {
+      "domain": "solgiftclaim.net"
+    },
+    {
+      "domain": "solanaclaimnft.com"
+    },
+    {
+      "domain": "solanaclaimnft.net"
+    },
+    {
+      "domain": "solanamintevent.com"
+    },
+    {
+      "domain": "solanamintevent.net"
+    },
+    {
+      "domain": "solanadropevent.com"
+    },
+    {
+      "domain": "solanadropevent.net"
+    },
+    {
+      "domain": "solnftclaim.com"
+    },
+    {
+      "domain": "solnftclaim.net"
+    },
+    {
+      "domain": "nftdropsolana.com"
+    },
+    {
+      "domain": "nftdropsolana.net"
+    },
+    {
+      "domain": "solananftdrop.com"
+    },
+    {
+      "domain": "solananftdrop.net"
+    },
+    {
+      "domain": "solanadropnft.com"
+    },
+    {
+      "domain": "solanadropnft.net"
+    },
+    {
+      "domain": "nfteventsolana.com"
+    },
+    {
+      "domain": "nfteventsolana.net"
+    },
+    {
+      "domain": "fractol.io"
+    },
+    {
+      "domain": "fractal.io"
+    },
+    {
+      "domain": "mogiceden.io"
+    },
+    {
+      "domain": "nnagiceden.com"
+    },
+    {
+      "domain": "claimsolananft.com"
+    },
+    {
+      "domain": "claimsolananft.net"
+    },
+    {
+      "domain": "officialapynode.online"
+    },
+    {
+      "domain": "froctal.io"
+    },
+    {
+      "domain": "nftairdropsolana.com"
+    },
+    {
+      "domain": "officialsolanastake.com"
+    },
+    {
+      "domain": "solnart.eu"
+    },
+    {
+      "domain": "giftairdropsolana.com"
+    },
+    {
+      "domain": "solananamonkey.business"
+    },
+    {
+      "domain": "solonart.eu"
+    },
+    {
+      "domain": "solanagiftairdrop.com"
+    },
+    {
+      "domain": "solanagiftevent.com"
+    },
+    {
+      "domain": "solananftlive.com"
+    },
+    {
+      "domain": "solananftlive.net"
+    },
+    {
+      "domain": "magiciden.in"
+    },
+    {
+      "domain": "solananftclaim.com"
+    },
+    {
+      "domain": "solananftclaim.net"
+    },
+    {
+      "domain": "magiceiden.io"
+    },
+    {
+      "domain": "solananftonline.com"
+    },
+    {
+      "domain": "solananftapp.com"
+    },
+    {
+      "domain": "nftdropbysolana.com"
+    },
+    {
+      "domain": "airdropbysolana.com"
+    },
+    {
+      "domain": "nftbysolana.com"
+    },
+    {
+      "domain": "giftbysolana.com"
+    },
+    {
+      "domain": "solanaonlinedrop.com"
+    },
+    {
+      "domain": "solanamintonline.com"
+    },
+    {
+      "domain": "solanararenft.com"
+    },
+    {
+      "domain": "solanararesnft.com"
+    },
+    {
+      "domain": "solananftrares.com"
+    },
+    {
+      "domain": "solanamintrares.com"
+    },
+    {
+      "domain": "solanadropmint.com"
+    },
+    {
+      "domain": "mintsolanadrop.com"
+    },
+    {
+      "domain": "claimairdropnft.com"
+    },
+    {
+      "domain": "getairdropsolana.com"
+    },
+    {
+      "domain": "getnftsolana.com"
+    },
+    {
+      "domain": "solananftcraze.com"
+    },
+    {
+      "domain": "solanalivenft.com"
+    },
+    {
+      "domain": "solanafreenft.com"
+    },
+    {
+      "domain": "froctal.eu"
+    },
+    {
+      "domain": "solananftsparkle.com"
+    },
+    {
+      "domain": "salanart.eu"
+    },
+    {
+      "domain": "maglseden.io"
+    },
+    {
+      "domain": "solanart.se"
+    },
+    {
+      "domain": "lastsolana.com"
+    },
+    {
+      "domain": "solanawilton.com"
+    },
+    {
+      "domain": "solanavolney.com"
+    },
+    {
+      "domain": "orca-swap.com"
+    },
+    {
+      "domain": "solanavadito.com"
+    },
+    {
+      "domain": "solanatowaoc.com"
+    },
+    {
+      "domain": "solanatopock.com"
+    },
+    {
+      "domain": "solanatenino.com"
+    },
+    {
+      "domain": "solanataiban.com"
+    },
+    {
+      "domain": "solanastites.com"
+    },
+    {
+      "domain": "solanasouris.com"
+    },
+    {
+      "domain": "solanasautee.com"
+    },
+    {
+      "domain": "solanarumney.com"
+    },
+    {
+      "domain": "solanaroxana.com"
+    },
+    {
+      "domain": "solanaredash.com"
+    },
+    {
+      "domain": "solanarandle.com"
+    },
+    {
+      "domain": "solanapisgah.com"
+    },
+    {
+      "domain": "solanapiseco.com"
+    },
+    {
+      "domain": "solanapinole.com"
+    },
+    {
+      "domain": "solanapatten.com"
+    },
+    {
+      "domain": "solanaottine.com"
+    },
+    {
+      "domain": "solanaormsby.com"
+    },
+    {
+      "domain": "solanaokeana.com"
+    },
+    {
+      "domain": "solanaokaton.com"
+    },
+    {
+      "domain": "solananovato.com"
+    },
+    {
+      "domain": "solananatick.com"
+    },
+    {
+      "domain": "solanamorann.com"
+    },
+    {
+      "domain": "solanamoraga.com"
+    },
+    {
+      "domain": "solanamikana.com"
+    },
+    {
+      "domain": "solanamanvel.com"
+    },
+    {
+      "domain": "solanalufkin.com"
+    },
+    {
+      "domain": "solanalamero.com"
+    },
+    {
+      "domain": "solanalajose.com"
+    },
+    {
+      "domain": "solanalaings.com"
+    },
+    {
+      "domain": "solanakelton.com"
+    },
+    {
+      "domain": "solanakalona.com"
+    },
+    {
+      "domain": "solanakailua.com"
+    },
+    {
+      "domain": "solanajachin.com"
+    },
+    {
+      "domain": "solanaherron.com"
+    },
+    {
+      "domain": "solanahepler.com"
+    },
+    {
+      "domain": "solanafabius.com"
+    },
+    {
+      "domain": "solanaenders.com"
+    },
+    {
+      "domain": "solanaelkton.com"
+    },
+    {
+      "domain": "solanaeckley.com"
+    },
+    {
+      "domain": "solanadugger.com"
+    },
+    {
+      "domain": "solanadepere.com"
+    },
+    {
+      "domain": "solanaclover.com"
+    },
+    {
+      "domain": "solanacatano.com"
+    },
+    {
+      "domain": "solanacandia.com"
+    },
+    {
+      "domain": "solanacadott.com"
+    },
+    {
+      "domain": "solanabraham.com"
+    },
+    {
+      "domain": "solanaboelus.com"
+    },
+    {
+      "domain": "froctol.eu"
+    },
+    {
+      "domain": "solanaberger.com"
+    },
+    {
+      "domain": "magicelen.live"
+    },
+    {
+      "domain": "mogiceden.eu"
+    },
+    {
+      "domain": "solanabalmat.com"
+    },
+    {
+      "domain": "solanaaugres.com"
+    },
+    {
+      "domain": "solanaatglen.com"
+    },
+    {
+      "domain": "solanaasotin.com"
+    },
+    {
+      "domain": "solanaarvada.com"
+    },
+    {
+      "domain": "solanaalvord.com"
+    },
+    {
+      "domain": "solanaalpena.com"
+    },
+    {
+      "domain": "solanaaitkin.com"
+    },
+    {
+      "domain": "stepn-mint.shop"
+    },
+    {
+      "domain": "magiceden.se"
+    },
+    {
+      "domain": "io-launchpad.live"
+    },
+    {
+      "domain": "stepnmint.site"
+    },
+    {
+      "domain": "solanart.es"
+    },
+    {
+      "domain": "solscannft.gift"
+    },
+    {
+      "domain": "magiceclen.io"
+    },
+    {
+      "domain": "mint-magiceden.net"
+    },
+    {
+      "domain": "phantomsapp.io"
+    },
+    {
+      "domain": "solscannft.io"
+    },
+    {
+      "domain": "solscannft.fun"
+    },
+    {
+      "domain": "solscannft.org"
+    },
+    {
+      "domain": "deadrejects.live"
+    },
+    {
+      "domain": "solscannft.pw"
+    },
+    {
+      "domain": "saberr.co"
+    },
+    {
+      "domain": "acess-emagiceden.blogspot.com"
+    },
+    {
+      "domain": "solscannft.uno"
+    },
+    {
+      "domain": "waltmagicedensingin.xyz"
+    },
+    {
+      "domain": "claim.offer-orca.co"
+    },
+    {
+      "domain": "solscannft.top"
+    },
+    {
+      "domain": "airdrop.offer-orca.es"
+    },
+    {
+      "domain": "auroryproject.org"
+    },
+    {
+      "domain": "magic-edern.com"
+    },
+    {
+      "domain": "maglcedern.com"
+    },
+    {
+      "domain": "magiceden.uno"
+    },
+    {
+      "domain": "magiciden.live"
+    },
+    {
+      "domain": "magic-eden.io"
+    },
+    {
+      "domain": "solanaluxora.com"
+    },
+    {
+      "domain": "magic-eden.me"
+    },
+    {
+      "domain": "magicaden.io"
+    },
+    {
+      "domain": "magicseden.io-launch.app"
+    },
+    {
+      "domain": "magiede-nfts.weebly.com"
+    },
+    {
+      "domain": "officialsolnft.org"
+    },
+    {
+      "domain": "magiiceden.xyz"
+    },
+    {
+      "domain": "magic-eden-selecblogspot.com"
+    },
+    {
+      "domain": "walletseu-edenmagic.com"
+    },
+    {
+      "domain": "officialsolnft.info"
+    },
+    {
+      "domain": "officialsolnft.website"
+    },
+    {
+      "domain": "magiceden.nu"
+    },
+    {
+      "domain": "solflari.com"
+    },
+    {
+      "domain": "solfilare.com"
+    },
+    {
+      "domain": "deadrejects.info"
+    },
+    {
+      "domain": "deadrejects.minting.li"
+    },
+    {
+      "domain": "deadrejects.online"
+    },
+    {
+      "domain": "officialsolnft.space"
+    },
+    {
+      "domain": "fractol.es"
+    },
+    {
+      "domain": "mogicedan.eu"
+    },
+    {
+      "domain": "officialsolnft.tech"
+    },
+    {
+      "domain": "officialsolnft.store"
+    },
+    {
+      "domain": "fractol.se"
+    },
+    {
+      "domain": "magiceden.it"
+    },
+    {
+      "domain": "officialsolnft.site"
+    },
+    {
+      "domain": "officialsolnft.shop"
+    },
+    {
+      "domain": "officialsolnft.online"
+    },
+    {
+      "domain": "solanacoello.com"
+    },
+    {
+      "domain": "solscannft.games"
+    },
+    {
+      "domain": "solanadutzow.com"
+    },
+    {
+      "domain": "solscannft.pro"
+    },
+    {
+      "domain": "solanaklemme.com"
+    },
+    {
+      "domain": "solscannft.life"
+    },
+    {
+      "domain": "magiceidens.digital"
+    },
+    {
+      "domain": "magicseidens.com"
+    },
+    {
+      "domain": "solanavashon.com"
+    },
+    {
+      "domain": "solanaursina.com"
+    },
+    {
+      "domain": "magiceler.xyz"
+    },
+    {
+      "domain": "metadopt.minti.live"
+    },
+    {
+      "domain": "solscannft.world"
+    },
+    {
+      "domain": "solanadorsey.com"
+    },
+    {
+      "domain": "solscannft.tech"
+    },
+    {
+      "domain": "solscannft.space"
+    },
+    {
+      "domain": "solanaselden.com"
+    },
+    {
+      "domain": "solanaetoile.com"
+    },
+    {
+      "domain": "magicedenio.com"
+    },
+    {
+      "domain": "magicedein.online"
+    },
+    {
+      "domain": "solanatustin.com"
+    },
+    {
+      "domain": "mint-magiceden.org"
+    },
+    {
+      "domain": "solanahaslet.com"
+    },
+    {
+      "domain": "solscannft.website"
+    },
+    {
+      "domain": "solscannft.online"
+    },
+    {
+      "domain": "solscannft.group"
+    },
+    {
+      "domain": "solanakaweah.com"
+    },
+    {
+      "domain": "solanabrutus.com"
+    },
+    {
+      "domain": "solscannft.site"
+    },
+    {
+      "domain": "solanadowell.com"
+    },
+    {
+      "domain": "nftharmonize.online"
+    },
+    {
+      "domain": "solanahulett.com"
+    },
+    {
+      "domain": "solscannft.xyz"
+    },
+    {
+      "domain": "solscannft.store"
+    },
+    {
+      "domain": "importblocknodes.com"
+    },
+    {
+      "domain": "magicseden.io-launchpad.cc"
+    },
+    {
+      "domain": "solanaeuless.com"
+    },
+    {
+      "domain": "nftsolscan.fun"
+    },
+    {
+      "domain": "okaybears.gifts"
+    },
+    {
+      "domain": "stepn-nft.space"
+    },
+    {
+      "domain": "stepn-nft.shop"
+    },
+    {
+      "domain": "stepn.nfts-mint.net"
+    },
+    {
+      "domain": "stepn-asics.site"
+    },
+    {
+      "domain": "nftsolscan.host"
+    },
+    {
+      "domain": "officialsolgift.site"
+    },
+    {
+      "domain": "nftsolscan.space"
+    },
+    {
+      "domain": "magicseden.io-launchpad.shop"
+    },
+    {
+      "domain": "solscannft.info"
+    },
+    {
+      "domain": "nftsolscan.press"
+    },
+    {
+      "domain": "officialsolgift.tech"
+    },
+    {
+      "domain": "nftsolscan.xyz"
+    },
+    {
+      "domain": "trippingapetribe.xyz"
+    },
+    {
+      "domain": "solanagiftmint.com"
+    },
+    {
+      "domain": "solananftgift.site"
+    },
+    {
+      "domain": "trippinapetribenft.xyz"
+    },
+    {
+      "domain": "officialsolgift.press"
+    },
+    {
+      "domain": "nftsolscan.store"
+    },
+    {
+      "domain": "claimsolananft.xyz"
+    },
+    {
+      "domain": "merrysolana.com"
+    },
+    {
+      "domain": "solananftgift.store"
+    },
+    {
+      "domain": "nftsolscan.pro"
+    },
+    {
+      "domain": "claimsolananft.store"
+    },
+    {
+      "domain": "solanararedrop.com"
+    },
+    {
+      "domain": "magicseden.io-launchpad.co"
+    },
+    {
+      "domain": "nftsolscan.pw"
+    },
+    {
+      "domain": "claimsolananft.site"
+    },
+    {
+      "domain": "officialsolgift.xyz"
+    },
+    {
+      "domain": "nftsolscan.uno"
+    },
+    {
+      "domain": "solananftgift.shop"
+    },
+    {
+      "domain": "nftsolscan.org"
+    },
+    {
+      "domain": "nftsolscan.website"
+    },
+    {
+      "domain": "officialsolanamint.info"
+    },
+    {
+      "domain": "claimsolananft.online"
+    },
+    {
+      "domain": "nftsolscan.tech"
+    },
+    {
+      "domain": "officialsolanamint.space"
+    },
+    {
+      "domain": "solananftgift.xyz"
+    },
+    {
+      "domain": "officialsolanamint.tech"
+    },
+    {
+      "domain": "magicseden.io-launchpad.pw"
+    },
+    {
+      "domain": "nftsolscan.site"
+    },
+    {
+      "domain": "officialsolanamint.website"
+    },
+    {
+      "domain": "officialsolanamint.xyz"
+    },
+    {
+      "domain": "solananft.name"
+    },
+    {
+      "domain": "solananft.press"
+    },
+    {
+      "domain": "solanamint.shop"
+    },
+    {
+      "domain": "solanamint.xyz"
+    },
+    {
+      "domain": "solanagift.info"
+    },
+    {
+      "domain": "solanagift.website"
+    },
+    {
+      "domain": "solananft.pw"
+    },
+    {
+      "domain": "solanagift.space"
+    },
+    {
+      "domain": "solanagift.shop"
+    },
+    {
+      "domain": "officialsolananft.website"
+    },
+    {
+      "domain": "degodz.com"
+    },
+    {
+      "domain": "solflare-web.org"
+    },
+    {
+      "domain": "solflare.biz"
+    },
+    {
+      "domain": "solflare.live"
+    },
+    {
+      "domain": "soflarewallet.com"
+    },
+    {
+      "domain": "magiceden-mint.com"
+    },
+    {
+      "domain": "stepn-magiceden.org"
+    },
+    {
+      "domain": "magiceden-launchpads.io"
+    },
+    {
+      "domain": "solanarta.com"
+    },
+    {
+      "domain": "salanert.com"
+    },
+    {
+      "domain": "solanart.com"
+    },
+    {
+      "domain": "solsea.club"
+    },
+    {
+      "domain": "officialsolananft.space"
+    },
+    {
+      "domain": "officialsolananft.tech"
+    },
+    {
+      "domain": "officialsolananft.shop"
+    },
+    {
+      "domain": "nftsolana.tech"
+    },
+    {
+      "domain": "nftsolana.shop"
+    },
+    {
+      "domain": "solanarare.com"
+    },
+    {
+      "domain": "solanarare.shop"
+    },
+    {
+      "domain": "solananft.best"
+    },
+    {
+      "domain": "solanarare.space"
+    },
+    {
+      "domain": "solanarare.xyz"
+    },
+    {
+      "domain": "solnft.pro"
+    },
+    {
+      "domain": "raresolana.com"
+    },
+    {
+      "domain": "solanarares.xyz"
+    },
+    {
+      "domain": "raresolana.xyz"
+    },
+    {
+      "domain": "raresolana.net"
+    },
+    {
+      "domain": "dedao.me"
+    },
+    {
+      "domain": "officialsolananfts.xyz"
+    },
+    {
+      "domain": "officialsolananfts.space"
+    },
+    {
+      "domain": "officialsolananft.xyz"
+    },
+    {
+      "domain": "officialsolanagift.space"
+    },
+    {
+      "domain": "officialsolanagift.xyz"
+    },
+    {
+      "domain": "solanafarm.xyz"
+    },
+    {
+      "domain": "stepn-run.store"
+    },
+    {
+      "domain": "solanaland.xyz"
+    },
+    {
+      "domain": "solnftart.xyz"
+    },
+    {
+      "domain": "solnft.fun"
+    },
+    {
+      "domain": "solnft.name"
+    },
+    {
+      "domain": "solanaartnft.xyz"
+    },
+    {
+      "domain": "solanaartists.xyz"
+    },
+    {
+      "domain": "solanacollection.xyz"
+    },
+    {
+      "domain": "magiceden.so"
+    },
+    {
+      "domain": "raresolana.space"
+    },
+    {
+      "domain": "fani-airdrop.space"
+    },
+    {
+      "domain": "fanitradenft.com"
+    },
+    {
+      "domain": "solseanft.xyz"
+    },
+    {
+      "domain": "minting.bar"
+    },
+    {
+      "domain": "solanatreenft.com"
+    },
+    {
+      "domain": "solnft.host"
+    },
+    {
+      "domain": "boredapesolanaclubs.com"
+    },
+    {
+      "domain": "solananftrare.space"
+    },
+    {
+      "domain": "leapfrog.blog"
+    },
+    {
+      "domain": "claim-okaybears.com"
+    },
+    {
+      "domain": "primemint.xyz"
+    },
+    {
+      "domain": "solnft.space"
+    },
+    {
+      "domain": "solananftrara.xyz"
+    },
+    {
+      "domain": "opeasea.co"
+    },
+    {
+      "domain": "solananftrare.com"
+    },
+    {
+      "domain": "officialmintsolana.com"
+    },
+    {
+      "domain": "trippinsapetribe.xyz"
+    },
+    {
+      "domain": "greatgoats-check.online"
+    },
+    {
+      "domain": "magicticket.org"
+    },
+    {
+      "domain": "solanatreenft.xyz"
+    },
+    {
+      "domain": "stepndrop.cc"
+    },
+    {
+      "domain": "solanatreenft.space"
+    },
+    {
+      "domain": "genopets.cc"
+    },
+    {
+      "domain": "solanatree.xyz"
+    },
+    {
+      "domain": "solanatree.space"
+    },
+    {
+      "domain": "magiceben.cf"
+    },
+    {
+      "domain": "officialmintsolana.xyz"
+    },
+    {
+      "domain": "officialmintsolana.space"
+    },
+    {
+      "domain": "officialmintsolana.tech"
+    },
+    {
+      "domain": "stepnbox.info"
+    },
+    {
+      "domain": "officialsolanamints.xyz"
+    },
+    {
+      "domain": "officialsolanamints.space"
+    },
+    {
+      "domain": "officialsolanamints.tech"
+    },
+    {
+      "domain": "solananftgod.com"
+    },
+    {
+      "domain": "solanart.nu"
+    },
+    {
+      "domain": "famousfoxfederation-wlclaim.com"
+    },
+    {
+      "domain": "stepn.re"
+    },
+    {
+      "domain": "solnft.gift"
+    },
+    {
+      "domain": "justape.live-mint.io"
+    },
+    {
+      "domain": "phantomsupport.vercel.app"
+    },
+    {
+      "domain": "yawww.io-trade.org"
+    },
+    {
+      "domain": "yawww.io-trade.in"
+    },
+    {
+      "domain": "solpokemon.click"
+    },
+    {
+      "domain": "solscan.tech"
+    },
+    {
+      "domain": "revokeaccess.com"
+    },
+    {
+      "domain": "genopets.eu"
+    },
+    {
+      "domain": "magiedene.com"
+    },
+    {
+      "domain": "magiceden.today"
+    },
+    {
+      "domain": "apps--magiceden.io"
+    },
+    {
+      "domain": "solscan.pro"
+    },
+    {
+      "domain": "solpokemon.digital"
+    },
+    {
+      "domain": "paradoxwallet.com"
+    },
+    {
+      "domain": "coralcube.pro"
+    },
+    {
+      "domain": "solscan.space"
+    },
+    {
+      "domain": "solscan.info"
+    },
+    {
+      "domain": "terium.info"
+    },
+    {
+      "domain": "duppiesnft.com"
+    },
+    {
+      "domain": "walken.org"
+    },
+    {
+      "domain": "solscan.gift"
+    },
+    {
+      "domain": "coralcube.net"
+    },
+    {
+      "domain": "walken.click"
+    },
+    {
+      "domain": "walken.live"
+    },
+    {
+      "domain": "okaycub.io"
+    },
+    {
+      "domain": "solscan.de"
+    },
+    {
+      "domain": "solscan.bz"
+    },
+    {
+      "domain": "solscan.site"
+    },
+    {
+      "domain": "solscan.sx"
+    },
+    {
+      "domain": "solclaimnft.com"
+    },
+    {
+      "domain": "terium.cc"
+    },
+    {
+      "domain": "solnft.biz"
+    },
+    {
+      "domain": "solscan.uno"
+    },
+    {
+      "domain": "solscan.ink"
+    },
+    {
+      "domain": "terium.pw"
+    },
+    {
+      "domain": "solscan.one"
+    },
+    {
+      "domain": "solscan.online"
+    },
+    {
+      "domain": "solscan.me"
+    },
+    {
+      "domain": "solscan.cc"
+    },
+    {
+      "domain": "solscan.in"
+    },
+    {
+      "domain": "stepn-bayc.net"
+    },
+    {
+      "domain": "stepn-bayc.live"
+    },
+    {
+      "domain": "stepn-bayc.org"
+    },
+    {
+      "domain": "zerium.uno"
+    },
+    {
+      "domain": "zerium.net"
+    },
+    {
+      "domain": "zerium.org"
+    },
+    {
+      "domain": "soldrop.uno"
+    },
+    {
+      "domain": "soldrop.pw"
+    },
+    {
+      "domain": "soldrop.shop"
+    },
+    {
+      "domain": "soldrop.space"
+    },
+    {
+      "domain": "soldrop.tech"
+    },
+    {
+      "domain": "soldrop.press"
+    },
+    {
+      "domain": "solanagetnft.com"
+    },
+    {
+      "domain": "stepnbayc.com"
+    },
+    {
+      "domain": "magiceden-nfts-marketplace.com"
+    },
+    {
+      "domain": "solanaofficialnft.com"
+    },
+    {
+      "domain": "summerbox.io"
+    },
+    {
+      "domain": "solanaofficialdrop.com"
+    },
+    {
+      "domain": "stepn-ape.com"
+    },
+    {
+      "domain": "zerium.info"
+    },
+    {
+      "domain": "zerium.xyz"
+    },
+    {
+      "domain": "solget.info"
+    },
+    {
+      "domain": "solget.pw"
+    },
+    {
+      "domain": "phantom-security.app"
+    },
+    {
+      "domain": "officialsolanaevent.com"
+    },
+    {
+      "domain": "solanascan.info"
+    },
+    {
+      "domain": "solgive.pw"
+    },
+    {
+      "domain": "solgive.tech"
+    },
+    {
+      "domain": "officialeventsolana.com"
+    },
+    {
+      "domain": "officialeventsolana.net"
+    },
+    {
+      "domain": "officialeventsolana.org"
+    },
+    {
+      "domain": "officialairdropsolana.com"
+    },
+    {
+      "domain": "officialairdropsolana.net"
+    },
+    {
+      "domain": "officialsolanadrops.com"
+    },
+    {
+      "domain": "officialsolanadrops.net"
+    },
+    {
+      "domain": "officialsolanarare.com"
+    },
+    {
+      "domain": "officialsolanalooks.com"
+    },
+    {
+      "domain": "officialsolanarare.net"
+    },
+    {
+      "domain": "officialsolanaevent.net"
+    },
+    {
+      "domain": "officialsolanalooks.net"
+    },
+    {
+      "domain": "solanamintgift.net"
+    },
+    {
+      "domain": "sollscan.net"
+    },
+    {
+      "domain": "solanamintgift.com"
+    },
+    {
+      "domain": "solget.org"
+    },
+    {
+      "domain": "solget.space"
+    },
+    {
+      "domain": "zerium.space"
+    },
+    {
+      "domain": "zerium.pw"
+    },
+    {
+      "domain": "zerium.tech"
+    },
+    {
+      "domain": "solanamintsnft.com"
+    },
+    {
+      "domain": "solananftmints.com"
+    },
+    {
+      "domain": "sollscan.work"
+    },
+    {
+      "domain": "solanadrop.pw"
+    },
+    {
+      "domain": "solanadrop.xyz"
+    },
+    {
+      "domain": "solanadrop.info"
+    },
+    {
+      "domain": "solget.tech"
+    },
+    {
+      "domain": "solget.press"
+    },
+    {
+      "domain": "solgift.space"
+    },
+    {
+      "domain": "solgift.info"
+    },
+    {
+      "domain": "solgift.tech"
+    },
+    {
+      "domain": "solanascan.press"
+    },
+    {
+      "domain": "solanascan.pw"
+    },
+    {
+      "domain": "magiceden.summergift.io"
+    },
+    {
+      "domain": "summergift.io"
+    },
+    {
+      "domain": "magiceden.summerpack.io"
+    },
+    {
+      "domain": "summerpack.io"
+    },
+    {
+      "domain": "solanagiftnft.com"
+    },
+    {
+      "domain": "solanagiftnft.net"
+    },
+    {
+      "domain": "solgive.store"
+    },
+    {
+      "domain": "soldrop.host"
+    },
+    {
+      "domain": "solanadrop.space"
+    },
+    {
+      "domain": "summerboxes.io"
+    },
+    {
+      "domain": "solananft.su"
+    },
+    {
+      "domain": "solnftscan.run"
+    },
+    {
+      "domain": "soldrop.pro"
+    },
+    {
+      "domain": "solanadrop.store"
+    },
+    {
+      "domain": "phantom-labs-security.app"
+    },
+    {
+      "domain": "solanadrop.shop"
+    },
+    {
+      "domain": "ape-stepn.com"
+    },
+    {
+      "domain": "phantom-support.app"
+    },
+    {
+      "domain": "manatapetes-org.blogspot.com"
+    },
+    {
+      "domain": "magiceden-drop.com"
+    },
+    {
+      "domain": "magiceden-collection.com"
+    },
+    {
+      "domain": "phantom-warning.app"
+    },
+    {
+      "domain": "zerium.one"
+    },
+    {
+      "domain": "phantom-detect.app"
+    },
+    {
+      "domain": "zoonies.io"
+    },
+    {
+      "domain": "phantom-notification.app"
+    },
+    {
+      "domain": "raresolanamonkey.com"
+    },
+    {
+      "domain": "solanamonkeybusiness.online"
+    },
+    {
+      "domain": "theportal.top"
+    },
+    {
+      "domain": "solanascan.one"
+    },
+    {
+      "domain": "ape-stepn.live"
+    },
+    {
+      "domain": "magiceden.rafflepass.io"
+    },
+    {
+      "domain": "degenfatcats.online"
+    },
+    {
+      "domain": "find-your-favorite-nfft-magicc.com"
+    },
+    {
+      "domain": "degenapeboost.online"
+    },
+    {
+      "domain": "phantom-detection.app"
+    },
+    {
+      "domain": "solanadrop.su"
+    },
+    {
+      "domain": "phantomwalletweb.com"
+    },
+    {
+      "domain": "genopets.re"
+    },
+    {
+      "domain": "genopets.se"
+    },
+    {
+      "domain": "solanamonkeybusiness.top"
+    },
+    {
+      "domain": "walken.re"
+    },
+    {
+      "domain": "invisiblefriendsnft.in"
+    },
+    {
+      "domain": "genoeggs.me"
+    },
+    {
+      "domain": "soliscan.net"
+    },
+    {
+      "domain": "revoke.rip"
+    },
+    {
+      "domain": "phantom-notice.app"
+    },
+    {
+      "domain": "phantom-labs-detect.app"
+    },
+    {
+      "domain": "bascdao.online"
+    },
+    {
+      "domain": "minting-now.io"
+    },
+    {
+      "domain": "soilscan.net"
+    },
+    {
+      "domain": "degentownsnft.com"
+    },
+    {
+      "domain": "rakkudos.online"
+    },
+    {
+      "domain": "degentrashpandas.online"
+    },
+    {
+      "domain": "nickelodeon.re"
+    },
+    {
+      "domain": "raidyum.com"
+    },
+    {
+      "domain": "phantom-notify.app"
+    },
+    {
+      "domain": "sollscannft.net"
+    },
+    {
+      "domain": "mysterybox.su"
+    },
+    {
+      "domain": "solanascan.work"
+    },
+    {
+      "domain": "magiceden-pass.com"
+    },
+    {
+      "domain": "raidyum.net"
+    },
+    {
+      "domain": "mobirisesite.com"
+    },
+    {
+      "domain": "phantom-app.net"
+    },
+    {
+      "domain": "phantom-secure.app"
+    },
+    {
+      "domain": "walken.uk"
+    },
+    {
+      "domain": "solascan.net"
+    },
+    {
+      "domain": "soliscan.io"
+    },
+    {
+      "domain": "magiceden-gift.info"
+    },
+    {
+      "domain": "radyum.org"
+    },
+    {
+      "domain": "ww-magiceden.io"
+    },
+    {
+      "domain": "eden-appweb.com"
+    },
+    {
+      "domain": "magiceden-pass.net"
+    },
+    {
+      "domain": "magiceden-nft.net"
+    },
+    {
+      "domain": "2years.io"
+    },
+    {
+      "domain": "sollanascan.work"
+    },
+    {
+      "domain": "sollscan.com"
+    },
+    {
+      "domain": "everseed.online"
+    },
+    {
+      "domain": "everpass.online"
+    },
+    {
+      "domain": "raydium-alpha.com"
+    },
+    {
+      "domain": "sollscan.link"
+    },
+    {
+      "domain": "solscaner.work"
+    },
+    {
+      "domain": "magicaden-pass.com"
+    },
+    {
+      "domain": "sollscan.name"
+    },
+    {
+      "domain": "solanscan.link"
+    },
+    {
+      "domain": "soliscan.com"
+    },
+    {
+      "domain": "teraformseed.me"
+    },
+    {
+      "domain": "bubblegooseballers.online"
+    },
+    {
+      "domain": "okaycub.com"
+    },
+    {
+      "domain": "everpass.space"
+    },
+    {
+      "domain": "magiceden-mystery.info"
+    },
+    {
+      "domain": "magiceden-premium.com"
+    },
+    {
+      "domain": "magiceden-premium.net"
+    },
+    {
+      "domain": "mint-primates.xyz"
+    },
+    {
+      "domain": "artsofmob.com"
+    },
+    {
+      "domain": "solianascan.net"
+    },
+    {
+      "domain": "magicedenbox.com"
+    },
+    {
+      "domain": "alpha-raydium.co"
+    },
+    {
+      "domain": "uil.lol"
+    },
+    {
+      "domain": "radyum.app"
+    },
+    {
+      "domain": "phantomapp.tech"
+    },
+    {
+      "domain": "sollscaner.work"
+    },
+    {
+      "domain": "solscans.info"
+    },
+    {
+      "domain": "soliascan.work"
+    },
+    {
+      "domain": "io-mint.xyz"
+    },
+    {
+      "domain": "solnftscan.name"
+    },
+    {
+      "domain": "solnftscan.work"
+    },
+    {
+      "domain": "mechafightclub.online"
+    },
+    {
+      "domain": "sollscane.net"
+    },
+    {
+      "domain": "bayc-stepn.com"
+    },
+    {
+      "domain": "magicedenbox.info"
+    },
+    {
+      "domain": "raydiumalpha.com"
+    },
+    {
+      "domain": "solianascan.com"
+    },
+    {
+      "domain": "monkelabs.cf"
+    },
+    {
+      "domain": "syncrectifier.netlify.app"
+    },
+    {
+      "domain": "lush-lion-safari-club-minting.net"
+    },
+    {
+      "domain": "yoots.net"
+    },
+    {
+      "domain": "solscane.net"
+    },
+    {
+      "domain": "yoots.io"
+    },
+    {
+      "domain": "magiceden-prime.com"
+    },
+    {
+      "domain": "solscanee.net"
+    },
+    {
+      "domain": "yoots.us"
+    },
+    {
+      "domain": "genopets.website"
+    },
+    {
+      "domain": "yoots.app"
+    },
+    {
+      "domain": "solscane.work"
+    },
+    {
+      "domain": "y00ts.space"
+    },
+    {
+      "domain": "ezu-mint.com"
+    },
+    {
+      "domain": "magicnftbox.work"
+    },
+    {
+      "domain": "y00tś.com"
+    },
+    {
+      "domain": "magicedenbox.shop"
+    },
+    {
+      "domain": "xn--y00t-o5a.com"
+    },
+    {
+      "domain": "solscan.ml"
+    },
+    {
+      "domain": "magicnfteden.work"
+    },
+    {
+      "domain": "sollscane.work"
+    },
+    {
+      "domain": "solscane.link"
+    },
+    {
+      "domain": "magicnftbox.name"
+    },
+    {
+      "domain": "raydiumapp.io"
+    },
+    {
+      "domain": "magicedan.link"
+    },
+    {
+      "domain": "sollscane.link"
+    },
+    {
+      "domain": "xn--00ts-4ra.com"
+    },
+    {
+      "domain": "gonepets.com"
+    },
+    {
+      "domain": "magickbox.work"
+    },
+    {
+      "domain": "solanascane.work"
+    },
+    {
+      "domain": "magiceden-plus.com"
+    },
+    {
+      "domain": "mint-y00ts.com"
+    },
+    {
+      "domain": "megicedem.net"
+    },
+    {
+      "domain": "sollscanet.net"
+    },
+    {
+      "domain": "y00ts.eu"
+    },
+    {
+      "domain": "solscan.cf"
+    },
+    {
+      "domain": "solanadrop.rf.gd"
+    },
+    {
+      "domain": "solanscane.work"
+    },
+    {
+      "domain": "magickedene.work"
+    },
+    {
+      "domain": "coralcube-swap.xyz"
+    },
+    {
+      "domain": "y00tsmint.live"
+    },
+    {
+      "domain": "yoots.info"
+    },
+    {
+      "domain": "y00ts.blog"
+    },
+    {
+      "domain": "premínt.xyz"
+    },
+    {
+      "domain": "y00ts.online"
+    },
+    {
+      "domain": "mint-y00ts.site"
+    },
+    {
+      "domain": "xn--premnt-6va.xyz"
+    },
+    {
+      "domain": "y00ts.ga"
+    },
+    {
+      "domain": "y00ls.com"
+    },
+    {
+      "domain": "magicedendrop.com"
+    },
+    {
+      "domain": "y00ts.gift"
+    },
+    {
+      "domain": "sollscamer.work"
+    },
+    {
+      "domain": "magikedene.work"
+    },
+    {
+      "domain": "y00ts.one"
+    },
+    {
+      "domain": "y00ts.bz"
+    },
+    {
+      "domain": "magicboxnft.name"
+    },
+    {
+      "domain": "meboxnft.name"
+    },
+    {
+      "domain": "memisterynft.work"
+    },
+    {
+      "domain": "galacticgeckos.online"
+    },
+    {
+      "domain": "magiceden-drops.com"
+    },
+    {
+      "domain": "solennd.io"
+    },
+    {
+      "domain": "degensweepers.online"
+    },
+    {
+      "domain": "magicedendrop.shop"
+    },
+    {
+      "domain": "b00st.online"
+    },
+    {
+      "domain": "t00bs.online"
+    },
+    {
+      "domain": "coralcube-swap.com"
+    },
+    {
+      "domain": "megboxeden.work"
+    },
+    {
+      "domain": "reptile-world-nft.com"
+    },
+    {
+      "domain": "idlemaster3d.com"
+    },
+    {
+      "domain": "master3drpg.com"
+    },
+    {
+      "domain": "meboxmegic.work"
+    },
+    {
+      "domain": "beerlessss.xyz"
+    },
+    {
+      "domain": "rworld-nft-p2e.com"
+    },
+    {
+      "domain": "staratlas-events.com"
+    },
+    {
+      "domain": "event-staratlas.com"
+    },
+    {
+      "domain": "ray-alpha.com"
+    },
+    {
+      "domain": "ray-alpha.org"
+    },
+    {
+      "domain": "staratlas-event.net"
+    },
+    {
+      "domain": "coralcube-swap.online"
+    },
+    {
+      "domain": "nnagic-eden-s0lana-bhzcamisetas"
+    },
+    {
+      "domain": "rayalpha.net"
+    },
+    {
+      "domain": "galacticgeckos.top"
+    },
+    {
+      "domain": "photofinish.online"
+    },
+    {
+      "domain": "solascan.name"
+    },
+    {
+      "domain": "ray-alpha.net"
+    },
+    {
+      "domain": "genesisgenopets.site"
+    },
+    {
+      "domain": "t00b.app"
+    },
+    {
+      "domain": "t00b.io"
+    },
+    {
+      "domain": "t00b.online"
+    },
+    {
+      "domain": "mesolbox.work"
+    },
+    {
+      "domain": "galacticgeckos.space"
+    },
+    {
+      "domain": "caveworld.online"
+    },
+    {
+      "domain": "heavenland.online"
+    },
+    {
+      "domain": "t00b.org"
+    },
+    {
+      "domain": "rayalpha.org"
+    },
+    {
+      "domain": "galactic-geckos.space"
+    },
+    {
+      "domain": "raydiumalpha.net"
+    },
+    {
+      "domain": "magiceden-hello-nfts.com"
+    },
+    {
+      "domain": "megasolbox.work"
+    },
+    {
+      "domain": "event-staratlas.net"
+    },
+    {
+      "domain": "magiceden-drops.shop"
+    },
+    {
+      "domain": "megoboxeden.work"
+    },
+    {
+      "domain": "mysteryboxx.work"
+    },
+    {
+      "domain": "soianamonkeys.business"
+    },
+    {
+      "domain": "crystalplay.io"
+    },
+    {
+      "domain": "raydiumalpha.org"
+    },
+    {
+      "domain": "staratlas-events.net"
+    },
+    {
+      "domain": "yoots.space"
+    },
+    {
+      "domain": "magboxfnt.name"
+    },
+    {
+      "domain": "crystal-play.io"
+    },
+    {
+      "domain": "magicedengift.com"
+    },
+    {
+      "domain": "crystal-p2e.io"
+    },
+    {
+      "domain": "metap2e.world"
+    },
+    {
+      "domain": "stablecoinchainhub.com"
+    },
+    {
+      "domain": "happy1year.io"
+    },
+    {
+      "domain": "claim-metaplex.io"
+    },
+    {
+      "domain": "magicedenvault.io"
+    },
+    {
+      "domain": "bvdcat.online"
+    },
+    {
+      "domain": "bvdcat.space"
+    },
+    {
+      "domain": "ukiyonft.online"
+    },
+    {
+      "domain": "helions.online"
+    },
+    {
+      "domain": "critterscult.space"
+    },
+    {
+      "domain": "magicedbox.com"
+    },
+    {
+      "domain": "sodead.online"
+    },
+    {
+      "domain": "meerkatmillionaires.space"
+    },
+    {
+      "domain": "solsunsets.online"
+    },
+    {
+      "domain": "rebellionbots.online"
+    },
+    {
+      "domain": "galactic-geckos.online"
+    },
+    {
+      "domain": "turtlesmutagen.online"
+    },
+    {
+      "domain": "heavenland-nft.online"
+    },
+    {
+      "domain": "oparadi.online"
+    },
+    {
+      "domain": "lotus-gang.online"
+    },
+    {
+      "domain": "monkeyleague.space"
+    },
+    {
+      "domain": "worldwide-wade.space"
+    },
+    {
+      "domain": "solpunks.online"
+    },
+    {
+      "domain": "thesuites.space"
+    },
+    {
+      "domain": "mechafightclub.top"
+    },
+    {
+      "domain": "caveworld.space"
+    },
+    {
+      "domain": "soldecoder.space"
+    },
+    {
+      "domain": "beardrop.top"
+    },
+    {
+      "domain": "degensweepers.top"
+    },
+    {
+      "domain": "degendojo.online"
+    },
+    {
+      "domain": "cetsoncreck.online"
+    },
+    {
+      "domain": "abcnft.online"
+    },
+    {
+      "domain": "vandalcity.online"
+    },
+    {
+      "domain": "primates.top"
+    },
+    {
+      "domain": "acidmonkeys.online"
+    },
+    {
+      "domain": "shrempin.online"
+    },
+    {
+      "domain": "tatsumeeko.online"
+    },
+    {
+      "domain": "pengsol.online"
+    },
+    {
+      "domain": "communi3-nft.online"
+    },
+    {
+      "domain": "privatefoxes.online"
+    },
+    {
+      "domain": "taiyorobotics.online"
+    },
+    {
+      "domain": "libertysquare.online"
+    },
+    {
+      "domain": "jikanstudios.space"
+    },
+    {
+      "domain": "astralsnft.online"
+    },
+    {
+      "domain": "trippinapes.space"
+    },
+    {
+      "domain": "rarichips.online"
+    },
+    {
+      "domain": "bascdao.space"
+    },
+    {
+      "domain": "reptilianrenegade.space"
+    },
+    {
+      "domain": "duckpunkz.online"
+    },
+    {
+      "domain": "froots.top"
+    },
+    {
+      "domain": "moneyboys.online"
+    },
+    {
+      "domain": "justape.online"
+    },
+    {
+      "domain": "tomorrowland-nft.online"
+    },
+    {
+      "domain": "gorillae.online"
+    },
+    {
+      "domain": "rudegolems.online"
+    },
+    {
+      "domain": "bothead.online"
+    },
+    {
+      "domain": "degentrashpandas.top"
+    },
+    {
+      "domain": "bubblegooseballers.top"
+    },
+    {
+      "domain": "flippinrabbits.online"
+    },
+    {
+      "domain": "catalinawhalemixer.online"
+    },
+    {
+      "domain": "foxflame.online"
+    },
+    {
+      "domain": "gothicdegens.online"
+    },
+    {
+      "domain": "mobstudios.online"
+    },
+    {
+      "domain": "atadia.top"
+    },
+    {
+      "domain": "famousfoxes.online"
+    },
+    {
+      "domain": "degenfatcats.top"
+    },
+    {
+      "domain": "stonedapecrew.top"
+    },
+    {
+      "domain": "photofinish.space"
+    },
+    {
+      "domain": "zenjinviperz.space"
+    },
+    {
+      "domain": "bountyhunters.top"
+    },
+    {
+      "domain": "pawnshopgnomies.online"
+    },
+    {
+      "domain": "cursedlabs.space"
+    },
+    {
+      "domain": "eternaldragons.top"
+    },
+    {
+      "domain": "raydium-alpha.net"
+    },
+    {
+      "domain": "magicednbox.com"
+    },
+    {
+      "domain": "happy1years.io"
+    },
+    {
+      "domain": "bvdcat.top"
+    },
+    {
+      "domain": "monkey-league.online"
+    },
+    {
+      "domain": "megacasebox.work"
+    },
+    {
+      "domain": "genopets-verify-connect.in"
+    },
+    {
+      "domain": "magicedenstake.com"
+    },
+    {
+      "domain": "solpunks.space"
+    },
+    {
+      "domain": "magicedenvault.com"
+    },
+    {
+      "domain": "metapiex.io"
+    },
+    {
+      "domain": "menftcase.work"
+    },
+    {
+      "domain": "raydium-v2.com"
+    },
+    {
+      "domain": "megaboxnfts.work"
+    },
+    {
+      "domain": "metapléx.com"
+    },
+    {
+      "domain": "events-staratlas.net"
+    },
+    {
+      "domain": "megoboxnft.work"
+    },
+    {
+      "domain": "metapiex.info"
+    },
+    {
+      "domain": "anniversary-staratlas.com"
+    },
+    {
+      "domain": "monkey-league.space"
+    },
+    {
+      "domain": "staratlas-prizes.com"
+    },
+    {
+      "domain": "magicedensafe.com"
+    },
+    {
+      "domain": "magicededn-vaults.com"
+    },
+    {
+      "domain": "phantomupdate.com"
+    },
+    {
+      "domain": "mrankoviknt.work"
+    },
+    {
+      "domain": "blog-staratlas.com"
+    },
+    {
+      "domain": "raydium-v2.net"
+    },
+    {
+      "domain": "magiceden-rent.com"
+    },
+    {
+      "domain": "updatephantom.com"
+    },
+    {
+      "domain": "marinadefinance.com"
+    },
+    {
+      "domain": "marinade-finance.com"
+    },
+    {
+      "domain": "ray-v2.org"
+    },
+    {
+      "domain": "menftdrop.shop"
+    },
+    {
+      "domain": "magicedrop.com"
+    },
+    {
+      "domain": "launchmynft.cc"
+    },
+    {
+      "domain": "multiresetdao.com"
+    },
+    {
+      "domain": "genopets-account-verify.in"
+    },
+    {
+      "domain": "v2-raydium.com"
+    },
+    {
+      "domain": "windows8ny.net"
+    },
+    {
+      "domain": "claim-metapiex.dev"
+    },
+    {
+      "domain": "v2-raydium.org"
+    },
+    {
+      "domain": "sodeadheart.online"
+    },
+    {
+      "domain": "tadmint.net"
+    },
+    {
+      "domain": "claim-metaplex.net"
+    },
+    {
+      "domain": "phantoms-webwallet.com"
+    },
+    {
+      "domain": "onchainsync.com"
+    },
+    {
+      "domain": "ciaim-metapiex.net"
+    },
+    {
+      "domain": "ciaim-metapiex.com"
+    },
+    {
+      "domain": "metaplex-claim.net"
+    },
+    {
+      "domain": "megaboxnft.com"
+    },
+    {
+      "domain": "play-genopets.com"
+    },
+    {
+      "domain": "genoopets.com"
+    },
+    {
+      "domain": "metapiex-ciaim.com"
+    },
+    {
+      "domain": "magicedennenada.com"
+    },
+    {
+      "domain": "genopets.run"
+    },
+    {
+      "domain": "phantom-allert.com"
+    },
+    {
+      "domain": "v2-raydium.net"
+    },
+    {
+      "domain": "phantom-detect.com"
+    },
+    {
+      "domain": "phantom-detects.com"
+    },
+    {
+      "domain": "genopetz.xyz"
+    },
+    {
+      "domain": "genopets-bot-verify.in"
+    },
+    {
+      "domain": "solana-event.com"
+    },
+    {
+      "domain": "margoritan.com"
+    },
+    {
+      "domain": "raydlum-alpha.com"
+    },
+    {
+      "domain": "staratlas-prizes.net"
+    },
+    {
+      "domain": "genopetsi.com"
+    },
+    {
+      "domain": "ukiyo-pass.online"
+    },
+    {
+      "domain": "phnantom.app"
+    },
+    {
+      "domain": "phantom-detector.com"
+    },
+    {
+      "domain": "mefodiusia.work"
+    },
+    {
+      "domain": "droppingboxs.com"
+    },
+    {
+      "domain": "ukiyonftpass.online"
+    },
+    {
+      "domain": "mratoinadf.work"
+    },
+    {
+      "domain": "kolamagoes.shop"
+    },
+    {
+      "domain": "aptosevent.pro"
+    },
+    {
+      "domain": "1rst-birthday.info"
+    },
+    {
+      "domain": "first-birthday.info"
+    },
+    {
+      "domain": "solmystery.io"
+    },
+    {
+      "domain": "metaplex-drop.pro"
+    },
+    {
+      "domain": "medicboxer.com"
+    },
+    {
+      "domain": "solanacare.online"
+    },
+    {
+      "domain": "solana-care.online"
+    },
+    {
+      "domain": "claim-mplx-metaplex.net"
+    },
+    {
+      "domain": "token-change.com"
+    },
+    {
+      "domain": "claim-solend.io"
+    },
+    {
+      "domain": "oracledocs.app"
+    },
+    {
+      "domain": "facebook-solana.net"
+    },
+    {
+      "domain": "solanabonus.com"
+    },
+    {
+      "domain": "zerium.store"
+    },
+    {
+      "domain": "stepn-sol.com"
+    },
+    {
+      "domain": "y00t.site"
+    },
+    {
+      "domain": "dappruder.com"
+    },
+    {
+      "domain": "vouchers.sapp.finance"
+    },
+    {
+      "domain": "ingenopets.com"
+    },
+    {
+      "domain": "y00t.space"
+    },
+    {
+      "domain": "diamondhands-dao.netlify"
+    },
+    {
+      "domain": "undergroundsocety.com"
+    },
+    {
+      "domain": "genopgets.com"
+    },
+    {
+      "domain": "laine.services"
+    },
+    {
+      "domain": "sol-sunsets.space"
+    },
+    {
+      "domain": "apocalypse.cool"
+    },
+    {
+      "domain": "solletwallet.io"
+    },
+    {
+      "domain": "solana-meta.net"
+    },
+    {
+      "domain": "claynosaurz.space"
+    },
+    {
+      "domain": "justape.top"
+    },
+    {
+      "domain": "meganaloven.com"
+    },
+    {
+      "domain": "just-apesnft.site"
+    },
+    {
+      "domain": "orca-dao.net"
+    },
+    {
+      "domain": "magicedensale.com"
+    },
+    {
+      "domain": "magiceden-malivice.com"
+    },
+    {
+      "domain": "magiceden.media"
+    },
+    {
+      "domain": "magieceden.live"
+    },
+    {
+      "domain": "magiceden-io.digital"
+    },
+    {
+      "domain": "mints-magiceden.com"
+    },
+    {
+      "domain": "magiceden.watch"
+    },
+    {
+      "domain": "magiceden-metaturtle.com"
+    },
+    {
+      "domain": "mints-magiceden.live"
+    },
+    {
+      "domain": "veefriendnft.net"
+    },
+    {
+      "domain": "veefriends-official.xyz"
+    },
+    {
+      "domain": "lotusgang.space"
+    },
+    {
+      "domain": "christmasbox.info"
+    },
+    {
+      "domain": "tomorrowlandnft.space"
+    },
+    {
+      "domain": "memoriamedalion.space"
+    },
+    {
+      "domain": "phantom-labs.us"
+    },
+    {
+      "domain": "tomorrowlandnft.online"
+    },
+    {
+      "domain": "minttomorrowlandnft.xyz"
+    },
+    {
+      "domain": "tomorrowlandmint.co"
+    },
+    {
+      "domain": "nft-tomorrowland.online"
+    },
+    {
+      "domain": "tomorrowland-nft.space"
+    },
+    {
+      "domain": "tomorrowland-nft.site"
+    },
+    {
+      "domain": "orcadao.net"
+    },
+    {
+      "domain": "phantom-security.live"
+    },
+    {
+      "domain": "orca-dao.org"
+    },
+    {
+      "domain": "yootsraffle.vip"
+    },
+    {
+      "domain": "hype-primates.com"
+    },
+    {
+      "domain": "aptlabs.site"
+    },
+    {
+      "domain": "whitelist-digidaigaku.com"
+    },
+    {
+      "domain": "opensea-drop.xyz"
+    },
+    {
+      "domain": "opensea-promo.com"
+    },
+    {
+      "domain": "openseaverify.com"
+    },
+    {
+      "domain": "plan-opensea.com"
+    },
+    {
+      "domain": "securetranscationopensea.live"
+    },
+    {
+      "domain": "lolgin-opensea-io.com"
+    },
+    {
+      "domain": "ww4openseo.io"
+    },
+    {
+      "domain": "blurclaim.cx"
+    },
+    {
+      "domain": "doodless.shop"
+    },
+    {
+      "domain": "dooplicatornft.xyz"
+    },
+    {
+      "domain": "nft-kanpaipandas.com"
+    },
+    {
+      "domain": "kanpaipandas.net"
+    },
+    {
+      "domain": "kanpaipandas.fun"
+    },
+    {
+      "domain": "kanpaipandas.world"
+    },
+    {
+      "domain": "kanpaipandas.shop"
+    },
+    {
+      "domain": "phantom-detect.space"
+    },
+    {
+      "domain": "phantom-labs.info"
+    },
+    {
+      "domain": "phantom-error.ink"
+    },
+    {
+      "domain": "apocalypse.pw"
+    },
+    {
+      "domain": "bonkcoin.live"
+    },
+    {
+      "domain": "thebonkcoin.com"
+    },
+    {
+      "domain": "bonkcoin.io"
+    },
+    {
+      "domain": "fronk.live"
+    },
+    {
+      "domain": "phantomlabs.cc"
+    },
+    {
+      "domain": "bonkcoin.pro"
+    },
+    {
+      "domain": "bonkcoin.store"
+    },
+    {
+      "domain": "kincoin.live"
+    },
+    {
+      "domain": "bonknft.xyz"
+    },
+    {
+      "domain": "bonkgift.com"
+    },
+    {
+      "domain": "usdcoin.bio"
+    },
+    {
+      "domain": "fronk.art"
+    },
+    {
+      "domain": "openseanft.store"
+    },
+    {
+      "domain": "theapt.website"
+    },
+    {
+      "domain": "aptoslabs.blog"
+    },
+    {
+      "domain": "shibuyatoken.xyz"
+    },
+    {
+      "domain": "kanpaispandas.com"
+    },
+    {
+      "domain": "kanpaipandasnft.xyz"
+    },
+    {
+      "domain": "opensealikes.org"
+    },
+    {
+      "domain": "opensea-document.site"
+    },
+    {
+      "domain": "whitelist-doodles.com"
+    },
+    {
+      "domain": "kanpaipandes.com"
+    },
+    {
+      "domain": "xn--opesea-yeb.app"
+    },
+    {
+      "domain": "duelcoin.online"
+    },
+    {
+      "domain": "teslaclub.ink"
+    },
+    {
+      "domain": "fronk.co"
+    },
+    {
+      "domain": "chilitoken.com"
+    },
+    {
+      "domain": "lushcoin.live"
+    },
+    {
+      "domain": "bonk.bio"
+    },
+    {
+      "domain": "bonkpass.xyz"
+    },
+    {
+      "domain": "mcgoblin.net"
+    },
+    {
+      "domain": "usd-coin.cash"
+    },
+    {
+      "domain": "bonkgive.com"
+    },
+    {
+      "domain": "thebonkcoin.org"
+    },
+    {
+      "domain": "fronk.life"
+    },
+    {
+      "domain": "fronk.store"
+    },
+    {
+      "domain": "bonkcoin.bio"
+    },
+    {
+      "domain": "mybonkcoin.com"
+    },
+    {
+      "domain": "bonkcoin.art"
+    },
+    {
+      "domain": "fronkcoin.com"
+    },
+    {
+      "domain": "dustprotocolnft.com"
+    },
+    {
+      "domain": "bonkcoinnft.com"
+    },
+    {
+      "domain": "staratlasnft.com"
+    },
+    {
+      "domain": "fronknft.com"
+    },
+    {
+      "domain": "bonkbox.xyz"
+    },
+    {
+      "domain": "bonkcoin.tech"
+    },
+    {
+      "domain": "bonkticket.fun"
+    },
+    {
+      "domain": "bonkcoin.app"
+    },
+    {
+      "domain": "bonkpass.space"
+    },
+    {
+      "domain": "bonkairdrop.xyz"
+    },
+    {
+      "domain": "bonkticket.xyz"
+    },
+    {
+      "domain": "orca-foundation.org"
+    },
+    {
+      "domain": "orca-fund.net"
+    },
+    {
+      "domain": "rovercoin.web.app"
+    },
+    {
+      "domain": "invisible-friends-nft.netlify.app"
+    },
+    {
+      "domain": "doggoclaim.web.app"
+    },
+    {
+      "domain": "doggodao.web.app"
+    },
+    {
+      "domain": "sol-doge.web.app"
+    },
+    {
+      "domain": "claimdrop.web.app"
+    },
+    {
+      "domain": "maglcedan-mint.web.app"
+    },
+    {
+      "domain": "degodsmint.web.app"
+    },
+    {
+      "domain": "ejelly.web.app"
+    },
+    {
+      "domain": "bonkbox.fun"
+    },
+    {
+      "domain": "orca-event.net"
+    },
+    {
+      "domain": "maglcedan-claim.web.app"
+    },
+    {
+      "domain": "white-list.netlify.app"
+    },
+    {
+      "domain": "whitelist-box.netlify.app"
+    },
+    {
+      "domain": "bonkcoin.farm"
+    },
+    {
+      "domain": "bonkboxes-wt.web.app"
+    },
+    {
+      "domain": "crazy-bonk.netlify.app"
+    },
+    {
+      "domain": "amazingboxes.netlify.app"
+    },
+    {
+      "domain": "bonkbox-claim.web.app"
+    },
+    {
+      "domain": "deadfellaz.co"
+    },
+    {
+      "domain": "orca-blog.net"
+    },
+    {
+      "domain": "moneybonk.netlify.app"
+    },
+    {
+      "domain": "youboxes.netlify.app"
+    },
+    {
+      "domain": "sheboxes.netlify.app"
+    },
+    {
+      "domain": "mybonkdex.netlify.app"
+    },
+    {
+      "domain": "boxesopen.netlify.app"
+    },
+    {
+      "domain": "myboxesclaim.netlify.app"
+    },
+    {
+      "domain": "boxesclaim.netlify.app"
+    },
+    {
+      "domain": "boxesmintlive.netlify.app"
+    },
+    {
+      "domain": "live-boxes.netlify.app"
+    },
+    {
+      "domain": "orca-go.org"
+    },
+    {
+      "domain": "claimshibonk.netlify.app"
+    },
+    {
+      "domain": "orca-claim.com"
+    },
+    {
+      "domain": "claimbokz.netlify.app"
+    },
+    {
+      "domain": "hadescoin.netlify.app"
+    },
+    {
+      "domain": "web3-resolverpanel.com"
+    },
+    {
+      "domain": "gobonk.netlify.app"
+    },
+    {
+      "domain": "goshibonkgang.netlify.app"
+    },
+    {
+      "domain": "goclaimbonk.netlify.app"
+    },
+    {
+      "domain": "orca-reward.org"
+    },
+    {
+      "domain": "phantomdownload.com"
+    },
+    {
+      "domain": "phtscan.space"
+    },
+    {
+      "domain": "teslacrew.space"
+    },
+    {
+      "domain": "orca-daoinitiative.com"
+    },
+    {
+      "domain": "caveman-nft.space"
+    },
+    {
+      "domain": "alameda-research.online"
+    },
+    {
+      "domain": "memes6529.xyz"
+    },
+    {
+      "domain": "mbonus.xyz"
+    },
+    {
+      "domain": "bonksgifts.web.app"
+    },
+    {
+      "domain": "celadon.game"
+    },
+    {
+      "domain": "bonkclaimbonus.netlify.app"
+    },
+    {
+      "domain": "leapfrogvalidator.com"
+    },
+    {
+      "domain": "shinobisystems.io"
+    },
+    {
+      "domain": "azuki.ws"
+    },
+    {
+      "domain": "chirulabs.net"
+    },
+    {
+      "domain": "revoken.cash"
+    },
+    {
+      "domain": "mokolostan.com"
+    },
+    {
+      "domain": "atlasgnft.netlify.app"
+    },
+    {
+      "domain": "bonkofficialdrop.netlify.app"
+    },
+    {
+      "domain": "orcadextrust.com"
+    },
+    {
+      "domain": "phantom-app.growfastorganic.in"
+    },
+    {
+      "domain": "ray-gifts.netlify.app"
+    },
+    {
+      "domain": "orcainvite.org"
+    },
+    {
+      "domain": "phantomlabs.pw"
+    },
+    {
+      "domain": "orcainitiative.net"
+    },
+    {
+      "domain": "orcacommunity.org"
+    },
+    {
+      "domain": "orcacommunity.net"
+    },
+    {
+      "domain": "orcaevent.org"
+    },
+    {
+      "domain": "raydium-events.netlify.app"
+    },
+    {
+      "domain": "orca-limited.top"
+    },
+    {
+      "domain": "a-orca.netlify.app"
+    },
+    {
+      "domain": "solflare-extension.com"
+    },
+    {
+      "domain": "orca-terms.top"
+    },
+    {
+      "domain": "lasvegas-bonus.web.app"
+    },
+    {
+      "domain": "orca-reward.top"
+    },
+    {
+      "domain": "apocalypse.city"
+    },
+    {
+      "domain": "celadongame.com"
+    },
+    {
+      "domain": "moonwallet.io"
+    },
+    {
+      "domain": "orca-tokens.top"
+    },
+    {
+      "domain": "marinade-solution.top"
+    },
+    {
+      "domain": "battleseekers.io"
+    },
+    {
+      "domain": "metaw1935.com"
+    },
+    {
+      "domain": "phantomlabi.pw"
+    },
+    {
+      "domain": "marinade-reward.top"
+    },
+    {
+      "domain": "celadongame.world"
+    },
+    {
+      "domain": "mintfarmer-v1.web.app"
+    },
+    {
+      "domain": "phantom-lab.space"
+    },
+    {
+      "domain": "magicalworld.io"
+    },
+    {
+      "domain": "magicalworld.cool"
+    },
+    {
+      "domain": "phantomsc.site"
+    },
+    {
+      "domain": "orca-invite.life"
+    },
+    {
+      "domain": "phantomsec.su"
+    },
+    {
+      "domain": "gold-island-game.com"
+    },
+    {
+      "domain": "orca-solution.top"
+    },
+    {
+      "domain": "marinade-solution.xyz"
+    },
+    {
+      "domain": "orca-trust.top"
+    },
+    {
+      "domain": "orca-terms.info"
+    },
+    {
+      "domain": "orca-invite.info"
+    },
+    {
+      "domain": "orca-defi.info"
+    },
+    {
+      "domain": "soillet.io"
+    },
+    {
+      "domain": "orca-trust.info"
+    },
+    {
+      "domain": "orca-solution.info"
+    },
+    {
+      "domain": "openaea.io"
+    },
+    {
+      "domain": "opemsea.io"
+    },
+    {
+      "domain": "xn--openea-ekb.app"
+    },
+    {
+      "domain": "orca-decision.info"
+    },
+    {
+      "domain": "orca-defi.club"
+    },
+    {
+      "domain": "orca-tokens.club"
+    },
+    {
+      "domain": "orca-decision.club"
+    },
+    {
+      "domain": "orca-claim.club"
+    },
+    {
+      "domain": "sol-eth-claim-v1.netlify.app"
+    },
+    {
+      "domain": "solanacares.site"
+    },
+    {
+      "domain": "orca-reward.club"
+    },
+    {
+      "domain": "jumpcrypto.io"
+    },
+    {
+      "domain": "phantomlabs.su"
+    },
+    {
+      "domain": "orca-io.net"
+    },
+    {
+      "domain": "orca-solana.org"
+    },
+    {
+      "domain": "blurdrop.art"
+    },
+    {
+      "domain": "defi-orca.com"
+    },
+    {
+      "domain": "orca-crypto.org"
+    },
+    {
+      "domain": "phantomwallet.su"
+    },
+    {
+      "domain": "orca-share.club"
+    },
+    {
+      "domain": "orca-share.net"
+    },
+    {
+      "domain": "defi-orca.club"
+    },
+    {
+      "domain": "ethsolanaairdrop.netlify.app"
+    },
+    {
+      "domain": "defi-orca.net"
+    },
+    {
+      "domain": "orca-share.xyz"
+    },
+    {
+      "domain": "serum.pw"
+    },
+    {
+      "domain": "orca.gift"
+    },
+    {
+      "domain": "solscan.pw"
+    },
+    {
+      "domain": "solscan.host"
+    },
+    {
+      "domain": "initiative-claim.info"
+    },
+    {
+      "domain": "claim-promotions.com"
+    },
+    {
+      "domain": "claim-promotions.info"
+    },
+    {
+      "domain": "solana-base.web.app"
+    },
+    {
+      "domain": "claim-promotions.life"
+    },
+    {
+      "domain": "claim-promotion.org"
+    },
+    {
+      "domain": "phantomwallet.io"
+    },
+    {
+      "domain": "claynocans.online"
+    },
+    {
+      "domain": "enftgift.com"
+    },
+    {
+      "domain": "phantomwalleti.su"
+    },
+    {
+      "domain": "initiative-claim.top"
+    },
+    {
+      "domain": "dao-claim.org"
+    },
+    {
+      "domain": "blurtokens.io"
+    },
+    {
+      "domain": "claim-dao.com"
+    },
+    {
+      "domain": "supportstring.com"
+    },
+    {
+      "domain": "orca-dev.org"
+    },
+    {
+      "domain": "orca-io.org"
+    },
+    {
+      "domain": "memoriamedalion.site"
+    },
+    {
+      "domain": "dex-initiativem.org"
+    },
+    {
+      "domain": "marinade-community.xyz"
+    },
+    {
+      "domain": "misteriumland.com"
+    },
+    {
+      "domain": "claim-dao.info"
+    },
+    {
+      "domain": "blur-dao.netlify.app"
+    },
+    {
+      "domain": "marinade-finance.xyz"
+    },
+    {
+      "domain": "phantomwalleto.su"
+    },
+    {
+      "domain": "marinade-contract.info"
+    },
+    {
+      "domain": "marinade-dao.xyz"
+    },
+    {
+      "domain": "marinade-yield.life"
+    },
+    {
+      "domain": "claim-promotion.club"
+    },
+    {
+      "domain": "blurclaim.netlify.app"
+    },
+    {
+      "domain": "initiative-defi.com"
+    },
+    {
+      "domain": "initiative-defi.xyz"
+    },
+    {
+      "domain": "initiative-defi.club"
+    },
+    {
+      "domain": "initiative-dex.life"
+    },
+    {
+      "domain": "marinade-contract.life"
+    },
+    {
+      "domain": "marinade-straresy.life"
+    },
+    {
+      "domain": "phantombeta.com"
+    },
+    {
+      "domain": "main.d1irgtveskab2u.amplifyapp.com"
+    },
+    {
+      "domain": "phantomwallt.su"
+    },
+    {
+      "domain": "marinade-dao.life"
+    },
+    {
+      "domain": "0rca.org"
+    },
+    {
+      "domain": "white-whale.top"
+    },
+    {
+      "domain": "bloody-crocodile.com"
+    },
+    {
+      "domain": "victorious-horse.com"
+    },
+    {
+      "domain": "blurnetworks.netlify.app"
+    },
+    {
+      "domain": "perfect-beagle.com"
+    },
+    {
+      "domain": "cloudy-zebra.com"
+    },
+    {
+      "domain": "relieved-armadilo.com"
+    },
+    {
+      "domain": "splendid-peacock.com"
+    },
+    {
+      "domain": "uninterested-crow.com"
+    },
+    {
+      "domain": "stormy-baboon.com"
+    },
+    {
+      "domain": "orca.best"
+    },
+    {
+      "domain": "sparkling-blue-whale.com"
+    },
+    {
+      "domain": "snessuprit.com"
+    },
+    {
+      "domain": "dogecapital.space"
+    },
+    {
+      "domain": "crucconiss.com"
+    },
+    {
+      "domain": "herchelloch.com"
+    },
+    {
+      "domain": "orcanauts.gift"
+    },
+    {
+      "domain": "giftboxsolana.com"
+    },
+    {
+      "domain": "semisperve.com"
+    },
+    {
+      "domain": "dst-live.web.app"
+    },
+    {
+      "domain": "oracocol.com"
+    },
+    {
+      "domain": "unrapapisma.com"
+    },
+    {
+      "domain": "famousfox.space"
+    },
+    {
+      "domain": "famous-crystals.online"
+    },
+    {
+      "domain": "lst-dst.web.app"
+    },
+    {
+      "domain": "sacenrethar.com"
+    },
+    {
+      "domain": "worecalluman.com"
+    },
+    {
+      "domain": "solfund.org"
+    },
+    {
+      "domain": "saga-wl.web.app"
+    },
+    {
+      "domain": "raydium.gift"
+    },
+    {
+      "domain": "sultrataling.com"
+    },
+    {
+      "domain": "ledoxerorte.com"
+    },
+    {
+      "domain": "melaudichic.com"
+    },
+    {
+      "domain": "defiprotocolextension.com"
+    },
+    {
+      "domain": "defi-protocol.site"
+    },
+    {
+      "domain": "phantomweb.us"
+    },
+    {
+      "domain": "amenctiver.com"
+    },
+    {
+      "domain": "solwl-saga.web.app"
+    },
+    {
+      "domain": "auctragiscle.com"
+    },
+    {
+      "domain": "gft-ray.web.app"
+    },
+    {
+      "domain": "maccingarce.com"
+    },
+    {
+      "domain": "bonk-pack.web.app"
+    },
+    {
+      "domain": "solgiftbox.com"
+    },
+    {
+      "domain": "raydium-dex.gift"
+    },
+    {
+      "domain": "gallgenial.com"
+    },
+    {
+      "domain": "bonk-premium.web.app"
+    },
+    {
+      "domain": "claynosaurz-claim.web.app"
+    },
+    {
+      "domain": "dust-air.web.app"
+    },
+    {
+      "domain": "pepe-claim.net"
+    },
+    {
+      "domain": "join-pepe.com"
+    },
+    {
+      "domain": "rayeventv4.web.app"
+    },
+    {
+      "domain": "bonk-rarity.web.app"
+    },
+    {
+      "domain": "solflare.su"
+    },
+    {
+      "domain": "dustbox.shop"
+    },
+    {
+      "domain": "fixbugs.pages.dev"
+    },
+    {
+      "domain": "dustbox.link"
+    },
+    {
+      "domain": "meta-plex.info"
+    },
+    {
+      "domain": "rewards-optimism.com"
+    },
+    {
+      "domain": "claimpepe.net"
+    },
+    {
+      "domain": "claim-pepe.org"
+    },
+    {
+      "domain": "claim-dogesai.xyz"
+    },
+    {
+      "domain": "pepecoin-claim.xyz"
+    },
+    {
+      "domain": "arbdogeclaim.com"
+    },
+    {
+      "domain": "apederc.net"
+    },
+    {
+      "domain": "rewards-pepe.com"
+    },
+    {
+      "domain": "claimoptimism.com"
+    },
+    {
+      "domain": "peppe.vip"
+    },
+    {
+      "domain": "bonkswap.live"
+    },
+    {
+      "domain": "join-pepe.xyz"
+    },
+    {
+      "domain": "dustbounty.live"
+    },
+    {
+      "domain": "bonkies.live"
+    },
+    {
+      "domain": "dust.bounty.mom"
+    },
+    {
+      "domain": "raydiumbonus.top"
+    },
+    {
+      "domain": "raydiumdao.life"
+    },
+    {
+      "domain": "claynosaurz.club"
+    },
+    {
+      "domain": "bonkbox.online"
+    },
+    {
+      "domain": "claynosaurz-pack.web.app"
+    },
+    {
+      "domain": "vpn-coinbase.com"
+    },
+    {
+      "domain": "pepeclaim.net"
+    },
+    {
+      "domain": "pepe.gift"
+    },
+    {
+      "domain": "claims-pepe.org"
+    },
+    {
+      "domain": "airdrop-pepe.xyz"
+    },
+    {
+      "domain": "rollbit.visit.express"
+    },
+    {
+      "domain": "allesciders.com"
+    },
+    {
+      "domain": "eplounctacce.com"
+    },
+    {
+      "domain": "claynosaurz-money.web.app"
+    },
+    {
+      "domain": "atlas.rewards.ink"
+    },
+    {
+      "domain": "urthriblebol.com"
+    },
+    {
+      "domain": "clay.alphatester.one"
+    },
+    {
+      "domain": "clay.rewards.ink"
+    },
+    {
+      "domain": "ray-list.web.app"
+    },
+    {
+      "domain": "atlas.alphatester.one"
+    },
+    {
+      "domain": "raydex.gift"
+    },
+    {
+      "domain": "unacersawme.com"
+    },
+    {
+      "domain": "ray.alphatester.pro"
+    },
+    {
+      "domain": "dust.alphatester.pro"
+    },
+    {
+      "domain": "atlas.nowrewards.life"
+    },
+    {
+      "domain": "madlads-v2.online"
+    },
+    {
+      "domain": "ray-init.gift"
+    },
+    {
+      "domain": "raydium-limited.gift"
+    },
+    {
+      "domain": "feckentual.com"
+    },
+    {
+      "domain": "raycom.gift"
+    },
+    {
+      "domain": "wlkn.fastgo.life"
+    },
+    {
+      "domain": "bonk.fastgo.life"
+    },
+    {
+      "domain": "bk.admired.site"
+    },
+    {
+      "domain": "wn.admired.site"
+    },
+    {
+      "domain": "raydium-dao.gift"
+    },
+    {
+      "domain": "ray-defi.gift"
+    },
+    {
+      "domain": "snelieniata.com"
+    },
+    {
+      "domain": "dex-we-trust.gift"
+    },
+    {
+      "domain": "subtaniall.com"
+    },
+    {
+      "domain": "solletapp.io"
+    },
+    {
+      "domain": "ray-community.gift"
+    },
+    {
+      "domain": "explesoplia.com"
+    },
+    {
+      "domain": "as.aesthete.site"
+    },
+    {
+      "domain": "atlas.livegift.site"
+    },
+    {
+      "domain": "bk.aesthete.site"
+    },
+    {
+      "domain": "wlkn.rewards.ink"
+    },
+    {
+      "domain": "bonk.livegift.site"
+    },
+    {
+      "domain": "pepelp.com"
+    },
+    {
+      "domain": "tensor.claims"
+    },
+    {
+      "domain": "raydium-community.gift"
+    },
+    {
+      "domain": "pepeonsol.com"
+    },
+    {
+      "domain": "unommentraly.com"
+    },
+    {
+      "domain": "raydium-initiative.gift"
+    },
+    {
+      "domain": "latishamusly.com"
+    },
+    {
+      "domain": "ray.giftgo.site"
+    },
+    {
+      "domain": "ry.majore.site"
+    },
+    {
+      "domain": "otherside.community"
+    },
+    {
+      "domain": "giftone.site"
+    },
+    {
+      "domain": "majore.site"
+    },
+    {
+      "domain": "tensors.trade"
+    },
+    {
+      "domain": "as.elegiac.site"
+    },
+    {
+      "domain": "atlas.fastto.site"
+    },
+    {
+      "domain": "dust.fastto.site"
+    },
+    {
+      "domain": "dt.elegiac.site"
+    },
+    {
+      "domain": "ray.fastto.site"
+    },
+    {
+      "domain": "helium.fastto.sit"
+    },
+    {
+      "domain": "ry.elegiac.site"
+    },
+    {
+      "domain": "hm.elegiac.site"
+    },
+    {
+      "domain": "dustlabs.bio"
+    },
+    {
+      "domain": "cy.incisive.site"
+    },
+    {
+      "domain": "bk.incisive.site"
+    },
+    {
+      "domain": "bonk.launchpad.gift"
+    },
+    {
+      "domain": "genoverse.store"
+    },
+    {
+      "domain": "connectcollab.vercel.app"
+    },
+    {
+      "domain": "fuddiesnft.github.io"
+    },
+    {
+      "domain": "ray.tryfast.site"
+    },
+    {
+      "domain": "languid.site"
+    },
+    {
+      "domain": "toly.space"
+    },
+    {
+      "domain": "bonk.giftlabs.live"
+    },
+    {
+      "domain": "dex-ray.gift"
+    },
+    {
+      "domain": "madionseucke.com"
+    },
+    {
+      "domain": "bk.capricious.site"
+    },
+    {
+      "domain": "wn.chicanery.site"
+    },
+    {
+      "domain": "dustlabs.me"
+    },
+    {
+      "domain": "psyop.store"
+    },
+    {
+      "domain": "kingcoin.pro"
+    },
+    {
+      "domain": "bk.facetious.site"
+    },
+    {
+      "domain": "hm.flabbergast.site"
+    },
+    {
+      "domain": "helium.giftlabs.live"
+    },
+    {
+      "domain": "solflare-extensions.com"
+    },
+    {
+      "domain": "dustgifts-list.web.app"
+    },
+    {
+      "domain": "lido.alphalite.pro"
+    },
+    {
+      "domain": "bonk.alphalite.pro"
+    },
+    {
+      "domain": "bk.gravest.site"
+    },
+    {
+      "domain": "ld.gravest.site"
+    },
+    {
+      "domain": "bk.icicles.site"
+    },
+    {
+      "domain": "kingcoin.world"
+    },
+    {
+      "domain": "maintdapp.com"
+    },
+    {
+      "domain": "laudable.site"
+    },
+    {
+      "domain": "acs.alphatesters.life"
+    },
+    {
+      "domain": "rancorous.site"
+    },
+    {
+      "domain": "dustlabs.team"
+    },
+    {
+      "domain": "storied-1.netlify.app"
+    },
+    {
+      "domain": "hoopa-claim.xyz"
+    },
+    {
+      "domain": "kingdrop.quest"
+    },
+    {
+      "domain": "usdc.promo"
+    },
+    {
+      "domain": "app.burst.quest"
+    },
+    {
+      "domain": "permissions-revoke.com"
+    },
+    {
+      "domain": "bonk.alphagift.site"
+    },
+    {
+      "domain": "bapp.counted.pics"
+    },
+    {
+      "domain": "pip.alphagift.site"
+    },
+    {
+      "domain": "pi.cradle.sbs"
+    },
+    {
+      "domain": "dst.cradle.sbs"
+    },
+    {
+      "domain": "dust.alphabonus.site"
+    },
+    {
+      "domain": "bonk.alphabonus.site"
+    },
+    {
+      "domain": "uni-fi.pro"
+    },
+    {
+      "domain": "unipool.fi"
+    },
+    {
+      "domain": "auni.pro"
+    },
+    {
+      "domain": "app.deferred.sbs"
+    },
+    {
+      "domain": "app.marsh.guru"
+    },
+    {
+      "domain": "bonk.alphatesters.live"
+    },
+    {
+      "domain": "as.poison.quest"
+    },
+    {
+      "domain": "pepe.absolve.site"
+    },
+    {
+      "domain": "absolve.site"
+    },
+    {
+      "domain": "poison.quest"
+    },
+    {
+      "domain": "acs.alphawork.site"
+    },
+    {
+      "domain": "ac.poultry.digital"
+    },
+    {
+      "domain": "mine.prisoner.pics"
+    },
+    {
+      "domain": "helium.alphawork.site"
+    },
+    {
+      "domain": "wn.waiver.cfd"
+    },
+    {
+      "domain": "alphawork.site"
+    },
+    {
+      "domain": "poultry.digital"
+    },
+    {
+      "domain": "atlas.alphadrop.site"
+    },
+    {
+      "domain": "rollbit.alphadrop.site"
+    },
+    {
+      "domain": "ray.alphadrop.site"
+    },
+    {
+      "domain": "lido.alphadrop.site"
+    },
+    {
+      "domain": "oopssolana.io"
+    },
+    {
+      "domain": "magiceden.market"
+    },
+    {
+      "domain": "bonk.alphadrop.site"
+    },
+    {
+      "domain": "app.srpccsh.digital"
+    },
+    {
+      "domain": "tensor.alphawork.site"
+    },
+    {
+      "domain": "zrn.app"
+    },
+    {
+      "domain": "oopsdrop.shop"
+    },
+    {
+      "domain": "oopsdrop.site"
+    },
+    {
+      "domain": "app.cptvdlm.xyz"
+    },
+    {
+      "domain": "bonk.alphadex.site"
+    },
+    {
+      "domain": "yaww-swap.io"
+    },
+    {
+      "domain": "bombaclot.space"
+    },
+    {
+      "domain": "letsgetstarted.xyz"
+    },
+    {
+      "domain": "matrix-eco.xyz"
+    },
+    {
+      "domain": "ray.alphadao.life"
+    },
+    {
+      "domain": "dustgift.xyz"
+    },
+    {
+      "domain": "vrdntphnx.quest"
+    },
+    {
+      "domain": "bonkearn.vip"
+    },
+    {
+      "domain": "genoverse.bio"
+    },
+    {
+      "domain": "cupe-live-13.netlify.app"
+    },
+    {
+      "domain": "signup-degods.com"
+    },
+    {
+      "domain": "sphinxlike.netlify.app"
+    },
+    {
+      "domain": "bonkearn.xyz"
+    },
+    {
+      "domain": "degods.quest"
+    },
+    {
+      "domain": "patched-me.com"
+    },
+    {
+      "domain": "kotaworldwide.space"
+    },
+    {
+      "domain": "genoverse.top"
+    },
+    {
+      "domain": "genopets-s4.netlify.app"
+    },
+    {
+      "domain": "solana-summit.org"
+    },
+    {
+      "domain": "hellio.pw"
+    },
+    {
+      "domain": "theheistairdrop.web.app"
+    },
+    {
+      "domain": "register-dydx.xyz"
+    },
+    {
+      "domain": "lhdplhks.uno"
+    },
+    {
+      "domain": "token-distribution.claims"
+    },
+    {
+      "domain": "theheist.pro"
+    },
+    {
+      "domain": "phontomm.ink"
+    },
+    {
+      "domain": "hivemapper.gift"
+    },
+    {
+      "domain": "admire24.web.app"
+    },
+    {
+      "domain": "hivemapper.win"
+    },
+    {
+      "domain": "hivemapper.team"
+    },
+    {
+      "domain": "equal-20.web.app"
+    },
+    {
+      "domain": "defi-offer-s003.netlify.app"
+    },
+    {
+      "domain": "claim-orca.info"
+    },
+    {
+      "domain": "genopets.gift"
+    },
+    {
+      "domain": "ibex-24.netlify.app"
+    },
+    {
+      "domain": "ibex-28.netlify.app"
+    },
+    {
+      "domain": "dustlabs.gift"
+    },
+    {
+      "domain": "present-24.web.app"
+    },
+    {
+      "domain": "bestowal-16.web.app"
+    },
+    {
+      "domain": "defi-offer-s004.netlify.app"
+    },
+    {
+      "domain": "urgent-08.web.app"
+    },
+    {
+      "domain": "degods.gift"
+    },
+    {
+      "domain": "genopets.win"
+    },
+    {
+      "domain": "ferret-20.netlify.app"
+    },
+    {
+      "domain": "defi-offer-s006.netlify.app"
+    },
+    {
+      "domain": "tensor.press"
+    },
+    {
+      "domain": "tensordrop.web.app"
+    },
+    {
+      "domain": "tensornft.pro"
+    },
+    {
+      "domain": "tencoin.web.app"
+    },
+    {
+      "domain": "tensor.dropdao.io"
+    },
+    {
+      "domain": "tensornfts.com"
+    },
+    {
+      "domain": "solanatoken.web.app"
+    },
+    {
+      "domain": "tenzalpha.web.app"
+    },
+    {
+      "domain": "bonk.alphabox.site"
+    },
+    {
+      "domain": "defi-1690929004.devflow.best"
+    },
+    {
+      "domain": "defi-offer-s008.netlify.app"
+    },
+    {
+      "domain": "defi-offer-s009.netlify.app"
+    },
+    {
+      "domain": "markets-looksrare.com"
+    },
+    {
+      "domain": "looksrare-org.info"
+    },
+    {
+      "domain": "nana-giveaway.web.app"
+    },
+    {
+      "domain": "1000-rewards.xyz"
+    },
+    {
+      "domain": "giftclaim-94.web.app"
+    },
+    {
+      "domain": "bonfida.net"
+    },
+    {
+      "domain": "solllet.io"
+    },
+    {
+      "domain": "hivemapper.pro"
+    },
+    {
+      "domain": "sense-20.web.app"
+    },
+    {
+      "domain": "orca-true.online"
+    },
+    {
+      "domain": "dialect.claims"
+    },
+    {
+      "domain": "orca-defi-pool-1693341473.limit.guru"
+    },
+    {
+      "domain": "sdlet.io"
+    },
+    {
+      "domain": "1986reborn.com"
+    },
+    {
+      "domain": "orca-defi-pool-4110.nichey.one"
+    },
+    {
+      "domain": "usdc-reward.com"
+    },
+    {
+      "domain": "orca-defi-pool-2850.invevent.xyz"
+    },
+    {
+      "domain": "pass-degods.net"
+    },
+    {
+      "domain": "meter-16.web.app"
+    },
+    {
+      "domain": "hivemapper.promo"
+    },
+    {
+      "domain": "melea.app"
+    },
+    {
+      "domain": "ethclaim.one"
+    },
+    {
+      "domain": "consensys.fi"
+    },
+    {
+      "domain": "consensys.digital"
+    },
+    {
+      "domain": "consensys.events"
+    },
+    {
+      "domain": "consensyslab.io"
+    },
+    {
+      "domain": "consensys.finance"
+    },
+    {
+      "domain": "consensys.network"
+    },
+    {
+      "domain": "consensys.it"
+    },
+    {
+      "domain": "phantom.community"
+    },
+    {
+      "domain": "usd.sol-events.com"
+    },
+    {
+      "domain": "orca-dao.com"
+    },
+    {
+      "domain": "bird.skin"
+    },
+    {
+      "domain": "invgifts.live"
+    },
+    {
+      "domain": "extension.center"
+    },
+    {
+      "domain": "okaydeerzzz-cs0r5.netlify.app"
+    },
+    {
+      "domain": "claim-bonk.co"
+    },
+    {
+      "domain": "dustpromo.vip"
+    },
+    {
+      "domain": "hivemapper.live"
+    },
+    {
+      "domain": "rustiq.uk"
+    },
+    {
+      "domain": "defi-ornade.claintime.pro"
+    },
+    {
+      "domain": "hnt-rew-ards.misty.guru"
+    },
+    {
+      "domain": "claim-helium.co"
+    },
+    {
+      "domain": "drop-usd.me"
+    },
+    {
+      "domain": "defi-ornade.xalpha.pro"
+    },
+    {
+      "domain": "coal-08.web.app"
+    },
+    {
+      "domain": "app-deform.cc"
+    },
+    {
+      "domain": "wisekeys.xyz"
+    },
+    {
+      "domain": "hivemapper.vip"
+    },
+    {
+      "domain": "urge-02.web.app"
+    },
+    {
+      "domain": "lido.bet"
+    },
+    {
+      "domain": "dustpromo.win"
+    },
+    {
+      "domain": "solflarewebextention.com"
+    },
+    {
+      "domain": "defi-ornade.inv-air.xyz"
+    },
+    {
+      "domain": "nftverify-io.web.app"
+    },
+    {
+      "domain": "balance-ftx.com"
+    },
+    {
+      "domain": "everstakesol.com"
+    },
+    {
+      "domain": "dapp-everstake-now.nowinv.pro"
+    },
+    {
+      "domain": "dapp-everstake-now.invdrop.pro"
+    },
+    {
+      "domain": "bonkdrop.online"
+    },
+    {
+      "domain": "minus-14.web.app"
+    },
+    {
+      "domain": "minus-12.web.app"
+    },
+    {
+      "domain": "claimsdao.web.app"
+    },
+    {
+      "domain": "airpot-02.vercel.app"
+    },
+    {
+      "domain": "hivemapper.store"
+    },
+    {
+      "domain": "honey-v3.vercel.app"
+    },
+    {
+      "domain": "hivemapper.bio"
+    },
+    {
+      "domain": "shinobisystem.com"
+    },
+    {
+      "domain": "omoon.cyou"
+    },
+    {
+      "domain": "melea.dev"
+    },
+    {
+      "domain": "revokecash.app"
+    },
+    {
+      "domain": "login-v1-sage.vercel.app"
+    },
+    {
+      "domain": "wi-31.onrender.com"
+    },
+    {
+      "domain": "token-magiceden.io"
+    },
+    {
+      "domain": "rfk88ve9yuglazijtx4vrozhco6pzoujxa2djpdw22dw.ptwrx.site"
+    },
+    {
+      "domain": "soliet.io"
+    },
+    {
+      "domain": "solliet.io"
+    },
+    {
+      "domain": "solled.id"
+    },
+    {
+      "domain": "honey-reward.vercel.app"
+    },
+    {
+      "domain": "orcawall.com"
+    },
+    {
+      "domain": "orcadash.com"
+    },
+    {
+      "domain": "hivemapper.plus"
+    },
+    {
+      "domain": "airdrop-pyth.vercel.app"
+    },
+    {
+      "domain": "flipsdao.web.app"
+    },
+    {
+      "domain": "raydexy.com"
+    },
+    {
+      "domain": "raydrop.online"
+    },
+    {
+      "domain": "meleapulse.com"
+    },
+    {
+      "domain": "gldx.online"
+    },
+    {
+      "domain": "pyth.life"
+    },
+    {
+      "domain": "pyth-reward.vercel.app"
+    },
+    {
+      "domain": "mvkzi9hjxo6bi2hxsjtlryelgsgcjamoh8uxy4rposw3.dgnz.website"
+    },
+    {
+      "domain": "bonknews.com"
+    },
+    {
+      "domain": "pyth.win"
+    },
+    {
+      "domain": "pyth-cc.vercel.app"
+    },
+    {
+      "domain": "bybit-win.gift"
+    },
+    {
+      "domain": "conts.cfd"
+    },
+    {
+      "domain": "honey-token.vercel.app"
+    },
+    {
+      "domain": "tensorsamurai.space"
+    },
+    {
+      "domain": "hivemapper.online"
+    },
+    {
+      "domain": "v23bovajv8vaj3yxuujrip9yy6vwpurb5pxkz6h9zb3d.txzlr.space"
+    },
+    {
+      "domain": "honey-xl.vercel.app"
+    },
+    {
+      "domain": "solflare-extension.io"
+    },
+    {
+      "domain": "soniccity.vercel.app"
+    },
+    {
+      "domain": "veja-e.top"
+    },
+    {
+      "domain": "rockernation.vercel.app"
+    },
+    {
+      "domain": "solllet.in"
+    },
+    {
+      "domain": "sollef.io"
+    },
+    {
+      "domain": "solleit.io"
+    },
+    {
+      "domain": "pythclaim.net"
+    },
+    {
+      "domain": "update-img.vercel.app"
+    },
+    {
+      "domain": "jito.pro"
+    },
+    {
+      "domain": "tcgrd.site"
+    },
+    {
+      "domain": "4oaxr7xn8worwntnf42iszdgacjjjyof6uneblduskzk.tcgrd.site"
+    },
+    {
+      "domain": "bonkget.com"
+    },
+    {
+      "domain": "sahcoinolu.top"
+    },
+    {
+      "domain": "pyth.news"
+    },
+    {
+      "domain": "pyt-rew.vercel.app"
+    },
+    {
+      "domain": "whitelist-mutt-flus-72.ncnix.site"
+    },
+    {
+      "domain": "bankless-claim.net"
+    },
+    {
+      "domain": "jup.promo"
+    },
+    {
+      "domain": "hon-rew.vercel.app"
+    },
+    {
+      "domain": "portjoint.com"
+    },
+    {
+      "domain": "plgx.xyz"
+    },
+    {
+      "domain": "meleadash.com"
+    },
+    {
+      "domain": "jito.gift"
+    },
+    {
+      "domain": "laine-system.online"
+    },
+    {
+      "domain": "laine-dapp.acalatay.xyz"
+    },
+    {
+      "domain": "acalatay.xyz"
+    },
+    {
+      "domain": "jup.to"
+    },
+    {
+      "domain": "oamp.vercel.app"
+    },
+    {
+      "domain": "abeevaevee.top"
+    },
+    {
+      "domain": "soilet.io"
+    },
+    {
+      "domain": "orcadrops.space"
+    },
+    {
+      "domain": "jsol.dev"
+    },
+    {
+      "domain": "invcheck.sbs"
+    },
+    {
+      "domain": "ufooxai.buzz"
+    },
+    {
+      "domain": "airex.buzz"
+    },
+    {
+      "domain": "lendx.cfd"
+    },
+    {
+      "domain": "spl-20-dao.web.app"
+    },
+    {
+      "domain": "get-bonk.vercel.app"
+    },
+    {
+      "domain": "get-bonk-tjem.vercel.app"
+    },
+    {
+      "domain": "wif-claim.netlify.app"
+    },
+    {
+      "domain": "solana-profit.web.app"
+    },
+    {
+      "domain": "atomsolana.live"
+    },
+    {
+      "domain": "jupdrop.site"
+    },
+    {
+      "domain": "ju-catdets-space.vercel.app"
+    },
+    {
+      "domain": "atmexchange.org"
+    },
+    {
+      "domain": "blockunification.asders.icu"
+    },
+    {
+      "domain": "galacticsgeckos.com"
+    },
+    {
+      "domain": "galactic-geckos.com"
+    },
+    {
+      "domain": "galacticsgecko.com"
+    },
+    {
+      "domain": "galacticgeckeos.com"
+    },
+    {
+      "domain": "galacticgeckoos.com"
+    },
+    {
+      "domain": "galatiicgeckos.com"
+    },
+    {
+      "domain": "galacticgeckios.com"
+    },
+    {
+      "domain": "geckosunite.com"
+    },
+    {
+      "domain": "stakehaus.online"
+    },
+    {
+      "domain": "alphnet.online"
+    },
+    {
+      "domain": "maps-solana.web.app"
+    },
+    {
+      "domain": "tokensets.fi"
+    },
+    {
+      "domain": "memevibz.com"
+    },
+    {
+      "domain": "alphone.site"
+    },
+    {
+      "domain": "analos.app"
+    },
+    {
+      "domain": "amdex.buzz"
+    },
+    {
+      "domain": "analosmem.io"
+    },
+    {
+      "domain": "analos.site"
+    },
+    {
+      "domain": "analos-wr2zn.netlify.app"
+    },
+    {
+      "domain": "analos.events"
+    },
+    {
+      "domain": "webzotcloud.alfmark.online"
+    },
+    {
+      "domain": "bonkkmas.com"
+    },
+    {
+      "domain": "ponke-claim.netlify.app"
+    },
+    {
+      "domain": "ponke-claim-fz7k3.netlify.app"
+    },
+    {
+      "domain": "block-claim-h3nfr.netlify.app"
+    },
+    {
+      "domain": "gecko-claim.netlify.app"
+    },
+    {
+      "domain": "assetdash.events"
+    },
+    {
+      "domain": "chonky.trading"
+    },
+    {
+      "domain": "assetdash.app"
+    },
+    {
+      "domain": "box-solan.web.app"
+    },
+    {
+      "domain": "ancient-step-road.vercel.app"
+    },
+    {
+      "domain": "assetdesh.com"
+    },
+    {
+      "domain": "assetdash.network"
+    },
+    {
+      "domain": "åssetdäsh.com"
+    },
+    {
+      "domain": "xmas.trading"
+    },
+    {
+      "domain": "xn--ssetdsh-9wad.com"
+    },
+    {
+      "domain": "appdapp.sbs"
+    },
+    {
+      "domain": "xmas.claims"
+    },
+    {
+      "domain": "chonky.claims"
+    },
+    {
+      "domain": "yo-li-contest.vercel.app"
+    },
+    {
+      "domain": "lidobonus.online"
+    },
+    {
+      "domain": "jup-drop.space"
+    },
+    {
+      "domain": "urgent-j-clo.vercel.app"
+    },
+    {
+      "domain": "compound-labs.xyz"
+    },
+    {
+      "domain": "sniper.events"
+    },
+    {
+      "domain": "sniper.gift"
+    },
+    {
+      "domain": "eethiewe.top"
+    },
+    {
+      "domain": "phtm.app"
+    },
+    {
+      "domain": "fnchw.lat"
+    },
+    {
+      "domain": "jup.gifts"
+    },
+    {
+      "domain": "mulbers.vercel.app"
+    },
+    {
+      "domain": "memevipz.com"
+    },
+    {
+      "domain": "alphbit.site"
+    },
+    {
+      "domain": "lessfeesendgas.org"
+    },
+    {
+      "domain": "lessfeesendgas.com"
+    },
+    {
+      "domain": "lessfeeseandgas.com"
+    },
+    {
+      "domain": "lessfeeandgas.com"
+    },
+    {
+      "domain": "lessfaesandgas.com"
+    },
+    {
+      "domain": "magiceden.click"
+    },
+    {
+      "domain": "tokens.claiming.fun"
+    },
+    {
+      "domain": "analos-drop.xyz"
+    },
+    {
+      "domain": "analos-drop-nxwaw.netlify.app"
+    },
+    {
+      "domain": "claim-silly.netlify.app"
+    },
+    {
+      "domain": "jup2024.com"
+    },
+    {
+      "domain": "airdrop-jup.live"
+    },
+    {
+      "domain": "mfi.expert"
+    },
+    {
+      "domain": "marginfi.site"
+    },
+    {
+      "domain": "solana-2024.com"
+    },
+    {
+      "domain": "daoduck.site"
+    },
+    {
+      "domain": "memejup.com"
+    },
+    {
+      "domain": "dragon-claim.netlify.app"
+    },
+    {
+      "domain": "dragon-airdrop-9uxa3.netlify.app"
+    },
+    {
+      "domain": "usabw.sbs"
+    },
+    {
+      "domain": "2024jup.vip"
+    },
+    {
+      "domain": "jpzhgw.sbs"
+    },
+    {
+      "domain": "rewards-phoenix.trade"
+    },
+    {
+      "domain": "wehx.sbs"
+    },
+    {
+      "domain": "phoenlx.trade"
+    },
+    {
+      "domain": "join-phoenix.trade"
+    },
+    {
+      "domain": "racket.events"
+    },
+    {
+      "domain": "register-phoenix.trade"
+    },
+    {
+      "domain": "racket.gift"
+    },
+    {
+      "domain": "rkt.events"
+    },
+    {
+      "domain": "reward-phoenix.trade"
+    },
+    {
+      "domain": "siiiydragon.io"
+    },
+    {
+      "domain": "phantom-webservice.online"
+    },
+    {
+      "domain": "monkerejectsnft.com"
+    },
+    {
+      "domain": "polychain.finance"
+    },
+    {
+      "domain": "jupxxx.lol"
+    },
+    {
+      "domain": "jup2024.vip"
+    },
+    {
+      "domain": "2024jupiter.vip"
+    },
+    {
+      "domain": "tohcaego.buzz"
+    },
+    {
+      "domain": "hark.gift"
+    },
+    {
+      "domain": "hark.events"
+    },
+    {
+      "domain": "mangofarm.fi"
+    },
+    {
+      "domain": "getpyth.org"
+    },
+    {
+      "domain": "2024jupiter.cc"
+    },
+    {
+      "domain": "yourusdc.app"
+    },
+    {
+      "domain": "pythdrop.site"
+    },
+    {
+      "domain": "gcko.org"
+    },
+    {
+      "domain": "jupiter-airdrop.com"
+    },
+    {
+      "domain": "orcawhirl.com"
+    },
+    {
+      "domain": "juptoken.net"
+    },
+    {
+      "domain": "officialphantom.com"
+    },
+    {
+      "domain": "mythisland.io"
+    },
+    {
+      "domain": "clmjup.xyz"
+    },
+    {
+      "domain": "jup.red"
+    },
+    {
+      "domain": "jupgg.com"
+    },
+    {
+      "domain": "jup-drop.cc"
+    },
+    {
+      "domain": "enroll-jup.app"
+    },
+    {
+      "domain": "bybit-gift.space"
+    },
+    {
+      "domain": "bybit-award.io"
+    },
+    {
+      "domain": "wynn-get.netlify.app"
+    },
+    {
+      "domain": "solanamoble.com"
+    },
+    {
+      "domain": "autovalidateblockchain.com"
+    },
+    {
+      "domain": "nftrzn.com"
+    },
+    {
+      "domain": "collab-award.io"
+    },
+    {
+      "domain": "collabgift.space"
+    },
+    {
+      "domain": "figure-distribution.com"
+    },
+    {
+      "domain": "projectlambo.net"
+    },
+    {
+      "domain": "scroll-drop.io"
+    },
+    {
+      "domain": "app.solflare-extension.xyz"
+    },
+    {
+      "domain": "airdrop-zkfair.site"
+    },
+    {
+      "domain": "nothingrc.claims"
+    },
+    {
+      "domain": "signup-dorkcoin.net"
+    },
+    {
+      "domain": "emcprotocol.org"
+    },
+    {
+      "domain": "lunga-dao.xyz"
+    },
+    {
+      "domain": "thepond.re"
+    },
+    {
+      "domain": "hivemapper.tech"
+    },
+    {
+      "domain": "claim-satoshivm.com"
+    },
+    {
+      "domain": "juptt.com"
+    },
+    {
+      "domain": "collabaward.site"
+    },
+    {
+      "domain": "collabreward.pw"
+    },
+    {
+      "domain": "radar-dapp.net"
+    },
+    {
+      "domain": "get-jup.app"
+    },
+    {
+      "domain": "collabaward.xyz"
+    },
+    {
+      "domain": "saga.promo"
+    },
+    {
+      "domain": "thesaga.site"
+    },
+    {
+      "domain": "unpacknft.net"
+    },
+    {
+      "domain": "iswm.cc"
+    },
+    {
+      "domain": "yourusdc.com"
+    },
+    {
+      "domain": "autoassetsvalidation.xyz"
+    },
+    {
+      "domain": "kraken-airdrop.pro"
+    },
+    {
+      "domain": "claimjupiter.com"
+    },
+    {
+      "domain": "soflarewebextension.com"
+    },
+    {
+      "domain": "y1k3qks.top"
+    },
+    {
+      "domain": "juprr.com"
+    },
+    {
+      "domain": "nfgrex1.pro"
+    },
+    {
+      "domain": "tensor-samurai.io"
+    },
+    {
+      "domain": "samurai-award.info"
+    },
+    {
+      "domain": "anitaonsol.com"
+    },
+    {
+      "domain": "saturnsolana.com"
+    },
+    {
+      "domain": "doggyonsol.com"
+    },
+    {
+      "domain": "jupzz.com"
+    },
+    {
+      "domain": "2ham.pro"
+    },
+    {
+      "domain": "meleasync.com"
+    },
+    {
+      "domain": "dapptech.online"
+    },
+    {
+      "domain": "wenwendrop.com"
+    },
+    {
+      "domain": "wentokenwen.com"
+    },
+    {
+      "domain": "defihug.online"
+    },
+    {
+      "domain": "wenwencoins.network"
+    },
+    {
+      "domain": "collect-wenwen.com"
+    },
+    {
+      "domain": "jupnow.com"
+    },
+    {
+      "domain": "fa2a0g.cc"
+    },
+    {
+      "domain": "wenreward.com"
+    },
+    {
+      "domain": "fpmvm.cc"
+    },
+    {
+      "domain": "4xqry.cc"
+    },
+    {
+      "domain": "wenvoucher.com"
+    },
+    {
+      "domain": "wencoinwen.com"
+    },
+    {
+      "domain": "jitovoucher.org"
+    },
+    {
+      "domain": "wencoin.io"
+    },
+    {
+      "domain": "solanawen.com"
+    },
+    {
+      "domain": "getbonk.net"
+    },
+    {
+      "domain": "unpackgift.org"
+    },
+    {
+      "domain": "bonus-wenwencoin.com"
+    },
+    {
+      "domain": "enrol-jup.app"
+    },
+    {
+      "domain": "secureandupdate.info"
+    },
+    {
+      "domain": "signup-rabbit.com"
+    },
+    {
+      "domain": "reg-jup.com"
+    },
+    {
+      "domain": "launching-jupiter.network"
+    },
+    {
+      "domain": "claim-jup.ag"
+    },
+    {
+      "domain": "start-wen.com"
+    },
+    {
+      "domain": "zerolend.app"
+    },
+    {
+      "domain": "list-jup.app"
+    },
+    {
+      "domain": "receive-jup.app"
+    },
+    {
+      "domain": "wenwencoin.io"
+    },
+    {
+      "domain": "hgdlil.info"
+    },
+    {
+      "domain": "wenwenjup.com"
+    },
+    {
+      "domain": "nbm5xi.top"
+    },
+    {
+      "domain": "jup12.com"
+    },
+    {
+      "domain": "zwbohn.pro"
+    },
+    {
+      "domain": "uhfs.cc"
+    },
+    {
+      "domain": "jup13.com"
+    },
+    {
+      "domain": "jup14.com"
+    },
+    {
+      "domain": "jup15.com"
+    },
+    {
+      "domain": "jup16.com"
+    },
+    {
+      "domain": "jup17.com"
+    },
+    {
+      "domain": "jup18.com"
+    },
+    {
+      "domain": "jup19.com"
+    },
+    {
+      "domain": "jup20.com"
+    },
+    {
+      "domain": "cqfvbw.cc"
+    },
+    {
+      "domain": "jup21.com"
+    },
+    {
+      "domain": "ogfjcw.info"
+    },
+    {
+      "domain": "superclaims-defi.com"
+    },
+    {
+      "domain": "earn-wl.com"
+    },
+    {
+      "domain": "list-jup.space"
+    },
+    {
+      "domain": "auth.walletsync.dev"
+    },
+    {
+      "domain": "phantimp.xyz"
+    },
+    {
+      "domain": "claim.wen.ag"
+    },
+    {
+      "domain": "alfmark.top"
+    },
+    {
+      "domain": "newsolcoin.xyz"
+    },
+    {
+      "domain": "jup10.com"
+    },
+    {
+      "domain": "rz7wjw.info"
+    },
+    {
+      "domain": "wen.meme"
+    },
+    {
+      "domain": "jupairdrop.com"
+    },
+    {
+      "domain": "wencoin.gg"
+    },
+    {
+      "domain": "7x7gx.pro"
+    },
+    {
+      "domain": "wenwencoin.vip"
+    },
+    {
+      "domain": "magleden.com"
+    },
+    {
+      "domain": "magicilyeden.io"
+    },
+    {
+      "domain": "usdt.is"
+    },
+    {
+      "domain": "tether.is"
+    },
+    {
+      "domain": "jupvoucher.com"
+    },
+    {
+      "domain": "stableusdc.com"
+    },
+    {
+      "domain": "claimvoucher2.glitch.me"
+    },
+    {
+      "domain": "claim1.glitch.me"
+    },
+    {
+      "domain": "claimnft1.pages.dev"
+    },
+    {
+      "domain": "pebosolana.com"
+    },
+    {
+      "domain": "zippyfinance.org"
+    },
+    {
+      "domain": "y2srob.info"
+    },
+    {
+      "domain": "jup005.com"
+    },
+    {
+      "domain": "registration-mixmob.io"
+    },
+    {
+      "domain": "claim-fred.com"
+    },
+    {
+      "domain": "kndonsol.com"
+    },
+    {
+      "domain": "unpacknft1.pages.dev"
+    },
+    {
+      "domain": "connectiondappchain.online"
+    },
+    {
+      "domain": "myjuppytoken.xyz"
+    },
+    {
+      "domain": "wasabiwallet.app"
+    },
+    {
+      "domain": "wasabiwallet.eu"
+    },
+    {
+      "domain": "wasabiwallet.sh"
+    },
+    {
+      "domain": "wasabiwallet.is"
+    },
+    {
+      "domain": "wasabiwallet.uk"
+    },
+    {
+      "domain": "jupidrop.space"
+    },
+    {
+      "domain": "rayd.promo"
+    },
+    {
+      "domain": "raidydrops.fun"
+    },
+    {
+      "domain": "nftxmas.com"
+    },
+    {
+      "domain": "get-wen.com"
+    },
+    {
+      "domain": "wenwemcoin.site"
+    },
+    {
+      "domain": "dexies.online"
+    },
+    {
+      "domain": "vudnwo.cc"
+    },
+    {
+      "domain": "jup111.com"
+    },
+    {
+      "domain": "dmmltt0.info"
+    },
+    {
+      "domain": "approved-received.pages.dev"
+    },
+    {
+      "domain": "juppy-box.com"
+    },
+    {
+      "domain": "nft-win.pages.dev"
+    },
+    {
+      "domain": "receiveusdc.com"
+    },
+    {
+      "domain": "usdcollect.com"
+    },
+    {
+      "domain": "solana.ag"
+    },
+    {
+      "domain": "dymension.ink"
+    },
+    {
+      "domain": "openbooklab.net"
+    },
+    {
+      "domain": "block.nodereset.com"
+    },
+    {
+      "domain": "datsbotai.io"
+    },
+    {
+      "domain": "jupclaim.org"
+    },
+    {
+      "domain": "swap-nft.pages.dev"
+    },
+    {
+      "domain": "4ooh.top"
+    },
+    {
+      "domain": "jup333.com"
+    },
+    {
+      "domain": "spacequest-jup.ag"
+    },
+    {
+      "domain": "get-24a.pages.dev"
+    },
+    {
+      "domain": "juppyapps.com"
+    },
+    {
+      "domain": "jups.io"
+    },
+    {
+      "domain": "solraffle.com"
+    },
+    {
+      "domain": "solstable.com"
+    },
+    {
+      "domain": "myjuppy-box.com"
+    },
+    {
+      "domain": "solanamobiie.com"
+    },
+    {
+      "domain": "rewards-solanamobile.com"
+    },
+    {
+      "domain": "goldsolana.org"
+    },
+    {
+      "domain": "exslbu0.top"
+    },
+    {
+      "domain": "birdeyesnipe.org"
+    },
+    {
+      "domain": "get-solanamobile.com"
+    },
+    {
+      "domain": "rafflestable.com"
+    },
+    {
+      "domain": "rafflesol.com"
+    },
+    {
+      "domain": "2000usdc.net"
+    },
+    {
+      "domain": "registration-jup.ag"
+    },
+    {
+      "domain": "imsvf.cc"
+    },
+    {
+      "domain": "jup222.com"
+    },
+    {
+      "domain": "openseek.xyz"
+    },
+    {
+      "domain": "o5nmng.pro"
+    },
+    {
+      "domain": "y5tmtb.info"
+    },
+    {
+      "domain": "sagabox.io"
+    },
+    {
+      "domain": "meleadapp.com"
+    },
+    {
+      "domain": "dexllc.xyz"
+    },
+    {
+      "domain": "metapass.fyi"
+    },
+    {
+      "domain": "stake-jup.com"
+    },
+    {
+      "domain": "saqaboxes.trade"
+    },
+    {
+      "domain": "meta-syncs.com"
+    },
+    {
+      "domain": "phantjum.xyz"
+    },
+    {
+      "domain": "solflareapp.com"
+    },
+    {
+      "domain": "metarack.art"
+    },
+    {
+      "domain": "saga-solanamobile.com"
+    },
+    {
+      "domain": "metamaps.land"
+    },
+    {
+      "domain": "fowkgj.top"
+    },
+    {
+      "domain": "jup444.com"
+    },
+    {
+      "domain": "fomocash.info"
+    },
+    {
+      "domain": "phanotm.sub-wallet.com"
+    },
+    {
+      "domain": "borgverse.app"
+    },
+    {
+      "domain": "solanamobile.net"
+    },
+    {
+      "domain": "magicinternetmoney.app"
+    },
+    {
+      "domain": "winsolana.org"
+    },
+    {
+      "domain": "myjuuycase.trade"
+    },
+    {
+      "domain": "distribution-filecoin.org"
+    },
+    {
+      "domain": "metapark.land"
+    },
+    {
+      "domain": "nosana-app.xyz"
+    },
+    {
+      "domain": "rtfights.com"
+    },
+    {
+      "domain": "marginfi.lol"
+    },
+    {
+      "domain": "jikanstudios.io"
+    },
+    {
+      "domain": "theseedfarm.app"
+    },
+    {
+      "domain": "sillycat.org"
+    },
+    {
+      "domain": "marginfi.shop"
+    },
+    {
+      "domain": "tro.gg"
+    },
+    {
+      "domain": "neku.io"
+    },
+    {
+      "domain": "apinlabs.com"
+    },
+    {
+      "domain": "bentencoin.io"
+    },
+    {
+      "domain": "crowfi.app"
+    },
+    {
+      "domain": "zaiprotocol.finance"
+    },
+    {
+      "domain": "froganadao.web.app"
+    },
+    {
+      "domain": "juppcases.work"
+    },
+    {
+      "domain": "stakesteak.app"
+    },
+    {
+      "domain": "metamarz.io"
+    },
+    {
+      "domain": "vitalik.is"
+    },
+    {
+      "domain": "bendogsolana.top"
+    },
+    {
+      "domain": "jupptrullo.cc"
+    },
+    {
+      "domain": "bitpulseportal.com"
+    },
+    {
+      "domain": "connect-0xchain.vercel.app"
+    },
+    {
+      "domain": "optinyan.xyz"
+    },
+    {
+      "domain": "dao-rewardes.web.app"
+    },
+    {
+      "domain": "portalgaming.vip"
+    },
+    {
+      "domain": "shinobininjasol.com"
+    },
+    {
+      "domain": "jup6jup6.com"
+    },
+    {
+      "domain": "tmwr.pro"
+    },
+    {
+      "domain": "dopegrowers.io"
+    },
+    {
+      "domain": "dao-rewards.web.app"
+    },
+    {
+      "domain": "secure-walletvalidator.xyz"
+    },
+    {
+      "domain": "visit-driphaus.com"
+    },
+    {
+      "domain": "solanagift-ahv.pages.dev"
+    },
+    {
+      "domain": "defiphantom.ai"
+    },
+    {
+      "domain": "pape-tokens.org"
+    },
+    {
+      "domain": "app-metis.co"
+    },
+    {
+      "domain": "claimconnect.pages.dev"
+    },
+    {
+      "domain": "quest.befilabsprotocols.live"
+    },
+    {
+      "domain": "phountom.xyz"
+    },
+    {
+      "domain": "pengonsol.xyz"
+    },
+    {
+      "domain": "dex-support.web.app"
+    },
+    {
+      "domain": "honk-get.netlify.app"
+    },
+    {
+      "domain": "tyc3.pro"
+    },
+    {
+      "domain": "3000w.io"
+    },
+    {
+      "domain": "app.parallelfl.network"
+    },
+    {
+      "domain": "areyoubullish.com"
+    },
+    {
+      "domain": "whitelist-cocosnaponsol.net"
+    },
+    {
+      "domain": "mainfixchain.com"
+    },
+    {
+      "domain": "areyoubullishsol.io"
+    },
+    {
+      "domain": "jupjup9.com"
+    },
+    {
+      "domain": "jils1.pro"
+    },
+    {
+      "domain": "mumucoin.org"
+    },
+    {
+      "domain": "claim-smogtoken.pages.dev"
+    },
+    {
+      "domain": "openlab.live"
+    },
+    {
+      "domain": "openbookgui.com"
+    },
+    {
+      "domain": "smole.app"
+    },
+    {
+      "domain": "bookofmeme.art"
+    },
+    {
+      "domain": "openbookmarket.space"
+    },
+    {
+      "domain": "phasnw.xyz"
+    },
+    {
+      "domain": "gmsol.ai"
+    },
+    {
+      "domain": "eth-bonus.net"
+    },
+    {
+      "domain": "getthew.pages.dev"
+    },
+    {
+      "domain": "solgift6.com"
+    },
+    {
+      "domain": "proxybridge.co.za"
+    },
+    {
+      "domain": "phantom-web-restore.webflow.io"
+    },
+    {
+      "domain": "blockchansmainnet.pages.dev"
+    },
+    {
+      "domain": "coimultiwallet.pages.dev"
+    },
+    {
+      "domain": "bobaoppas.xyz"
+    },
+    {
+      "domain": "bomedrop.io"
+    },
+    {
+      "domain": "bomedrop.cc"
+    },
+    {
+      "domain": "ngknss.cc"
+    },
+    {
+      "domain": "betadify.io"
+    },
+    {
+      "domain": "tensorcheck.web.app"
+    },
+    {
+      "domain": "appnodelink.web.app"
+    },
+    {
+      "domain": "phantom-online.vercel.app"
+    },
+    {
+      "domain": "launch.ansembullish.net"
+    },
+    {
+      "domain": "dappconnect.coinmerges.live"
+    },
+    {
+      "domain": "claimsloth.com"
+    },
+    {
+      "domain": "5000jup.com"
+    },
+    {
+      "domain": "ckpujr.cc"
+    },
+    {
+      "domain": "gummyonbase.net"
+    },
+    {
+      "domain": "collect-gummyonsol.com"
+    },
+    {
+      "domain": "sweatybear.app"
+    },
+    {
+      "domain": "tnsrchain.web.app"
+    },
+    {
+      "domain": "tnsr-daostage.web.app"
+    },
+    {
+      "domain": "phantomhub-presale.pages.dev"
+    },
+    {
+      "domain": "dappsmainnet.pages.dev"
+    },
+    {
+      "domain": "app-slothana.com"
+    },
+    {
+      "domain": "dappsmainet.pages.dev"
+    },
+    {
+      "domain": "gummyonsol-in.web.app"
+    },
+    {
+      "domain": "solanagreenland.com"
+    },
+    {
+      "domain": "bark-sol.com"
+    },
+    {
+      "domain": "zmorris.net"
+    },
+    {
+      "domain": "dapps.webprotocols.live"
+    },
+    {
+      "domain": "webprotocols.live"
+    },
+    {
+      "domain": "net-links.surge.sh"
+    },
+    {
+      "domain": "secureconnect.tistory.com"
+    },
+    {
+      "domain": "solana-minter.vercel.app"
+    },
+    {
+      "domain": "playdogeio.pages.dev"
+    },
+    {
+      "domain": "queryrectifysync.pages.dev"
+    },
+    {
+      "domain": "6660a23d6f35fe5357c3d281--magical-pixie-ca02cf.netlify.app"
+    },
+    {
+      "domain": "solana-dapp-react.pages.dev"
+    },
+    {
+      "domain": "safeconnect.tistory.com"
+    },
+    {
+      "domain": "portalhub.tistory.com"
+    },
+    {
+      "domain": "webchainnode.web.app"
+    },
+    {
+      "domain": "fix-dapp.pages.dev"
+    },
+    {
+      "domain": "cloudwl.vercel.app"
+    },
+    {
+      "domain": "slrf-fzbb38.vercel.app"
+    },
+    {
+      "domain": "megadicetoken.web.app"
+    },
+    {
+      "domain": "dappdefi.pages.dev"
+    },
+    {
+      "domain": "sealana.io"
+    },
+    {
+      "domain": "cloud-pp3wd0.vercel.app"
+    },
+    {
+      "domain": "swiftdog-fd555.web.app"
+    },
+    {
+      "domain": "nodeaccess.pages.dev"
+    },
+    {
+      "domain": "claims-sealana.pages.dev"
+    },
+    {
+      "domain": "8ffjdp-5000.csb.app"
+    },
+    {
+      "domain": "tea-defi-protocol.vercel.app"
+    },
+    {
+      "domain": "blockunified-app.pages.dev"
+    },
+    {
+      "domain": "unstake.it"
+    },
+    {
+      "domain": "bugrectifier.pages.dev"
+    },
+    {
+      "domain": "coinauth-node.web.app"
+    },
+    {
+      "domain": "apes-yigtqw.vercel.app"
+    },
+    {
+      "domain": "synchronizing-ledger-devices.vercel.app"
+    },
+    {
+      "domain": "dev-phantom-restore-page.webflow.io"
+    },
+    {
+      "domain": "blocknodes-resolve.pages.dev"
+    },
+    {
+      "domain": "shit-9mhpw5.vercel.app"
+    },
+    {
+      "domain": "shit-14rskx.vercel.app"
+    },
+    {
+      "domain": "dad-te2eq2.vercel.app"
+    },
+    {
+      "domain": "cloud-2pvgyy.vercel.app"
+    },
+    {
+      "domain": "cloud-f0dfrd.vercel.app"
+    },
+    {
+      "domain": "moo-7saxh5.vercel.app"
+    },
+    {
+      "domain": "ma-1ijj9q.vercel.app"
+    },
+    {
+      "domain": "ma-6au9u3.vercel.app"
+    },
+    {
+      "domain": "manekidrop.online"
+    },
+    {
+      "domain": "dad-rm57it.vercel.app"
+    },
+    {
+      "domain": "backpacknfts.web.app"
+    },
+    {
+      "domain": "smartsolution-nodes.pages.dev"
+    },
+    {
+      "domain": "fixphantom.vercel.app"
+    },
+    {
+      "domain": "wider.guru"
+    },
+    {
+      "domain": "grassfoundation-ioport.pages.dev"
+    },
+    {
+      "domain": "syncbit.info"
+    },
+    {
+      "domain": "resolvelivechain.web.app"
+    },
+    {
+      "domain": "central-optimalbasepad.pages.dev"
+    },
+    {
+      "domain": "rebrandautodefi.pages.dev"
+    },
+    {
+      "domain": "jups-ag.pages.dev"
+    },
+    {
+      "domain": "raydium-board.web.app"
+    },
+    {
+      "domain": "moodengclaim.netlify.app"
+    },
+    {
+      "domain": "coinfixsolution.pages.dev"
+    },
+    {
+      "domain": "photon-sols-tinyastro.xyz"
+    },
+    {
+      "domain": "photons-sol.xyz"
+    },
+    {
+      "domain": "webjup.cc"
+    },
+    {
+      "domain": "index-raydium.web.app"
+    },
+    {
+      "domain": "pumpp-fun.pages.dev"
+    },
+    {
+      "domain": "phantom-restorewalletteamdesk.webflow.io"
+    },
+    {
+      "domain": "dextoolwallets.on.fleek.co"
+    }
+  ],
+  "whitelist": [
+    "phantom.app",
+    "sneks.gg",
+    "polygonventures.xyz",
+    "fatcatsupgrade.com",
+    "idle-miner.club",
+    "wenwencoin.com",
+    "google.com",
+    "revoke.cash",
+    "nftplus.io"
+  ]
+}

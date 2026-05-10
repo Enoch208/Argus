@@ -6,13 +6,17 @@
  * (programs / wallets / mints), URL intel checks OCR-extracted domains
  * from screenshots. They share the severity vocabulary; nothing else.
  *
- * Storage: in-memory Map for v1 — the corpus is small enough (≤ 40 entries)
- * that SQLite is overkill. When the full Phantom-blocklist scrape lands
- * (~2,300 entries), we'll move to a SQLite table; the boundary is one
- * function (`lookupDomains`).
+ * Storage: in-memory Map. The corpus is bundled at build time as a JSON
+ * snapshot ([resources/data/phantom-blocklist.json](../../../resources/data/phantom-blocklist.json))
+ * scraped from `github.com/phantom/blocklist` (Apache-2.0). Refresh via
+ * `npx tsx scripts/refresh-url-blocklist.ts` — the snapshot's pinned commit
+ * SHA is preserved so reviewers can verify provenance. ~2.3k entries fits
+ * comfortably in a Map; the lookup boundary stays one function regardless
+ * of how the corpus is sourced.
  */
 
 import type { IntelSeverity } from "@/main/scam-intel/store";
+import phantomBundle from "../../../resources/data/phantom-blocklist.json";
 
 export interface UrlIntel {
   /** Normalised: lowercase, no scheme, no `www.`, no path / port. */
@@ -27,6 +31,22 @@ export interface UrlIntel {
 const SEED_UPDATED_AT = 1_762_646_400_000; // 2025-11-09T00:00:00Z
 const ARGUS_URL_ALLOWLIST = "argus-allowlist";
 const PHANTOM_BLOCKLIST = "phantom/blocklist";
+const PHANTOM_WHITELIST = "phantom/whitelist";
+
+interface PhantomBundle {
+  version: number;
+  fetchedAt: string;
+  source: string;
+  license: string;
+  commit: string;
+  commitDate: string;
+  blocklist: { domain: string }[];
+  whitelist: string[];
+}
+const PHANTOM = phantomBundle as PhantomBundle;
+// Phantom commit SHA at build time, surfaced through `urlIntelHealth()` so
+// reviewers can verify the bundled corpus against the upstream repo.
+const PHANTOM_COMMIT_AT_MS = Date.parse(PHANTOM.commitDate);
 
 function allowed(domain: string, label: string): UrlIntel {
   return {
@@ -91,9 +111,59 @@ const SEEDS: UrlIntel[] = [
   phantomTyposquat("tensor-airdrop.com", "tensor.trade"),
 ];
 
+/** Generic Phantom blocklist entry — used for the bundled corpus. The
+ *  hand-curated seeds keep their richer "mimics" labels and stay
+ *  authoritative; this builder fills in everything else. */
+function phantomBlock(domain: string): UrlIntel {
+  return {
+    domain: normaliseDomain(domain),
+    label: "Phantom-flagged phishing domain",
+    severity: "danger",
+    source: PHANTOM_BLOCKLIST,
+    note: `Listed in github.com/phantom/blocklist@${PHANTOM.commit.slice(0, 7)} as a known phishing or scam domain.`,
+    updatedAt: PHANTOM_COMMIT_AT_MS,
+  };
+}
+
+function phantomAllow(domain: string): UrlIntel {
+  return {
+    domain: normaliseDomain(domain),
+    label: "Phantom-flagged safe domain",
+    severity: "allow",
+    source: PHANTOM_WHITELIST,
+    note: `Listed in github.com/phantom/blocklist whitelist@${PHANTOM.commit.slice(0, 7)}.`,
+    updatedAt: PHANTOM_COMMIT_AT_MS,
+  };
+}
+
+/**
+ * Hand-curated seeds win on conflicts (richer labels, explicit `mimics`
+ * targets); Phantom corpus fills out the long tail. Order matters: the
+ * Map preserves the first insert, and we put `SEEDS` first.
+ */
+function buildSeedTable(): UrlIntel[] {
+  const out = new Map<string, UrlIntel>();
+  for (const seed of SEEDS) out.set(seed.domain, seed);
+  for (const entry of PHANTOM.blocklist) {
+    const key = normaliseDomain(entry.domain);
+    if (!key || out.has(key)) continue;
+    out.set(key, phantomBlock(key));
+  }
+  for (const domain of PHANTOM.whitelist) {
+    const key = normaliseDomain(domain);
+    if (!key || out.has(key)) continue;
+    out.set(key, phantomAllow(key));
+  }
+  return [...out.values()];
+}
+
+const ALL_ENTRIES: UrlIntel[] = buildSeedTable();
 const INDEX: ReadonlyMap<string, UrlIntel> = new Map(
-  SEEDS.map((s) => [s.domain, s]),
+  ALL_ENTRIES.map((s) => [s.domain, s]),
 );
+// Fuzzy matcher only checks against the canonical allow-list — the Phantom
+// blocklist is exact-match only (running Levenshtein over 2k entries on
+// every OCR'd domain would be wasteful and noisy).
 const ALLOWLIST = SEEDS.filter((s) => s.severity === "allow");
 
 /**
@@ -137,8 +207,22 @@ export function normaliseDomain(input: string): string {
 }
 
 /** Snapshot for diagnostics / Stack route. */
-export function urlIntelHealth(): { totalEntries: number } {
-  return { totalEntries: SEEDS.length };
+export function urlIntelHealth(): {
+  totalEntries: number;
+  blockedEntries: number;
+  allowedEntries: number;
+  handCurated: number;
+  phantomCommit: string;
+  phantomCommitDate: string;
+} {
+  return {
+    totalEntries: ALL_ENTRIES.length,
+    blockedEntries: ALL_ENTRIES.filter((e) => e.severity === "danger").length,
+    allowedEntries: ALL_ENTRIES.filter((e) => e.severity === "allow").length,
+    handCurated: SEEDS.length,
+    phantomCommit: PHANTOM.commit.slice(0, 7),
+    phantomCommitDate: PHANTOM.commitDate,
+  };
 }
 
 function fuzzyTyposquat(domain: string): UrlIntel | null {

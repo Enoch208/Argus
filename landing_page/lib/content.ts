@@ -188,7 +188,7 @@ export const PIPELINE_CARDS: PipelineCard[] = [
     icon: Connect,
     title: "Cross-reference",
     blurb:
-      "Local scam-intel (Mandiant CLINKSINK + SolanaFM), URL allow-list with one-edit fuzzy-match, and BGE-embedded personal history converge on a single severity.",
+      "65 hand-curated wallet/program/mint entries from Mandiant CLINKSINK + SolanaFM, plus 2,247 domains from the live Phantom blocklist scrape, plus BGE-embedded personal history — all converging on a single severity.",
     variant: "orbit",
   },
   {

@@ -17,6 +17,7 @@
     "demo:phishing": "tsx scripts/demo.ts phishing",
     "demo:safe": "tsx scripts/demo.ts safe",
     "demo:approve": "tsx scripts/demo.ts approve",
+    "refresh:intel": "tsx scripts/refresh-url-blocklist.ts",
     "postinstall": "electron-builder install-app-deps"
   },
   "//deps": "better-sqlite3 backs the local scam-intel store; @types/better-sqlite3 is dev-only.",
