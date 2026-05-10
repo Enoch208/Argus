@@ -11,6 +11,11 @@ import { app } from "electron";
 import Database from "better-sqlite3";
 import { ArgusError } from "@/shared/errors";
 import {
+  retrieveHistorySignals,
+  type HistoryRagInput,
+  type HistoryRagSignal,
+} from "@/main/review/history-rag";
+import {
   ReviewRecord,
   type ReviewRecord as ReviewRecordT,
   type Verdict,
@@ -110,18 +115,32 @@ export function reviewHistory(): ReviewRecordT[] {
 export function searchReviews(query: string): ReviewRecordT[] {
   const q = query.trim();
   if (!q) return [...queuedReviews(), ...reviewHistory()].slice(0, 80);
-  return rowsToRecords(
+  const records = rowsToRecords(
     openDb()
-      .prepare<[string, string, string], ReviewRow>(
+      .prepare<[], ReviewRow>(
         `SELECT * FROM reviews
-         WHERE verdict_json LIKE ?
-            OR status LIKE ?
-            OR signature LIKE ?
          ORDER BY updated_at DESC
-         LIMIT 80`,
+         LIMIT 200`,
       )
-      .all(`%${q}%`, `%${q}%`, `%${q}%`),
+      .all(),
   );
+  return rankSearch(q, records).slice(0, 80);
+}
+
+export async function personalHistorySignal(
+  input: HistoryRagInput,
+): Promise<HistoryRagSignal> {
+  const records = rowsToRecords(
+    openDb()
+      .prepare<[], ReviewRow>(
+        `SELECT * FROM reviews
+         WHERE status != 'pending'
+         ORDER BY updated_at DESC
+         LIMIT 200`,
+      )
+      .all(),
+  );
+  return retrieveHistorySignals(input, records);
 }
 
 function openDb(): Database.Database {
@@ -163,4 +182,41 @@ function rowsToRecords(rows: ReviewRow[]): ReviewRecordT[] {
       return [];
     }
   });
+}
+
+function rankSearch(query: string, records: ReviewRecordT[]): ReviewRecordT[] {
+  const q = query.toLowerCase();
+  const tokens = q.match(/[a-z0-9]{2,}/g) ?? [];
+  return records
+    .map((record) => {
+      const haystack = recordText(record).toLowerCase();
+      const exact = haystack.includes(q) ? 5 : 0;
+      const tokenScore = tokens.reduce(
+        (score, token) => score + (haystack.includes(token) ? 1 : 0),
+        0,
+      );
+      return { record, score: exact + tokenScore };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || b.record.updatedAt - a.record.updatedAt)
+    .map(({ record }) => record);
+}
+
+function recordText(record: ReviewRecordT): string {
+  return [
+    record.status,
+    record.signature ?? "",
+    record.verdict.level,
+    record.verdict.summary,
+    record.verdict.explanation.title,
+    record.verdict.explanation.plainEnglish,
+    record.verdict.explanation.recommendation,
+    ...record.verdict.citations,
+    ...record.verdict.instructions.flatMap((ix) => [
+      ix.kind,
+      ix.summary,
+      ix.programId,
+      ...Object.values(ix.details).map(String),
+    ]),
+  ].join(" ");
 }

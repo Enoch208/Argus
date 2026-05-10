@@ -113,14 +113,33 @@ export const channels = {
     output: z.object({ ok: z.literal(true) }),
   },
 
-  /** Begins the review pipeline for a pasted base58 transaction. */
+  /** Begins the review pipeline for a pasted base58 transaction and / or
+   *  a dragged screenshot. Either input fires alone; both can fire together
+   *  (paste a screenshot of the dApp UI alongside the base58 it's about to
+   *  sign). The pipeline runs whichever surfaces are present.
+   *
+   *  Image bytes travel as base64 over IPC — Electron's IPC supports binary,
+   *  but base64 keeps the payload JSON-serialisable and the wire-format
+   *  obvious in logs (which never log it; SECURITY.md §logging redacts long
+   *  base64 strings). */
   "review.start": {
-    input: z.object({
-      raw: z
-        .string()
-        .min(1)
-        .regex(/^[1-9A-HJ-NP-Za-km-z]+$/, "expected base58"),
-    }),
+    input: z
+      .object({
+        raw: z
+          .string()
+          .min(1)
+          .regex(/^[1-9A-HJ-NP-Za-km-z]+$/, "expected base58")
+          .optional(),
+        image: z
+          .object({
+            base64: z.string().min(1),
+            mime: z.enum(["image/png", "image/jpeg", "image/webp"]),
+          })
+          .optional(),
+      })
+      .refine((d) => d.raw !== undefined || d.image !== undefined, {
+        message: "review.start requires `raw`, `image`, or both",
+      }),
     output: Verdict,
   },
 

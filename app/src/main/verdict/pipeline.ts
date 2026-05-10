@@ -1,8 +1,10 @@
 /**
- * Verdict pipeline. Today: decode → simulate → intel-lookup (program + wallet
- * + mint) → QVAC LLM explanation → assemble verdict. Tomorrow: + history RAG.
- * The output shape is stable across all those upgrades — the renderer
- * doesn't notice.
+ * Verdict pipeline. Inputs in priority order:
+ *   1. base58 transaction → decode → simulate → on-chain intel lookup
+ *   2. screenshot bytes → OCR → URL allow-list / blocklist lookup
+ * Either is optional; both can fire together (paste a screenshot of the
+ * dApp UI alongside the base58 it's about to ask the user to sign). The
+ * pipeline runs whichever surfaces are present.
  *
  * STRICT (DESIGN-PRINCIPLES.md):
  *   §1 The verdict comes first → `level` + `summary` are populated before
@@ -12,9 +14,15 @@
  *      with the explicit "novel program" reason. Never silently green.
  */
 
+import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
 import { ArgusError } from "@/shared/errors";
 import { explainVerdict } from "@/main/verdict/explainer";
+import {
+  historySignalCitation,
+  type HistoryRagSignal,
+} from "@/main/review/history-rag";
+import { personalHistorySignal } from "@/main/review/store";
 import type {
   DecodedInstruction,
   Verdict,
@@ -29,40 +37,87 @@ import {
   type ProgramIntel,
   type WalletIntel,
 } from "@/main/scam-intel/store";
+import { lookupDomains, type UrlIntel } from "@/main/url-intel/store";
+import { extractUrlsFromImage } from "@/main/ocr/extractor";
 import { parseTransaction } from "@/main/solana/decoder";
 import { simulate } from "@/main/solana/simulator";
+
+export interface ReviewInput {
+  raw?: string;
+  image?: { base64: string; mime: string };
+}
 
 interface IntelHits {
   program: ProgramIntel[];
   wallet: WalletIntel[];
   mint: MintIntel[];
+  url: UrlIntel[];
 }
 
-export async function reviewTransaction(raw: string): Promise<Verdict> {
-  const parsed = parseTransaction(raw);
+interface OcrSurface {
+  text: string;
+  domains: string[];
+}
+
+export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
+  if (!input.raw && !input.image) {
+    throw new ArgusError(
+      "IPC_INVALID_PAYLOAD",
+      "review requires `raw`, `image`, or both",
+    );
+  }
+
+  // ── Phase 1: optional decode + simulate ────────────────────────────────
+  let instructions: DecodedInstruction[] = [];
   let deltas: Verdict["deltas"] = [];
   let simFailed: string | null = null;
 
-  try {
-    const sim = await simulate(parsed.transaction);
-    deltas = sim.deltas;
-    if (sim.raw.err) simFailed = JSON.stringify(sim.raw.err);
-  } catch (err) {
-    if (err instanceof ArgusError) simFailed = err.message;
-    else throw err;
-    logger.warn("simulation failed; verdict still emits", { msg: simFailed });
+  if (input.raw) {
+    const parsed = parseTransaction(input.raw);
+    instructions = parsed.instructions;
+    try {
+      const sim = await simulate(parsed.transaction);
+      deltas = sim.deltas;
+      if (sim.raw.err) simFailed = JSON.stringify(sim.raw.err);
+    } catch (err) {
+      if (err instanceof ArgusError) simFailed = err.message;
+      else throw err;
+      logger.warn("simulation failed; verdict still emits", { msg: simFailed });
+    }
   }
 
-  const intel = lookupAllIntel(parsed.instructions);
-  const level = pickLevel(parsed.instructions, simFailed, intel);
-  const summary = buildSummary(parsed.instructions, level, simFailed, intel);
-  const citations = buildCitations(parsed.instructions, deltas, simFailed, intel);
-  const meta = buildMeta(parsed.instructions, simFailed, intel);
+  // ── Phase 2: optional OCR ─────────────────────────────────────────────
+  let ocr: OcrSurface | null = null;
+  if (input.image) {
+    try {
+      const bytes = Buffer.from(input.image.base64, "base64");
+      ocr = await extractUrlsFromImage(bytes);
+    } catch (err) {
+      logger.warn("ocr failed; verdict continues without URL signals", {
+        msg: err instanceof Error ? err.message : "?",
+      });
+    }
+  }
+
+  // ── Phase 3: collated intel lookup ────────────────────────────────────
+  const intel = lookupAllIntel(instructions, ocr?.domains ?? []);
+  const level = pickLevel(instructions, simFailed, intel, !!input.image);
+  const summary = buildSummary(instructions, level, simFailed, intel, !!input.image);
+  const citations = buildCitations(
+    instructions,
+    deltas,
+    simFailed,
+    intel,
+    ocr,
+  );
+  const history = await personalHistorySignal({ summary, citations, instructions });
+  citations.push(historySignalCitation(history));
+  const meta = buildMeta(instructions, simFailed, intel, !!input.image, history);
   const explanation = await explainVerdict({
     level,
     summary,
     citations,
-    instructions: parsed.instructions,
+    instructions,
     deltas,
     simFailed,
   });
@@ -73,7 +128,7 @@ export async function reviewTransaction(raw: string): Promise<Verdict> {
     summary,
     explanation,
     citations,
-    instructions: parsed.instructions,
+    instructions,
     deltas,
     meta,
     createdAt: Date.now(),
@@ -81,19 +136,18 @@ export async function reviewTransaction(raw: string): Promise<Verdict> {
 }
 
 // ---------------------------------------------------------------------------
-// Intel collection — pulls every address worth looking up out of the decoded
-// instructions and runs all three table lookups in one pass.
+// Intel collection
 // ---------------------------------------------------------------------------
 
-function lookupAllIntel(ix: DecodedInstruction[]): IntelHits {
+function lookupAllIntel(
+  ix: DecodedInstruction[],
+  ocrDomains: string[],
+): IntelHits {
   const programIds = ix.map((i) => i.programId);
 
   const wallets = new Set<string>();
   const mints = new Set<string>();
   for (const i of ix) {
-    // Recipient-shaped fields per InstructionKind. We're conservative — only
-    // address-typed values, never amounts. Anything we add to the decoder
-    // becomes lookupable here automatically by extending this switch.
     switch (i.kind) {
       case "sol-transfer":
         if (typeof i.details.to === "string") wallets.add(i.details.to);
@@ -107,9 +161,6 @@ function lookupAllIntel(ix: DecodedInstruction[]): IntelHits {
       case "spl-close-account":
         if (typeof i.details.destination === "string") wallets.add(i.details.destination);
         break;
-      // Mints are surfaced when the decoder learns to extract them
-      // (Token-2022 transfer-checked carries one). For now this set may stay
-      // empty — the table is queried but returns nothing.
       default:
         break;
     }
@@ -119,17 +170,19 @@ function lookupAllIntel(ix: DecodedInstruction[]): IntelHits {
     program: lookupProgramIntel(programIds),
     wallet: lookupWalletIntel([...wallets]),
     mint: lookupMintIntel([...mints]),
+    url: lookupDomains(ocrDomains),
   };
 }
 
 // ---------------------------------------------------------------------------
-// Verdict-level policy. Conservative until the history-RAG pass lands.
+// Verdict-level policy
 // ---------------------------------------------------------------------------
 
 function pickLevel(
   ix: DecodedInstruction[],
   simFailed: string | null,
   intel: IntelHits,
+  hasImage: boolean,
 ): VerdictLevel {
   if (simFailed) return "RED";
   if (anyDanger(intel)) return "RED";
@@ -137,7 +190,7 @@ function pickLevel(
   if (ix.some((i) => i.kind === "spl-approve")) return "YELLOW";
   if (anyCaution(intel)) return "YELLOW";
   if (ix.some((i) => i.kind === "unknown")) return "YELLOW";
-  if (ix.length === 0) return "YELLOW";
+  if (ix.length === 0 && !hasImage) return "YELLOW";
   return "YELLOW"; // see DESIGN-PRINCIPLES §3 — never overclaim certainty
 }
 
@@ -145,14 +198,16 @@ function anyDanger(intel: IntelHits): boolean {
   return (
     intel.program.some((i) => i.severity === "danger") ||
     intel.wallet.some((i) => i.severity === "danger") ||
-    intel.mint.some((i) => i.severity === "danger")
+    intel.mint.some((i) => i.severity === "danger") ||
+    intel.url.some((u) => u.severity === "danger")
   );
 }
 function anyCaution(intel: IntelHits): boolean {
   return (
     intel.program.some((i) => i.severity === "caution") ||
     intel.wallet.some((i) => i.severity === "caution") ||
-    intel.mint.some((i) => i.severity === "caution")
+    intel.mint.some((i) => i.severity === "caution") ||
+    intel.url.some((u) => u.severity === "caution")
   );
 }
 
@@ -161,8 +216,12 @@ function buildSummary(
   level: VerdictLevel,
   simFailed: string | null,
   intel: IntelHits,
+  hasImage: boolean,
 ): string {
   if (level === "RED" && simFailed) return "Refuse to sign — simulation rejected.";
+  if (level === "RED" && intel.url.some((u) => u.severity === "danger")) {
+    return "Refuse to engage — screenshot shows a domain on the local URL blocklist.";
+  }
   if (level === "RED" && intel.wallet.some((w) => w.severity === "danger")) {
     return "Refuse to sign — recipient is on the local scam-intel blocklist.";
   }
@@ -172,6 +231,7 @@ function buildSummary(
   if (level === "RED" && intel.mint.some((m) => m.severity === "danger")) {
     return "Refuse to sign — token mint is on the local scam-intel blocklist.";
   }
+  if (ix.length === 0 && hasImage) return "Screenshot reviewed; no transaction submitted.";
   if (ix.length === 0) return "Empty transaction.";
   if (ix.length === 1) return ix[0]!.summary;
   const head = ix[0]!.summary;
@@ -183,20 +243,22 @@ function buildCitations(
   deltas: Verdict["deltas"],
   simFailed: string | null,
   intel: IntelHits,
+  ocr: OcrSurface | null,
 ): string[] {
   const out: string[] = [];
 
-  if (simFailed) {
-    out.push(`Simulation rejected: ${simFailed}.`);
-  } else {
-    out.push(`Simulation passed (${ix.length} instruction${ix.length === 1 ? "" : "s"}).`);
+  if (ix.length > 0) {
+    if (simFailed) {
+      out.push(`Simulation rejected: ${simFailed}.`);
+    } else {
+      out.push(`Simulation passed (${ix.length} instruction${ix.length === 1 ? "" : "s"}).`);
+    }
+    for (const i of ix.slice(0, 3)) out.push(i.summary);
   }
 
-  for (const i of ix.slice(0, 3)) {
-    out.push(i.summary);
-  }
+  if (ix.length > 0) out.push(buildOnchainIntelCitation(ix, intel));
 
-  out.push(buildIntelCitation(ix, intel));
+  if (ocr) out.push(buildUrlCitation(intel, ocr));
 
   const unknownCount = ix.filter((i) => i.kind === "unknown").length;
   if (unknownCount > 0) {
@@ -214,26 +276,16 @@ function buildCitations(
     }
   }
 
+  // DESIGN-PRINCIPLES.md §2 — at least one citation, always.
+  if (out.length === 0) out.push("No verifiable signals were extracted from the inputs.");
+
   return out;
 }
 
-function buildMeta(
-  ix: DecodedInstruction[],
-  simFailed: string | null,
-  intel: IntelHits,
-): string {
-  const parts: string[] = [];
-  parts.push(simFailed ? "Simulation · rejected" : "Simulation");
-  parts.push(anyDanger(intel) ? "Intel · flagged" : "Intel");
-  if (ix.length > 0) parts.push(`${ix.length} ix`);
-  return parts.join(" · ");
-}
-
-function buildIntelCitation(
+function buildOnchainIntelCitation(
   ix: DecodedInstruction[],
   intel: IntelHits,
 ): string {
-  // Surface the highest-severity hit, regardless of which table fired it.
   const danger = [
     ...intel.wallet.filter((w) => w.severity === "danger").map((w) => `recipient ${w.label}`),
     ...intel.program.filter((p) => p.severity === "danger").map((p) => `program ${p.label}`),
@@ -254,6 +306,39 @@ function buildIntelCitation(
 
   const programsChecked = new Set(ix.map((i) => i.programId)).size;
   return `Local scam-intel checked ${programsChecked} program${programsChecked === 1 ? "" : "s"}; no blocklist matches.`;
+}
+
+function buildUrlCitation(intel: IntelHits, ocr: OcrSurface): string {
+  const danger = intel.url.filter((u) => u.severity === "danger");
+  if (danger.length > 0) {
+    const sample = danger.slice(0, 3).map((u) => `${u.domain} (${u.label})`).join(", ");
+    return `OCR found ${danger.length} blocked domain${danger.length === 1 ? "" : "s"}: ${sample}.`;
+  }
+  const allow = intel.url.filter((u) => u.severity === "allow");
+  if (allow.length > 0) {
+    const sample = allow.slice(0, 3).map((u) => u.domain).join(", ");
+    return `OCR recognised canonical Solana dApp${allow.length === 1 ? "" : "s"}: ${sample}.`;
+  }
+  if (ocr.domains.length > 0) {
+    return `OCR extracted ${ocr.domains.length} domain${ocr.domains.length === 1 ? "" : "s"}; none on the local URL allow-list or blocklist.`;
+  }
+  return `OCR extracted no domains from the screenshot.`;
+}
+
+function buildMeta(
+  ix: DecodedInstruction[],
+  simFailed: string | null,
+  intel: IntelHits,
+  hasImage: boolean,
+  history: HistoryRagSignal,
+): string {
+  const parts: string[] = [];
+  if (ix.length > 0) parts.push(simFailed ? "Simulation · rejected" : "Simulation");
+  parts.push(anyDanger(intel) ? "Intel · flagged" : "Intel");
+  if (hasImage) parts.push("OCR");
+  parts.push(history.hits.length > 0 ? "History · match" : "History");
+  if (ix.length > 0) parts.push(`${ix.length} ix`);
+  return parts.join(" · ");
 }
 
 // ---------------------------------------------------------------------------

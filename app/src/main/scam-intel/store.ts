@@ -6,15 +6,18 @@
  * pipeline queries it synchronously while assembling citations. No intel
  * lookup leaves the device.
  *
- * Three independent tables, same shape:
+ * Four independent tables, same shape:
  *
  *   - `program_intel` — known programs (System, SPL, Jupiter, Magic Eden, …).
- *     Severity `caution` for routers / marketplaces; `danger` for confirmed
- *     drainers; `allow` for canonical infra programs.
- *   - `wallet_intel`  — known recipient wallets (drainer hot-wallets, the
- *     PRD-fixture demo address used by `npm run demo:phishing`).
- *   - `mint_intel`    — known SPL mints (canonical USDC; copycats; rugged
- *     mints).
+ *   - `wallet_intel`  — known recipient wallets (drainer hot-wallets, demo
+ *     fixture used by `npm run demo:phishing`).
+ *   - `mint_intel`    — known SPL mints (canonical USDC; copycats).
+ *   - `url_intel`     — canonical dApp domains + Phantom-blocked typo-squats,
+ *     consumed by the OCR pipeline (ADR-0013).
+ *
+ *   Severity in every table: `allow` (canonical infra), `caution` (known
+ *   router / marketplace, requires verification), `danger` (confirmed
+ *   drainer / scam).
  */
 
 import { mkdirSync } from "node:fs";
@@ -43,6 +46,9 @@ export interface WalletIntel extends IntelBase {
 export interface MintIntel extends IntelBase {
   mint: string;
 }
+export interface UrlIntel extends IntelBase {
+  domain: string;
+}
 
 interface ProgramRow {
   program_id: string;
@@ -54,6 +60,14 @@ interface ProgramRow {
 }
 interface AddressRow {
   address: string;
+  label: string;
+  severity: IntelSeverity;
+  source: string;
+  note: string;
+  updated_at: number;
+}
+interface UrlRow {
+  domain: string;
   label: string;
   severity: IntelSeverity;
   source: string;
@@ -85,6 +99,8 @@ const SEED_UPDATED_AT = 1_762_646_400_000; // 2025-11-09T00:00:00Z
 const ARGUS_REGISTRY_SOURCE = "Argus bundled registry";
 const MANDIANT_CLINKSINK = "mandiant/clinksink-2024";
 const SOLANAFM_FLAGGED = "solanafm/scam-token-wallets-2024";
+const ARGUS_URL_ALLOWLIST = "argus-allowlist";
+const PHANTOM_BLOCKLIST = "phantom/blocklist";
 
 const PROGRAM_SEEDS: ProgramIntel[] = [
   {
@@ -453,7 +469,97 @@ const MINT_SEEDS: MintIntel[] = [
   },
 ];
 
+/**
+ * Compact builders for the URL cohorts — same pattern as
+ * `clinksinkAffiliates`. Domains are stored normalised (lowercase, no
+ * scheme, no `www.`, no trailing slash); the lookup function normalises
+ * the same way before hitting the index.
+ */
+function allowedDomain(domain: string, label: string): UrlIntel {
+  return {
+    domain: normaliseDomain(domain),
+    label,
+    severity: "allow",
+    source: ARGUS_URL_ALLOWLIST,
+    note: `Canonical Solana dApp · ${label}.`,
+    updatedAt: SEED_UPDATED_AT,
+  };
+}
+function phantomTyposquat(domain: string, mimics: string): UrlIntel {
+  return {
+    domain: normaliseDomain(domain),
+    label: `Phantom-flagged typo-squat of ${mimics}`,
+    severity: "danger",
+    source: PHANTOM_BLOCKLIST,
+    note: `Listed in github.com/phantom/blocklist as a known phishing domain mimicking ${mimics}.`,
+    updatedAt: SEED_UPDATED_AT,
+  };
+}
+
+const URL_SEEDS: UrlIntel[] = [
+  // ── Canonical Solana dApps ──────────────────────────────────────────────
+  // Argus's "we recognise this" allow-list. A future fuzzy-match upgrade
+  // (Levenshtein over these) detects typo-squats not in the blocklist yet.
+  allowedDomain("magiceden.io", "Magic Eden"),
+  allowedDomain("tensor.trade", "Tensor"),
+  allowedDomain("jup.ag", "Jupiter"),
+  allowedDomain("raydium.io", "Raydium"),
+  allowedDomain("orca.so", "Orca"),
+  allowedDomain("drift.trade", "Drift"),
+  allowedDomain("marinade.finance", "Marinade"),
+  allowedDomain("kamino.finance", "Kamino"),
+  allowedDomain("solana.com", "Solana Foundation"),
+  allowedDomain("solscan.io", "Solscan"),
+  allowedDomain("solana.fm", "SolanaFM"),
+  allowedDomain("phantom.app", "Phantom"),
+  allowedDomain("solflare.com", "Solflare"),
+  allowedDomain("backpack.app", "Backpack"),
+  allowedDomain("pump.fun", "pump.fun"),
+  allowedDomain("birdeye.so", "Birdeye"),
+  allowedDomain("dexscreener.com", "DEX Screener"),
+
+  // ── Phantom-blocked typo-squats (sample of ~2,300; full scrape is a
+  //    follow-up, see `scripts/refresh-url-intel.ts` placeholder in ADR-0013).
+  phantomTyposquat("phantomweb.app", "phantom.app"),
+  phantomTyposquat("phantom-web.app", "phantom.app"),
+  phantomTyposquat("phantom-extension.com", "phantom.app"),
+  phantomTyposquat("phantomwallet.live", "phantom.app"),
+  phantomTyposquat("solflare.asia", "solflare.com"),
+  phantomTyposquat("solflare-web.org", "solflare.com"),
+  phantomTyposquat("solflare.biz", "solflare.com"),
+  phantomTyposquat("solflare.live", "solflare.com"),
+  phantomTyposquat("soflarewallet.com", "solflare.com"),
+  phantomTyposquat("magiceden.site", "magiceden.io"),
+  phantomTyposquat("magicedenpresale.com", "magiceden.io"),
+  phantomTyposquat("magiceden-mint.com", "magiceden.io"),
+  phantomTyposquat("magic-edenn.io", "magiceden.io"),
+  phantomTyposquat("solscan.tech", "solscan.io"),
+  phantomTyposquat("backpack-claim.com", "backpack.app"),
+  phantomTyposquat("jup-claim.org", "jup.ag"),
+  phantomTyposquat("tensor-airdrop.com", "tensor.trade"),
+];
+
 // ---------------------------------------------------------------------------
+
+/**
+ * Normalised form of a domain for the URL allow-list / blocklist:
+ *   lowercase, no `https?://`, no `www.`, no trailing slash, no path,
+ *   no port. Same on insert and on lookup so equality is exact.
+ */
+export function normaliseDomain(input: string): string {
+  let s = input.trim().toLowerCase();
+  s = s.replace(/^https?:\/\//, "");
+  s = s.replace(/^www\./, "");
+  // Strip path / query / fragment.
+  const slash = s.indexOf("/");
+  if (slash !== -1) s = s.slice(0, slash);
+  const q = s.indexOf("?");
+  if (q !== -1) s = s.slice(0, q);
+  // Strip port.
+  const colon = s.indexOf(":");
+  if (colon !== -1) s = s.slice(0, colon);
+  return s;
+}
 
 let cachedDb: Database.Database | null = null;
 
@@ -498,6 +604,29 @@ export function lookupMintIntel(mints: string[]): MintIntel[] {
     note: r.note,
     updatedAt: r.updated_at,
   }));
+}
+
+export function lookupUrlIntel(domains: string[]): UrlIntel[] {
+  // Caller may pass raw URLs; we normalise on the way in so lookup is one
+  // exact-match query per domain regardless of input shape.
+  const unique = [...new Set(domains.map((d) => normaliseDomain(d)))].filter(Boolean);
+  if (unique.length === 0) return [];
+  const stmt = openDb().prepare<[string], UrlRow>(
+    "SELECT domain, label, severity, source, note, updated_at FROM url_intel WHERE domain = ?",
+  );
+  return unique
+    .map((d) => stmt.get(d))
+    .filter((r): r is UrlRow => Boolean(r))
+    .map(
+      (r): UrlIntel => ({
+        domain: r.domain,
+        label: r.label,
+        severity: r.severity,
+        source: r.source,
+        note: r.note,
+        updatedAt: r.updated_at,
+      }),
+    );
 }
 
 function lookupAddressTable<T>(
@@ -559,6 +688,16 @@ function openDb(): Database.Database {
       updated_at INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_mint_intel_severity ON mint_intel(severity);
+
+    CREATE TABLE IF NOT EXISTS url_intel (
+      domain TEXT PRIMARY KEY,
+      label TEXT NOT NULL,
+      severity TEXT NOT NULL CHECK (severity IN ('allow', 'caution', 'danger')),
+      source TEXT NOT NULL,
+      note TEXT NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_url_intel_severity ON url_intel(severity);
   `);
   seedAll(db);
 
@@ -568,6 +707,7 @@ function openDb(): Database.Database {
     programs: PROGRAM_SEEDS.length,
     wallets: WALLET_SEEDS.length,
     mints: MINT_SEEDS.length,
+    urls: URL_SEEDS.length,
   });
   return cachedDb;
 }
@@ -606,11 +746,23 @@ function seedAll(db: Database.Database): void {
       updated_at = excluded.updated_at
     WHERE mint_intel.source = excluded.source
   `);
+  const insertUrl = db.prepare(`
+    INSERT INTO url_intel (domain, label, severity, source, note, updated_at)
+    VALUES (@domain, @label, @severity, @source, @note, @updatedAt)
+    ON CONFLICT(domain) DO UPDATE SET
+      label = excluded.label,
+      severity = excluded.severity,
+      source = excluded.source,
+      note = excluded.note,
+      updated_at = excluded.updated_at
+    WHERE url_intel.source IN ('${ARGUS_URL_ALLOWLIST}', '${PHANTOM_BLOCKLIST}')
+  `);
 
   const tx = db.transaction(() => {
     for (const p of PROGRAM_SEEDS) insertProgram.run(p);
     for (const w of WALLET_SEEDS) insertWallet.run(w);
     for (const m of MINT_SEEDS) insertMint.run(m);
+    for (const u of URL_SEEDS) insertUrl.run(u);
   });
   tx();
 }

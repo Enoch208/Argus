@@ -12,9 +12,12 @@ import { signAndBroadcast } from "@/main/solana/signer";
 import { reviewTransaction } from "@/main/verdict/pipeline";
 
 export function registerReviewHandlers(): void {
-  register("review.start", async ({ raw }) => {
-    const verdict = await reviewTransaction(raw);
-    savePendingReview(raw, verdict);
+  register("review.start", async (input) => {
+    const verdict = await reviewTransaction(input);
+    // Image-only reviews aren't approveable — no transaction to sign — so
+    // they emit a verdict for display but don't enter the pending queue.
+    // OCR-augmented reviews of an actual transaction still queue normally.
+    if (input.raw) savePendingReview(input.raw, verdict);
     return verdict;
   });
 

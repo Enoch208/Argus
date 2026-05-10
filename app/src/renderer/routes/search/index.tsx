@@ -16,8 +16,9 @@ export default function SearchRoute() {
           <span className={t.eyebrow}>Search</span>
           <h1 className={t.h2}>Ask your wallet history.</h1>
           <p className={t.body}>
-            Search verdicts, citations, signatures, and statuses locally. RAG can
-            layer on later without changing the surface.
+            Local retrieval over verdicts, citations, signatures, and decisions.
+            Argus uses the same history memory to spot familiar approvals and
+            unusual requests during review.
           </p>
         </header>
 
