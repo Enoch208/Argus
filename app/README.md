@@ -117,8 +117,8 @@ npm run test            # vitest (decoder + url-intel + history-rag)
 
 ## What's *not* yet implemented
 
-- ☐ Multimodal LLM over screenshots — deferred until `node-llama-cpp` ships a multimodal API ([ADR-0015](docs/decisions/0015-vision-deferred-brand-impersonation.md)). Brand-impersonation + URL allow-list are the screenshot signals today.
-- ☐ Voice mode (Whisper transcribe → Piper readback)
+- ☐ Multimodal LLM over screenshots — deferred until `@qvac/sdk`'s projection-model loading path is wired ([ADR-0015](docs/decisions/0015-vision-deferred-brand-impersonation.md)). Brand-impersonation + URL allow-list are the screenshot signals today.
+- ☐ `@qvac/sdk` `translate` — multilingual verdict explanations
 - ☐ Phantom-blocklist full ~2,300-entry scrape ([scripts/refresh-url-intel.ts](scripts/) is the boundary)
 
 ## Related
