@@ -65,8 +65,8 @@ Argus runs on the **official [QVAC SDK](https://www.npmjs.com/package/@qvac/sdk)
 | Verdict explainer | `Qwen3-1.7B-Q4_K_M.gguf` (via `@qvac/llm-llamacpp`) | [src/main/verdict/explainer.ts](src/main/verdict/explainer.ts) |
 | Personal-history RAG embeddings | `bge-small-en-v1.5-q4_k_m.gguf` (via `@qvac/embed-llamacpp`) | [src/main/llm/embedder.ts](src/main/llm/embedder.ts) |
 | Screenshot text extraction | `@qvac/ocr-onnx` (CRAFT detector + Latin recognizer) | [src/main/ocr/extractor.ts](src/main/ocr/extractor.ts) |
-| Voice transcription | `whisper-base.en` (via `@qvac/transcription-whispercpp`) | reserved |
-| Voice readback | Piper (via `@qvac/tts-onnx`) | reserved |
+| Voice transcription | Whisper base.en (via `@qvac/transcription-whispercpp`) | [src/main/ipc/handlers/voice.ts](src/main/ipc/handlers/voice.ts) |
+| Voice readback | Chatterbox q4f16 (via `@qvac/tts-onnx`) | [src/renderer/components/verdict/read-aloud.tsx](src/renderer/components/verdict/read-aloud.tsx) |
 
 > Multimodal vision (`MiniCPM-V-2.6`) is intentionally deferred until we wire the QVAC SDK's projection-model loading path. Today the screenshot signals are OCR'd URLs and the brand-impersonation citation in the verdict pipeline ([ADR-0015](docs/decisions/0015-vision-deferred-brand-impersonation.md)).
 
