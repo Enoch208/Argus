@@ -32,3 +32,5 @@ release/
 *.swo
 
 *.md
+!README.md
+!**/README.md
