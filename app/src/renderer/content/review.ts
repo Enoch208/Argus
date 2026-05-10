@@ -1,17 +1,17 @@
 export const REVIEW_COPY = {
-  title: ["Review a transaction or screenshot.", ""],
-  body: "Paste a base58-encoded Solana transaction, drop a screenshot of a suspicious dApp / message, or both. Argus decodes the transaction, runs a chain simulation, OCRs the image for URLs, and surfaces a verdict you can act on.",
-  pasteLabel: "Base58 transaction",
+  title: ["Check before you sign.", ""],
+  body: "Paste the transaction request from a wallet or crypto app, drop a screenshot of a suspicious site or message, or use both. Argus explains what it sees and tells you whether it looks safe.",
+  pasteLabel: "Transaction request",
   placeholder:
-    "paste here — typically copied from a dApp's 'advanced' or 'raw' panel before signing",
+    "paste the raw transaction text here if the app gives you one",
   imageLabel: "Screenshot",
-  imageHint: "Drag or paste (⌘V) a screenshot of the dApp or message. PNG, JPEG, or WebP.",
-  imageEmpty: "No screenshot. Drop or paste one here.",
+  imageHint: "Drag or paste (⌘V) a screenshot of the site, wallet prompt, or message. PNG, JPEG, or WebP.",
+  imageEmpty: "Drop or paste a screenshot here.",
   imageRemove: "Remove",
   reviewButton: "Review",
-  reviewing: "Decoding · simulating · OCR…",
+  reviewing: "Checking…",
   approveButton: "Approve",
   blockButton: "Block",
   emptyHint:
-    "No review yet. The verdict card will appear here once Argus has analysed your input.",
+    "Add a transaction request, a screenshot, or both. Your verdict will appear here.",
 } as const;
