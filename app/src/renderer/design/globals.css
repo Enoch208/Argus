@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #08080a;
+  --color-surface: #0a0a0c;
+  --color-surface-2: #0c0c0f;
+  --color-line: rgb(255 255 255 / 0.07);
+
+  --font-sans:
+    "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display:
+    "DM Sans", "Inter", system-ui, sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, "Menlo", monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: white;
+    font-family: var(--font-sans);
+    font-weight: 200;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+
+  /* Modern Electron-app convention (Linear, Granola, Cursor): pointer cursor
+     on actual interactive elements. Browser default for <button> is `default`,
+     so we have to opt in. Disabled controls keep the default arrow. */
+  a[href],
+  button:not(:disabled):not([aria-disabled="true"]),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  /* Title-bar drag region — Mac/Win get a draggable strip without the web
+     cursor lookalike. */
+  [data-titlebar="drag"] {
+    -webkit-app-region: drag;
+    user-select: none;
+  }
+  [data-titlebar="nodrag"] {
+    -webkit-app-region: no-drag;
+  }
+}
+
+@layer utilities {
+  /* The static amber aurora seen behind the canvas in the reference design.
+     One radial-gradient — no animation, no JS, no per-frame cost. The Mac
+     vibrancy already does the heavy lifting; this just gives the right side
+     a warm focal point. */
+  .canvas-aurora {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        60% 50% at 78% 38%,
+        rgba(245, 128, 32, 0.18) 0%,
+        rgba(245, 128, 32, 0.06) 35%,
+        transparent 70%
+      ),
+      radial-gradient(
+        45% 40% at 92% 78%,
+        rgba(245, 128, 32, 0.08) 0%,
+        transparent 70%
+      );
+  }
+
+  /* The signature card treatment: subtle translucent body, hairline border,
+     1px top-edge highlight that reads as "lifted". No per-card backdrop-blur
+     — that compounds badly when stacked. */
+  .glass-card {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.025) 0%,
+        rgba(255, 255, 255, 0) 28%
+      ),
+      rgba(14, 14, 16, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 18px 30px -22px rgba(0, 0, 0, 0.7);
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.reveal {
+  animation: reveal-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
