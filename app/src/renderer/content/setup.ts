@@ -4,7 +4,6 @@ import {
   Layers,
   Mic,
   Sphere,
-  View,
   type Icon,
 } from "@/renderer/design/icons";
 
@@ -25,7 +24,6 @@ export const SETUP_COPY = {
  */
 export const MODEL_ICONS: Record<string, Icon> = {
   "qwen3-1-7b-q4": Cpu,
-  "minicpm-v-2-6-q4": View,
   "whisper-base-en": Mic,
   "piper-medium-en": Sphere,
   "paddle-ocr-mobile": FileSearch,

@@ -38,7 +38,7 @@ import {
   type WalletIntel,
 } from "@/main/scam-intel/store";
 import { lookupDomains, type UrlIntel } from "@/main/url-intel/store";
-import { extractUrlsFromImage } from "@/main/ocr/extractor";
+import { canonicalDomainForBrand, extractUrlsFromImage } from "@/main/ocr/extractor";
 import { parseTransaction } from "@/main/solana/decoder";
 import { simulate } from "@/main/solana/simulator";
 
@@ -57,6 +57,15 @@ interface IntelHits {
 interface OcrSurface {
   text: string;
   domains: string[];
+  brands: string[];
+}
+
+interface BrandImpersonation {
+  brand: string;
+  canonical: string;
+  /** OCR-extracted domains that are *not* the canonical domain. The presence
+   *  of any non-canonical domain alongside the brand mention is the signal. */
+  competing: string[];
 }
 
 export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
@@ -101,18 +110,40 @@ export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
 
   // ── Phase 3: collated intel lookup ────────────────────────────────────
   const intel = lookupAllIntel(instructions, ocr?.domains ?? []);
-  const level = pickLevel(instructions, simFailed, intel, !!input.image);
-  const summary = buildSummary(instructions, level, simFailed, intel, !!input.image);
+  const impersonations = ocr ? detectBrandImpersonation(ocr) : [];
+  const level = pickLevel(
+    instructions,
+    simFailed,
+    intel,
+    impersonations,
+    !!input.image,
+  );
+  const summary = buildSummary(
+    instructions,
+    level,
+    simFailed,
+    intel,
+    impersonations,
+    !!input.image,
+  );
   const citations = buildCitations(
     instructions,
     deltas,
     simFailed,
     intel,
     ocr,
+    impersonations,
   );
   const history = await personalHistorySignal({ summary, citations, instructions });
   citations.push(historySignalCitation(history));
-  const meta = buildMeta(instructions, simFailed, intel, !!input.image, history);
+  const meta = buildMeta(
+    instructions,
+    simFailed,
+    intel,
+    impersonations,
+    !!input.image,
+    history,
+  );
   const explanation = await explainVerdict({
     level,
     summary,
@@ -182,13 +213,23 @@ function pickLevel(
   ix: DecodedInstruction[],
   simFailed: string | null,
   intel: IntelHits,
+  impersonations: BrandImpersonation[],
   hasImage: boolean,
 ): VerdictLevel {
   if (simFailed) return "RED";
   if (anyDanger(intel)) return "RED";
+  // Brand mention + a danger-flagged competing domain → impersonation, RED.
+  if (
+    impersonations.some((imp) =>
+      imp.competing.some((c) => intel.url.some((u) => u.domain === c && u.severity === "danger")),
+    )
+  ) {
+    return "RED";
+  }
   if (ix.some((i) => i.kind === "spl-set-authority")) return "YELLOW";
   if (ix.some((i) => i.kind === "spl-approve")) return "YELLOW";
   if (anyCaution(intel)) return "YELLOW";
+  if (impersonations.length > 0) return "YELLOW";
   if (ix.some((i) => i.kind === "unknown")) return "YELLOW";
   if (ix.length === 0 && !hasImage) return "YELLOW";
   return "YELLOW"; // see DESIGN-PRINCIPLES §3 — never overclaim certainty
@@ -216,11 +257,16 @@ function buildSummary(
   level: VerdictLevel,
   simFailed: string | null,
   intel: IntelHits,
+  impersonations: BrandImpersonation[],
   hasImage: boolean,
 ): string {
   if (level === "RED" && simFailed) return "Refuse to sign — simulation rejected.";
   if (level === "RED" && intel.url.some((u) => u.severity === "danger")) {
     return "Refuse to engage — screenshot shows a domain on the local URL blocklist.";
+  }
+  if (level === "RED" && impersonations.length > 0) {
+    const imp = impersonations[0]!;
+    return `Refuse to engage — screenshot impersonates ${imp.brand} (real domain ${imp.canonical}).`;
   }
   if (level === "RED" && intel.wallet.some((w) => w.severity === "danger")) {
     return "Refuse to sign — recipient is on the local scam-intel blocklist.";
@@ -244,6 +290,7 @@ function buildCitations(
   simFailed: string | null,
   intel: IntelHits,
   ocr: OcrSurface | null,
+  impersonations: BrandImpersonation[],
 ): string[] {
   const out: string[] = [];
 
@@ -259,6 +306,8 @@ function buildCitations(
   if (ix.length > 0) out.push(buildOnchainIntelCitation(ix, intel));
 
   if (ocr) out.push(buildUrlCitation(intel, ocr));
+
+  if (impersonations.length > 0) out.push(buildImpersonationCitation(impersonations));
 
   const unknownCount = ix.filter((i) => i.kind === "unknown").length;
   if (unknownCount > 0) {
@@ -329,6 +378,7 @@ function buildMeta(
   ix: DecodedInstruction[],
   simFailed: string | null,
   intel: IntelHits,
+  impersonations: BrandImpersonation[],
   hasImage: boolean,
   history: HistoryRagSignal,
 ): string {
@@ -336,9 +386,43 @@ function buildMeta(
   if (ix.length > 0) parts.push(simFailed ? "Simulation · rejected" : "Simulation");
   parts.push(anyDanger(intel) ? "Intel · flagged" : "Intel");
   if (hasImage) parts.push("OCR");
+  if (impersonations.length > 0) parts.push("Brand · impersonation");
   parts.push(history.hits.length > 0 ? "History · match" : "History");
   if (ix.length > 0) parts.push(`${ix.length} ix`);
   return parts.join(" · ");
+}
+
+// ---------------------------------------------------------------------------
+// Brand-impersonation detection
+//
+// Vision-pipeline-derived signal: a screenshot that names a canonical Solana
+// brand (e.g. "Phantom") but does NOT surface the brand's canonical domain
+// (phantom.app) is suspicious — especially when the screenshot also surfaces
+// a competing domain. This pairs cleanly with the URL allow-list: if the
+// competing domain is already on the blocklist, the impersonation citation
+// reinforces the verdict; if it isn't, the impersonation alone earns YELLOW
+// per DESIGN-PRINCIPLES.md §3 (honest uncertainty over silent green).
+// ---------------------------------------------------------------------------
+
+function detectBrandImpersonation(ocr: OcrSurface): BrandImpersonation[] {
+  if (ocr.brands.length === 0) return [];
+  const out: BrandImpersonation[] = [];
+  for (const brand of ocr.brands) {
+    const canonical = canonicalDomainForBrand(brand);
+    if (!canonical) continue;
+    if (ocr.domains.includes(canonical)) continue; // legitimate
+    const competing = ocr.domains.filter((d) => d !== canonical);
+    if (competing.length === 0) continue;
+    out.push({ brand, canonical, competing });
+  }
+  return out;
+}
+
+function buildImpersonationCitation(impersonations: BrandImpersonation[]): string {
+  const first = impersonations[0]!;
+  const competing = first.competing.slice(0, 2).join(", ");
+  const more = impersonations.length > 1 ? ` (+${impersonations.length - 1} more)` : "";
+  return `Brand-impersonation: screenshot mentions ${first.brand} but the URL is ${competing}, not ${first.canonical}${more}.`;
 }
 
 // ---------------------------------------------------------------------------

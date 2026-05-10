@@ -82,16 +82,6 @@ const previewModels: ModelProgress[] = [
     error: null,
   },
   {
-    id: "minicpm-v-2-6-q4",
-    name: "MiniCPM-V 2.6 Q4",
-    role: "Vision guard",
-    vram: "1.6 GB",
-    sizeBytes: 1_717_986_918,
-    downloadedBytes: 0,
-    state: "queued",
-    error: null,
-  },
-  {
     id: "whisper-base-en",
     name: "Whisper-base.en",
     role: "Voice transcription",

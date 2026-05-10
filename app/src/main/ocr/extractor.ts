@@ -22,6 +22,10 @@ export interface OcrResult {
   text: string;
   /** Normalised, deduped, lowercased domain list extracted from the text. */
   domains: string[];
+  /** Canonical Solana brand mentions found in the OCR text (e.g. "phantom",
+   *  "magic eden"). Used to cross-reference against `domains` for
+   *  brand-impersonation detection. */
+  brands: string[];
 }
 
 // Cached dynamic import. Tesseract.js is CJS, but lazy-loading keeps boot
@@ -43,11 +47,13 @@ export async function extractUrlsFromImage(
     const { data } = await worker.recognize(Buffer.from(imageBytes));
     const text = data.text ?? "";
     const domains = extractDomains(text);
+    const brands = extractBrands(text);
     logger.info("ocr extraction complete", {
       chars: text.length,
       domains: domains.length,
+      brands: brands.length,
     });
-    return { text, domains };
+    return { text, domains, brands };
   } finally {
     await worker.terminate();
   }
@@ -88,6 +94,60 @@ function normaliseDomainLite(s: string): string {
   const slash = n.indexOf("/");
   if (slash !== -1) n = n.slice(0, slash);
   return n;
+}
+
+// ---------------------------------------------------------------------------
+// Brand extraction
+// ---------------------------------------------------------------------------
+
+/**
+ * Canonical Solana brands → their canonical apex domain. The verdict pipeline
+ * cross-references OCR brand mentions against OCR domain mentions: a screenshot
+ * that names a brand without surfacing the brand's canonical domain is a
+ * brand-impersonation signal (the screenshot is dressed up as Phantom but the
+ * URL is, say, `phantomweb.app`).
+ *
+ * Keep this aligned with the canonical entries in `main/url-intel/store.ts`.
+ */
+export const BRAND_TO_DOMAIN: ReadonlyMap<string, string> = new Map([
+  ["phantom", "phantom.app"],
+  ["solflare", "solflare.com"],
+  ["backpack", "backpack.app"],
+  ["magic eden", "magiceden.io"],
+  ["magiceden", "magiceden.io"],
+  ["tensor", "tensor.trade"],
+  ["jupiter", "jup.ag"],
+  ["raydium", "raydium.io"],
+  ["orca", "orca.so"],
+  ["drift", "drift.trade"],
+  ["marinade", "marinade.finance"],
+  ["kamino", "kamino.finance"],
+  ["solscan", "solscan.io"],
+  ["solanafm", "solana.fm"],
+  ["pump.fun", "pump.fun"],
+  ["birdeye", "birdeye.so"],
+  ["dexscreener", "dexscreener.com"],
+  ["dex screener", "dexscreener.com"],
+]);
+
+export function canonicalDomainForBrand(brand: string): string | null {
+  return BRAND_TO_DOMAIN.get(brand.toLowerCase()) ?? null;
+}
+
+/**
+ * Returns the deduped, lowercase brand mentions found in OCR text. Match is
+ * word-bounded so "tensor" doesn't trigger on "tensorflow" and "drift" doesn't
+ * trigger on "drifting".
+ */
+export function extractBrands(text: string): string[] {
+  const haystack = text.toLowerCase();
+  const out = new Set<string>();
+  for (const brand of BRAND_TO_DOMAIN.keys()) {
+    const escaped = brand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`(?:^|[^a-z0-9])${escaped}(?:$|[^a-z0-9])`, "i");
+    if (re.test(haystack)) out.add(brand);
+  }
+  return [...out];
 }
 
 /** Filter out obvious false positives from OCR noise: short strings,
