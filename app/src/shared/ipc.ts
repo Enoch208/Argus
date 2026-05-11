@@ -56,6 +56,32 @@ export const ModelsStatus = z.object({
 export type ModelsStatus = z.infer<typeof ModelsStatus>;
 
 // ---------------------------------------------------------------------------
+// Stack status
+// ---------------------------------------------------------------------------
+
+export const StackLayerState = z.enum(["ready", "loading", "attention"]);
+export type StackLayerState = z.infer<typeof StackLayerState>;
+
+export const StackLayer = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  state: StackLayerState,
+  value: z.string().min(1),
+  detail: z.string().min(1),
+});
+export type StackLayer = z.infer<typeof StackLayer>;
+
+export const StackStatus = z.object({
+  ready: z.boolean(),
+  layers: z.array(StackLayer),
+  modelsReady: z.number().int().nonnegative(),
+  modelsTotal: z.number().int().nonnegative(),
+  scamDomains: z.number().int().nonnegative(),
+  blacklistedWallets: z.number().int().nonnegative(),
+});
+export type StackStatus = z.infer<typeof StackStatus>;
+
+// ---------------------------------------------------------------------------
 // Channel registry
 // ---------------------------------------------------------------------------
 
@@ -250,6 +276,12 @@ export const channels = {
   "models.status": {
     input: z.void(),
     output: ModelsStatus,
+  },
+
+  /** User-facing protection summary for the Stack page. */
+  "stack.status": {
+    input: z.void(),
+    output: StackStatus,
   },
 
   /** Begin the download queue. Idempotent — calling while active is a no-op. */

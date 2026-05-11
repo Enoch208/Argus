@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { logger } from "./log";
 import { registerModelsHandlers } from "./ipc/handlers/models";
 import { registerReviewHandlers } from "./ipc/handlers/review";
+import { registerStackHandlers } from "./ipc/handlers/stack";
 import { registerVoiceHandlers } from "./ipc/handlers/voice";
 import { registerWalletHandlers } from "./ipc/handlers/wallet";
 import { shutdownQvac } from "./llm/qvac";
@@ -64,11 +65,14 @@ app.whenReady().then(async () => {
   try {
     await registry.init();
   } catch (err) {
-    logger.error("registry.init failed", { msg: err instanceof Error ? err.message : "?" });
+    logger.error("registry.init failed", {
+      msg: err instanceof Error ? err.message : "?",
+    });
   }
 
   registerWalletHandlers();
   registerModelsHandlers();
+  registerStackHandlers();
   registerReviewHandlers();
   registerVoiceHandlers();
 

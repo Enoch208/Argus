@@ -15,6 +15,7 @@ import {
   type IpcResult,
   type ModelProgress,
   type ModelsStatus,
+  type StackStatus,
 } from "@/shared/ipc";
 
 type ArgusBridge = {
@@ -49,23 +50,31 @@ function isDevRenderer(): boolean {
 export const argus = {
   wallet: {
     state: () => invoke("wallet.state", undefined),
-    create: (input: ChannelInput<"wallet.create">) => invoke("wallet.create", input),
+    create: (input: ChannelInput<"wallet.create">) =>
+      invoke("wallet.create", input),
     confirmCreate: () => invoke("wallet.confirmCreate", undefined),
-    import: (input: ChannelInput<"wallet.import">) => invoke("wallet.import", input),
-    unlock: (input: ChannelInput<"wallet.unlock">) => invoke("wallet.unlock", input),
+    import: (input: ChannelInput<"wallet.import">) =>
+      invoke("wallet.import", input),
+    unlock: (input: ChannelInput<"wallet.unlock">) =>
+      invoke("wallet.unlock", input),
     lock: () => invoke("wallet.lock", undefined),
     balance: () => invoke("wallet.balance", undefined),
-    airdrop: (input: ChannelInput<"wallet.airdrop">) => invoke("wallet.airdrop", input),
+    airdrop: (input: ChannelInput<"wallet.airdrop">) =>
+      invoke("wallet.airdrop", input),
     buildTransfer: (input: ChannelInput<"wallet.buildTransfer">) =>
       invoke("wallet.buildTransfer", input),
   },
   review: {
-    start: (input: ChannelInput<"review.start">) => invoke("review.start", input),
-    approve: (input: ChannelInput<"review.approve">) => invoke("review.approve", input),
-    block: (input: ChannelInput<"review.block">) => invoke("review.block", input),
+    start: (input: ChannelInput<"review.start">) =>
+      invoke("review.start", input),
+    approve: (input: ChannelInput<"review.approve">) =>
+      invoke("review.approve", input),
+    block: (input: ChannelInput<"review.block">) =>
+      invoke("review.block", input),
     queue: () => invoke("review.queue", undefined),
     history: () => invoke("review.history", undefined),
-    search: (input: ChannelInput<"review.search">) => invoke("review.search", input),
+    search: (input: ChannelInput<"review.search">) =>
+      invoke("review.search", input),
   },
   voice: {
     transcribe: (input: ChannelInput<"voice.transcribe">) =>
@@ -76,6 +85,9 @@ export const argus = {
     status: () => invoke("models.status", undefined),
     start: () => invoke("models.start", undefined),
     pause: () => invoke("models.pause", undefined),
+  },
+  stack: {
+    status: () => invoke("stack.status", undefined),
   },
 };
 
@@ -141,6 +153,8 @@ const browserPreviewBridge: ArgusBridge = {
         previewBaseFraction = previewStatus().fraction;
         previewActive = false;
         return ok({ ok: true });
+      case "stack.status":
+        return ok(previewStackStatus());
       case "wallet.state":
         return ok({ state: "uninitialised", address: null } as const);
       case "wallet.lock":
@@ -193,6 +207,66 @@ function previewStatus(): ModelsStatus {
     active: previewActive && !ready,
     fraction,
     models,
+  };
+}
+
+function previewStackStatus(): StackStatus {
+  const models = previewStatus();
+  const readyModels = models.models.filter(
+    (model) => model.state === "ready",
+  ).length;
+  return {
+    ready: models.ready,
+    modelsReady: readyModels,
+    modelsTotal: models.models.length,
+    scamDomains: 331_227,
+    blacklistedWallets: 7_910,
+    layers: [
+      {
+        id: "transaction-decoder",
+        label: "Transaction decoder",
+        state: "ready",
+        value: "Active",
+        detail: "Decodes Solana transfers before approval.",
+      },
+      {
+        id: "screenshot-ocr",
+        label: "Screenshot OCR",
+        state: models.ready ? "ready" : "loading",
+        value: models.ready
+          ? "Ready"
+          : `${readyModels}/${models.models.length}`,
+        detail: "Reads wallet prompts, URL bars, and phishing page text.",
+      },
+      {
+        id: "scam-domains",
+        label: "Scam domains",
+        state: "ready",
+        value: "331,227",
+        detail: "Phantom and ScamSniffer domain intelligence.",
+      },
+      {
+        id: "wallet-blacklist",
+        label: "Blocked wallets",
+        state: "ready",
+        value: "7,910",
+        detail: "Exact address checks through local wallet intel.",
+      },
+      {
+        id: "local-ai",
+        label: "Local explainer",
+        state: models.ready ? "ready" : "loading",
+        value: models.ready ? "Ready" : "Loading",
+        detail: "Summarises scam patterns locally.",
+      },
+      {
+        id: "voice",
+        label: "Voice controls",
+        state: models.ready ? "ready" : "loading",
+        value: models.ready ? "Ready" : "Loading",
+        detail: "Local command transcription and browser readback.",
+      },
+    ],
   };
 }
 

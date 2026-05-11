@@ -50,6 +50,14 @@ export interface UrlIntel extends IntelBase {
   domain: string;
 }
 
+export interface ScamIntelHealth {
+  programEntries: number;
+  walletEntries: number;
+  localWalletBlacklistEntries: number;
+  mintEntries: number;
+  urlSeedEntries: number;
+}
+
 interface ProgramRow {
   program_id: string;
   label: string;
@@ -690,6 +698,18 @@ export function lookupUrlIntel(domains: string[]): UrlIntel[] {
         updatedAt: r.updated_at,
       }),
     );
+}
+
+/** Snapshot for diagnostics / Stack route. */
+export function scamIntelHealth(): ScamIntelHealth {
+  const localWalletBlacklistEntries = loadWalletBlacklist().length;
+  return {
+    programEntries: PROGRAM_SEEDS.length,
+    walletEntries: WALLET_SEEDS.length + localWalletBlacklistEntries,
+    localWalletBlacklistEntries,
+    mintEntries: MINT_SEEDS.length,
+    urlSeedEntries: URL_SEEDS.length,
+  };
 }
 
 function lookupAddressTable<T>(
