@@ -15,6 +15,7 @@ import {
   useWallet,
   useWalletBalance,
 } from "@/renderer/hooks/use-wallet";
+import { ArgusError } from "@/shared/errors";
 
 /**
  * Send route — the moment Argus's "AI in front of every signature" promise
@@ -38,10 +39,12 @@ export default function SendRoute() {
   const cluster = balance.data?.cluster ?? "devnet";
   const sol = Number.parseFloat(amount);
   const amountValid = Number.isFinite(sol) && sol > 0;
-  const enoughBalance =
-    !balance.data || sol <= balance.data.sol; // Allow review when balance hasn't loaded yet.
+  const enoughBalance = !balance.data || sol <= balance.data.sol; // Allow review when balance hasn't loaded yet.
   const canSubmit =
-    wallet.data?.state === "unlocked" && to.trim().length > 30 && amountValid && enoughBalance;
+    wallet.data?.state === "unlocked" &&
+    to.trim().length > 30 &&
+    amountValid &&
+    enoughBalance;
   const actionPending = approve.isPending || block.isPending;
 
   function reset() {
@@ -55,7 +58,10 @@ export default function SendRoute() {
     e.preventDefault();
     if (!canSubmit) return;
     reset();
-    const built = await buildTransfer.mutateAsync({ to: to.trim(), amountSol: sol });
+    const built = await buildTransfer.mutateAsync({
+      to: to.trim(),
+      amountSol: sol,
+    });
     review.mutate({ raw: built.raw });
   }
 
@@ -100,7 +106,9 @@ export default function SendRoute() {
                 type="text"
                 inputMode="decimal"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ""))}
+                onChange={(e) =>
+                  setAmount(e.target.value.replace(/[^0-9.]/g, ""))
+                }
                 placeholder="0.0"
                 className="flex-1 bg-transparent font-mono text-[14px] text-white placeholder:text-white/25 focus:outline-none"
               />
@@ -118,7 +126,9 @@ export default function SendRoute() {
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="submit"
-              disabled={!canSubmit || review.isPending || buildTransfer.isPending}
+              disabled={
+                !canSubmit || review.isPending || buildTransfer.isPending
+              }
               className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-[14px] font-normal text-black hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {review.isPending || buildTransfer.isPending
@@ -133,17 +143,29 @@ export default function SendRoute() {
               <button
                 type="button"
                 disabled={airdrop.isPending}
-                onClick={() => airdrop.mutate({ sol: 1 })}
+                onClick={() => airdrop.mutate({ sol: 0.1 })}
                 className="inline-flex items-center gap-2 rounded-xl border border-white/[0.12] bg-white/[0.03] px-4 py-2.5 text-[12.5px] font-light text-white/72 transition hover:border-white/22 hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {airdrop.isPending ? SEND_COPY.airdropPending : SEND_COPY.airdropLabel}
+                {airdrop.isPending
+                  ? SEND_COPY.airdropPending
+                  : SEND_COPY.airdropLabel}
               </button>
             )}
           </div>
 
           {airdrop.isError && (
             <div className="rounded-xl border border-rose-500/25 bg-rose-500/[0.06] p-3 text-[12.5px] font-light text-rose-200">
-              {airdrop.error.message}
+              <p>{airdrop.error.message}</p>
+              {isFaucetLimit(airdrop.error) && (
+                <a
+                  href={faucetLink(wallet.data?.address ?? null)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-block font-mono text-[11.5px] text-rose-100 underline decoration-rose-200/30 underline-offset-4 hover:text-white"
+                >
+                  Open Solana devnet faucet
+                </a>
+              )}
             </div>
           )}
           {airdrop.isSuccess && (
@@ -165,7 +187,9 @@ export default function SendRoute() {
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  disabled={actionPending || approve.isSuccess || block.isSuccess}
+                  disabled={
+                    actionPending || approve.isSuccess || block.isSuccess
+                  }
                   onClick={() => approve.mutate({ id: review.data.id })}
                   className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-white px-5 py-2.5 text-[13px] font-normal text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_16px_40px_-24px_rgba(255,255,255,0.9)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
                 >
@@ -173,7 +197,9 @@ export default function SendRoute() {
                 </button>
                 <button
                   type="button"
-                  disabled={actionPending || approve.isSuccess || block.isSuccess}
+                  disabled={
+                    actionPending || approve.isSuccess || block.isSuccess
+                  }
                   onClick={() => block.mutate({ id: review.data.id })}
                   className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.03] px-5 py-2.5 text-[13px] font-normal text-white/82 transition hover:border-white/22 hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
                 >
@@ -200,7 +226,8 @@ export default function SendRoute() {
               )}
             </>
           ) : (
-            !buildTransfer.isError && !review.isError && (
+            !buildTransfer.isError &&
+            !review.isError && (
               <p className={cn(t.bodySm, "italic")}>{SEND_COPY.emptyHint}</p>
             )
           )}
@@ -254,6 +281,20 @@ function shortSig(signature: string): string {
 
 function solscanLink(signature: string, cluster: string): string {
   const suffix =
-    cluster === "devnet" ? "?cluster=devnet" : cluster === "testnet" ? "?cluster=testnet" : "";
+    cluster === "devnet"
+      ? "?cluster=devnet"
+      : cluster === "testnet"
+        ? "?cluster=testnet"
+        : "";
   return `https://solscan.io/tx/${signature}${suffix}`;
+}
+
+function isFaucetLimit(error: Error): boolean {
+  return error instanceof ArgusError && error.code === "RPC_RATE_LIMITED";
+}
+
+function faucetLink(address: string | null): string {
+  const base = "https://faucet.solana.com";
+  if (!address) return base;
+  return `${base}?address=${encodeURIComponent(address)}`;
 }

@@ -22,6 +22,7 @@ export const ARGUS_ERROR_CODES = [
 
   // chain / RPC
   "RPC_UNREACHABLE",
+  "RPC_RATE_LIMITED",
   "RPC_REJECTED",
   "TX_DECODE_FAILED",
   "TX_SIMULATION_FAILED",
@@ -57,6 +58,7 @@ export interface ArgusErrorWire {
 }
 
 export function toWire(err: unknown): ArgusErrorWire {
-  if (err instanceof ArgusError) return { code: err.code, message: err.message };
+  if (err instanceof ArgusError)
+    return { code: err.code, message: err.message };
   return { code: "INTERNAL", message: "Internal error" };
 }
