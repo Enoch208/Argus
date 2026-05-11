@@ -24,9 +24,12 @@ import {
   type ParsedInstruction,
   type TransactionInstruction,
 } from "@solana/web3.js";
-import bs58 from "bs58";
 import { ArgusError } from "@/shared/errors";
-import type { DecodedInstruction, InstructionKind } from "@/shared/types/verdict";
+import { bs58 } from "@/main/solana/base58";
+import type {
+  DecodedInstruction,
+  InstructionKind,
+} from "@/shared/types/verdict";
 
 // ---------------------------------------------------------------------------
 // Known program ids — single source of truth, used by the verdict pipeline
@@ -56,6 +59,11 @@ const SPL_INSTRUCTION = {
   ApproveChecked: 13,
 } as const;
 
+// Serialized Solana transactions contain a compact signature count, 64-byte
+// signature slots, and a message. Addresses/signatures are valid base58 too,
+// but they decode to far fewer bytes and cannot be transaction wire data.
+const MIN_SERIALIZED_TRANSACTION_BYTES = 96;
+
 export interface ParsedTx {
   /** Original base58 input. */
   raw: string;
@@ -68,7 +76,14 @@ export interface ParsedTx {
 }
 
 export function parseTransaction(raw: string): ParsedTx {
-  const bytes = decodeBase58(raw);
+  const normalised = raw.trim();
+  const bytes = decodeBase58(normalised);
+  if (bytes.length < MIN_SERIALIZED_TRANSACTION_BYTES) {
+    throw new ArgusError(
+      "TX_DECODE_FAILED",
+      `expected a serialized Solana transaction, but decoded only ${bytes.length} bytes`,
+    );
+  }
 
   // Try v0 first — most modern transactions are versioned.
   let tx: Transaction | VersionedTransaction;
@@ -88,7 +103,7 @@ export function parseTransaction(raw: string): ParsedTx {
   }
 
   const instructions = collectInstructions(tx).map(decodeOne);
-  return { raw, instructions, transaction: tx, isVersioned };
+  return { raw: normalised, instructions, transaction: tx, isVersioned };
 }
 
 // ---------------------------------------------------------------------------
@@ -136,7 +151,11 @@ function decodeOne(ix: TransactionInstruction): DecodedInstruction {
     return unknownButNamed("jupiter-swap", "Jupiter v6 swap", programId);
   }
   if (programId === PROGRAMS.magicEdenV2) {
-    return unknownButNamed("magic-eden", "Magic Eden marketplace call", programId);
+    return unknownButNamed(
+      "magic-eden",
+      "Magic Eden marketplace call",
+      programId,
+    );
   }
   return {
     kind: "unknown",
@@ -194,7 +213,10 @@ function decodeSplToken(ix: TransactionInstruction): DecodedInstruction {
   const tag = ix.data[0];
   const accounts = ix.keys.map((k) => k.pubkey.toBase58());
 
-  if (tag === SPL_INSTRUCTION.Transfer || tag === SPL_INSTRUCTION.TransferChecked) {
+  if (
+    tag === SPL_INSTRUCTION.Transfer ||
+    tag === SPL_INSTRUCTION.TransferChecked
+  ) {
     // Layout: [tag:1][amount:8] (Transfer) / [tag:1][amount:8][decimals:1] (Checked)
     const amount = readU64LE(ix.data, 1);
     return {
@@ -208,7 +230,10 @@ function decodeSplToken(ix: TransactionInstruction): DecodedInstruction {
       },
     };
   }
-  if (tag === SPL_INSTRUCTION.Approve || tag === SPL_INSTRUCTION.ApproveChecked) {
+  if (
+    tag === SPL_INSTRUCTION.Approve ||
+    tag === SPL_INSTRUCTION.ApproveChecked
+  ) {
     const amount = readU64LE(ix.data, 1);
     return {
       kind: "spl-approve",

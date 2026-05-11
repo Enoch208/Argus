@@ -26,7 +26,7 @@ function spawnMainWindow(): void {
   mainWindow = win;
 
   if (process.env.ELECTRON_RENDERER_URL) {
-    void win.loadURL(process.env.ELECTRON_RENDERER_URL);
+    void loadDevRenderer(win, process.env.ELECTRON_RENDERER_URL);
   } else {
     void win.loadFile(join(__dirname, "../renderer/index.html"));
   }
@@ -34,6 +34,28 @@ function spawnMainWindow(): void {
   win.on("closed", () => {
     if (mainWindow === win) mainWindow = null;
   });
+}
+
+async function loadDevRenderer(win: BrowserWindow, url: string): Promise<void> {
+  const attempts = 30;
+  for (let i = 1; i <= attempts; i += 1) {
+    if (win.isDestroyed()) return;
+    try {
+      await win.loadURL(url);
+      return;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      if (!message.includes("ERR_CONNECTION_REFUSED") || i === attempts) {
+        logger.error("renderer load failed", { url, msg: message });
+        throw err;
+      }
+      await delay(250);
+    }
+  }
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 app.whenReady().then(async () => {

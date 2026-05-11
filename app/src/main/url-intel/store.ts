@@ -8,15 +8,15 @@
  *
  * Storage: in-memory Map. The corpus is bundled at build time as a JSON
  * snapshot ([resources/data/phantom-blocklist.json](../../../resources/data/phantom-blocklist.json))
- * scraped from `github.com/phantom/blocklist` (Apache-2.0). Refresh via
- * `npx tsx scripts/refresh-url-blocklist.ts` — the snapshot's pinned commit
- * SHA is preserved so reviewers can verify provenance. ~2.3k entries fits
- * comfortably in a Map; the lookup boundary stays one function regardless
- * of how the corpus is sourced.
+ * scraped from `github.com/phantom/blocklist` (Apache-2.0), plus
+ * [resources/data/scamsniffer-domains.json](../../../resources/data/scamsniffer-domains.json)
+ * from `github.com/scamsniffer/scam-database` (GPL-3.0). Refresh with the
+ * scripts in `app/scripts/`. Exact-match lookup stays O(1) through a Map.
  */
 
 import type { IntelSeverity } from "@/main/scam-intel/store";
 import phantomBundle from "../../../resources/data/phantom-blocklist.json";
+import scamSnifferBundle from "../../../resources/data/scamsniffer-domains.json";
 
 export interface UrlIntel {
   /** Normalised: lowercase, no scheme, no `www.`, no path / port. */
@@ -32,6 +32,7 @@ const SEED_UPDATED_AT = 1_762_646_400_000; // 2025-11-09T00:00:00Z
 const ARGUS_URL_ALLOWLIST = "argus-allowlist";
 const PHANTOM_BLOCKLIST = "phantom/blocklist";
 const PHANTOM_WHITELIST = "phantom/whitelist";
+const SCAMSNIFFER_BLOCKLIST = "scamsniffer/scam-database";
 
 interface PhantomBundle {
   version: number;
@@ -47,6 +48,18 @@ const PHANTOM = phantomBundle as PhantomBundle;
 // Phantom commit SHA at build time, surfaced through `urlIntelHealth()` so
 // reviewers can verify the bundled corpus against the upstream repo.
 const PHANTOM_COMMIT_AT_MS = Date.parse(PHANTOM.commitDate);
+
+interface ScamSnifferBundle {
+  version: number;
+  fetchedAt: string;
+  source: string;
+  license: string;
+  commit: string;
+  commitDate: string;
+  domains: string[];
+}
+const SCAMSNIFFER = scamSnifferBundle as ScamSnifferBundle;
+const SCAMSNIFFER_COMMIT_AT_MS = Date.parse(SCAMSNIFFER.commitDate);
 
 function allowed(domain: string, label: string): UrlIntel {
   return {
@@ -136,6 +149,17 @@ function phantomAllow(domain: string): UrlIntel {
   };
 }
 
+function scamSnifferBlock(domain: string): UrlIntel {
+  return {
+    domain: normaliseDomain(domain),
+    label: "ScamSniffer phishing domain",
+    severity: "danger",
+    source: SCAMSNIFFER_BLOCKLIST,
+    note: `Listed in github.com/scamsniffer/scam-database@${SCAMSNIFFER.commit.slice(0, 7)} as a phishing domain.`,
+    updatedAt: SCAMSNIFFER_COMMIT_AT_MS,
+  };
+}
+
 /**
  * Hand-curated seeds win on conflicts (richer labels, explicit `mimics`
  * targets); Phantom corpus fills out the long tail. Order matters: the
@@ -153,6 +177,11 @@ function buildSeedTable(): UrlIntel[] {
     const key = normaliseDomain(domain);
     if (!key || out.has(key)) continue;
     out.set(key, phantomAllow(key));
+  }
+  for (const domain of SCAMSNIFFER.domains) {
+    const key = normaliseDomain(domain);
+    if (!key || out.has(key)) continue;
+    out.set(key, scamSnifferBlock(key));
   }
   return [...out.values()];
 }
@@ -214,6 +243,8 @@ export function urlIntelHealth(): {
   handCurated: number;
   phantomCommit: string;
   phantomCommitDate: string;
+  scamSnifferCommit: string;
+  scamSnifferCommitDate: string;
 } {
   return {
     totalEntries: ALL_ENTRIES.length,
@@ -222,6 +253,8 @@ export function urlIntelHealth(): {
     handCurated: SEEDS.length,
     phantomCommit: PHANTOM.commit.slice(0, 7),
     phantomCommitDate: PHANTOM.commitDate,
+    scamSnifferCommit: SCAMSNIFFER.commit.slice(0, 7),
+    scamSnifferCommitDate: SCAMSNIFFER.commitDate,
   };
 }
 

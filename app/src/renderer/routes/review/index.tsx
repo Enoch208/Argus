@@ -22,7 +22,12 @@ interface ReviewImage {
   label: string;
 }
 
-const ACCEPTED_MIME: readonly ImageMime[] = ["image/png", "image/jpeg", "image/webp"] as const;
+const ACCEPTED_MIME: readonly ImageMime[] = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+] as const;
+const MIN_TRANSACTION_BASE58_CHARS = 120;
 
 export default function ReviewRoute() {
   const [raw, setRaw] = useState("");
@@ -34,7 +39,14 @@ export default function ReviewRoute() {
   const dropRef = useRef<HTMLDivElement | null>(null);
   const [dropActive, setDropActive] = useState(false);
 
-  const valid = looksLikeBase58(raw) || image !== null;
+  const trimmedText = raw.trim();
+  const rawLooksInformational =
+    trimmedText.length > 0 &&
+    isBase58(trimmedText) &&
+    !looksLikeBase58(trimmedText);
+  const hasText = trimmedText.length > 0;
+  const hasTransaction = looksLikeBase58(trimmedText);
+  const valid = hasText || image !== null;
   const actionPending = approve.isPending || block.isPending;
   const verdictId = review.data?.id;
 
@@ -87,9 +99,10 @@ export default function ReviewRoute() {
             if (!valid) return;
             approve.reset();
             block.reset();
-            setReviewHasTransaction(looksLikeBase58(raw));
+            setReviewHasTransaction(hasTransaction);
             review.mutate({
-              ...(looksLikeBase58(raw) ? { raw: raw.trim() } : {}),
+              ...(hasTransaction ? { raw: trimmedText } : {}),
+              ...(!hasTransaction && hasText ? { text: trimmedText } : {}),
               ...(image
                 ? { image: { base64: image.base64, mime: image.mime } }
                 : {}),
@@ -111,6 +124,12 @@ export default function ReviewRoute() {
               rows={4}
               className="w-full rounded-xl border border-white/[0.08] bg-white/[0.02] px-4 py-3 font-mono text-[12.5px] text-white placeholder:text-white/25 focus:border-white/30 focus:bg-white/[0.04] focus:outline-none"
             />
+            {rawLooksInformational && (
+              <span className="text-[11.5px] font-light text-amber-100/70">
+                That looks like an address or transaction ID. Argus can check it
+                for risk, but there will be nothing to approve or sign.
+              </span>
+            )}
           </label>
 
           <div className="flex flex-col gap-1.5">
@@ -148,7 +167,9 @@ export default function ReviewRoute() {
                 )}
               >
                 <span>{REVIEW_COPY.imageEmpty}</span>
-                <span className="text-[11px] text-white/30">{REVIEW_COPY.imageHint}</span>
+                <span className="text-[11px] text-white/30">
+                  {REVIEW_COPY.imageHint}
+                </span>
               </div>
             )}
           </div>
@@ -159,8 +180,12 @@ export default function ReviewRoute() {
               disabled={!valid || review.isPending}
               className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-[14px] font-normal text-black hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {review.isPending ? REVIEW_COPY.reviewing : REVIEW_COPY.reviewButton}
-              {!review.isPending && <ArrowRight size={14} className="text-black/60" />}
+              {review.isPending
+                ? REVIEW_COPY.reviewing
+                : REVIEW_COPY.reviewButton}
+              {!review.isPending && (
+                <ArrowRight size={14} className="text-black/60" />
+              )}
             </button>
           </div>
         </form>
@@ -179,22 +204,32 @@ export default function ReviewRoute() {
                   <div className="flex flex-wrap items-center gap-3">
                     <button
                       type="button"
-                      disabled={actionPending || approve.isSuccess || block.isSuccess}
+                      disabled={
+                        actionPending || approve.isSuccess || block.isSuccess
+                      }
                       onClick={() => approve.mutate({ id: review.data.id })}
                       className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-white px-5 py-2.5 text-[13px] font-normal text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_16px_40px_-24px_rgba(255,255,255,0.9)] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      {approve.isPending ? "Signing..." : REVIEW_COPY.approveButton}
+                      {approve.isPending
+                        ? "Signing..."
+                        : REVIEW_COPY.approveButton}
                     </button>
                     <button
                       type="button"
-                      disabled={actionPending || approve.isSuccess || block.isSuccess}
+                      disabled={
+                        actionPending || approve.isSuccess || block.isSuccess
+                      }
                       onClick={() => block.mutate({ id: review.data.id })}
                       className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.03] px-5 py-2.5 text-[13px] font-normal text-white/82 transition hover:border-white/22 hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      {block.isPending ? "Blocking..." : REVIEW_COPY.blockButton}
+                      {block.isPending
+                        ? "Blocking..."
+                        : REVIEW_COPY.blockButton}
                     </button>
                     <VoiceCommand
-                      disabled={actionPending || approve.isSuccess || block.isSuccess}
+                      disabled={
+                        actionPending || approve.isSuccess || block.isSuccess
+                      }
                       onAction={onVoiceAction}
                     />
                   </div>
@@ -255,13 +290,20 @@ function shortSignature(signature: string): string {
 
 function looksLikeBase58(s: string): boolean {
   const t = s.trim();
-  return t.length > 32 && /^[1-9A-HJ-NP-Za-km-z]+$/.test(t);
+  return t.length >= MIN_TRANSACTION_BASE58_CHARS && isBase58(t);
+}
+
+function isBase58(s: string): boolean {
+  return /^[1-9A-HJ-NP-Za-km-z]+$/.test(s.trim());
 }
 
 function pickImageItem(data: DataTransfer | null): DataTransferItem | null {
   if (!data) return null;
   for (const item of data.items) {
-    if (item.kind === "file" && (ACCEPTED_MIME as readonly string[]).includes(item.type)) {
+    if (
+      item.kind === "file" &&
+      (ACCEPTED_MIME as readonly string[]).includes(item.type)
+    ) {
       return item;
     }
   }

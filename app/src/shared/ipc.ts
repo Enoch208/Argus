@@ -142,10 +142,10 @@ export const channels = {
     output: z.object({ raw: z.string() }),
   },
 
-  /** Begins the review pipeline for a pasted base58 transaction and / or
-   *  a dragged screenshot. Either input fires alone; both can fire together
-   *  (paste a screenshot of the dApp UI alongside the base58 it's about to
-   *  sign). The pipeline runs whichever surfaces are present.
+  /** Begins the review pipeline for anything suspicious: raw transaction
+   *  wire data, URLs, domains, addresses, signatures, free text, and / or a
+   *  dragged screenshot. Raw transactions can be approved after review;
+   *  everything else is informational and never enters the signing path.
    *
    *  Image bytes travel as base64 over IPC — Electron's IPC supports binary,
    *  but base64 keeps the payload JSON-serialisable and the wire-format
@@ -159,6 +159,7 @@ export const channels = {
           .min(1)
           .regex(/^[1-9A-HJ-NP-Za-km-z]+$/, "expected base58")
           .optional(),
+        text: z.string().min(1).max(8000).optional(),
         image: z
           .object({
             base64: z.string().min(1),
@@ -166,9 +167,14 @@ export const channels = {
           })
           .optional(),
       })
-      .refine((d) => d.raw !== undefined || d.image !== undefined, {
-        message: "review.start requires `raw`, `image`, or both",
-      }),
+      .refine(
+        (d) =>
+          d.raw !== undefined || d.text !== undefined || d.image !== undefined,
+        {
+          message:
+            "review.start requires `raw`, `text`, `image`, or a combination",
+        },
+      ),
     output: Verdict,
   },
 
@@ -211,7 +217,13 @@ export const channels = {
     input: z.object({
       audio: z.string().min(1),
       mime: z
-        .enum(["audio/webm", "audio/ogg", "audio/wav", "audio/mp4", "audio/mpeg"])
+        .enum([
+          "audio/webm",
+          "audio/ogg",
+          "audio/wav",
+          "audio/mp4",
+          "audio/mpeg",
+        ])
         .optional(),
     }),
     output: z.object({

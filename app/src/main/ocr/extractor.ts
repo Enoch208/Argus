@@ -37,7 +37,9 @@ export async function extractUrlsFromImage(
 ): Promise<OcrResult> {
   const blocks = await ocrImage(imageBytes);
   if (!blocks) {
-    logger.info("ocr unavailable; verdict continues without screenshot signals");
+    logger.info(
+      "ocr unavailable; verdict continues without screenshot signals",
+    );
     return EMPTY_RESULT;
   }
   const text = blocksToText(blocks);
@@ -108,6 +110,13 @@ function normaliseDomainLite(s: string): string {
  */
 export const BRAND_TO_DOMAIN: ReadonlyMap<string, string> = new Map([
   ["phantom", "phantom.app"],
+  ["trust wallet", "trustwallet.com"],
+  ["trustwallet", "trustwallet.com"],
+  ["wallet connect", "walletconnect.com"],
+  ["walletconnect", "walletconnect.com"],
+  ["metamask", "metamask.io"],
+  ["coinbase wallet", "coinbase.com"],
+  ["coinbase", "coinbase.com"],
   ["solflare", "solflare.com"],
   ["backpack", "backpack.app"],
   ["magic eden", "magiceden.io"],

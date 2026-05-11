@@ -13,6 +13,8 @@ files:
 extraResources:
   - from: "resources/manifest.json"
     to: "manifest.json"
+  - from: "resources/data/wallet-blacklist.jsonl"
+    to: "data/wallet-blacklist.jsonl"
 
 asarUnpack:
   - "**/*.{node,dll}"

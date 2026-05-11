@@ -77,7 +77,7 @@ export default function SettingsRoute() {
             </div>
             <button
               type="button"
-              onClick={() => setRoute("setup")}
+              onClick={() => setRoute("stack")}
               className="mt-5 rounded-lg bg-white px-3 py-2 text-[12px] font-normal text-black transition hover:bg-white/90"
             >
               Open model stack

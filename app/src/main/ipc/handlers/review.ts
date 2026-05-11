@@ -17,7 +17,8 @@ export function registerReviewHandlers(): void {
     // Image-only reviews aren't approveable — no transaction to sign — so
     // they emit a verdict for display but don't enter the pending queue.
     // OCR-augmented reviews of an actual transaction still queue normally.
-    if (input.raw) savePendingReview(input.raw, verdict);
+    if (input.raw && verdict.instructions.length > 0)
+      savePendingReview(input.raw, verdict);
     return verdict;
   });
 

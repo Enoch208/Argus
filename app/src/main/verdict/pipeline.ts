@@ -16,6 +16,7 @@
 
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
+import { PublicKey } from "@solana/web3.js";
 import { ArgusError } from "@/shared/errors";
 import { explainVerdict } from "@/main/verdict/explainer";
 import {
@@ -38,12 +39,18 @@ import {
   type WalletIntel,
 } from "@/main/scam-intel/store";
 import { lookupDomains, type UrlIntel } from "@/main/url-intel/store";
-import { canonicalDomainForBrand, extractUrlsFromImage } from "@/main/ocr/extractor";
+import {
+  canonicalDomainForBrand,
+  extractBrands,
+  extractDomains,
+  extractUrlsFromImage,
+} from "@/main/ocr/extractor";
 import { parseTransaction } from "@/main/solana/decoder";
 import { simulate } from "@/main/solana/simulator";
 
 export interface ReviewInput {
   raw?: string;
+  text?: string;
   image?: { base64: string; mime: string };
 }
 
@@ -68,11 +75,24 @@ interface BrandImpersonation {
   competing: string[];
 }
 
+interface ScamPattern {
+  label: string;
+  severity: VerdictLevel;
+  citation: string;
+}
+
+interface TextSurface {
+  text: string;
+  domains: string[];
+  brands: string[];
+  wallets: string[];
+}
+
 export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
-  if (!input.raw && !input.image) {
+  if (!input.raw && !input.text && !input.image) {
     throw new ArgusError(
       "IPC_INVALID_PAYLOAD",
-      "review requires `raw`, `image`, or both",
+      "review requires `raw`, `text`, `image`, or a combination",
     );
   }
 
@@ -80,18 +100,30 @@ export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
   let instructions: DecodedInstruction[] = [];
   let deltas: Verdict["deltas"] = [];
   let simFailed: string | null = null;
+  let decodeFailed: string | null = null;
 
   if (input.raw) {
-    const parsed = parseTransaction(input.raw);
-    instructions = parsed.instructions;
     try {
-      const sim = await simulate(parsed.transaction);
-      deltas = sim.deltas;
-      if (sim.raw.err) simFailed = JSON.stringify(sim.raw.err);
+      const parsed = parseTransaction(input.raw);
+      instructions = parsed.instructions;
+      try {
+        const sim = await simulate(parsed.transaction);
+        deltas = sim.deltas;
+        if (sim.raw.err) simFailed = JSON.stringify(sim.raw.err);
+      } catch (err) {
+        if (err instanceof ArgusError) simFailed = err.message;
+        else throw err;
+        logger.warn("simulation failed; verdict still emits", {
+          msg: simFailed,
+        });
+      }
     } catch (err) {
-      if (err instanceof ArgusError) simFailed = err.message;
-      else throw err;
-      logger.warn("simulation failed; verdict still emits", { msg: simFailed });
+      if (!(err instanceof ArgusError) || err.code !== "TX_DECODE_FAILED")
+        throw err;
+      decodeFailed = err.message;
+      logger.warn("transaction decode failed; reviewing raw input as text", {
+        msg: decodeFailed,
+      });
     }
   }
 
@@ -108,15 +140,36 @@ export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
     }
   }
 
+  const fallbackText = decodeFailed ? input.raw : undefined;
+  const textSurface =
+    input.text || fallbackText
+      ? extractTextSurface(
+          [input.text, fallbackText].filter(Boolean).join("\n"),
+        )
+      : null;
+  const allText = [textSurface?.text ?? "", ocr?.text ?? ""]
+    .filter(Boolean)
+    .join("\n");
+  const scamPatterns = detectScamPatterns(allText);
+
   // ── Phase 3: collated intel lookup ────────────────────────────────────
-  const intel = lookupAllIntel(instructions, ocr?.domains ?? []);
-  const impersonations = ocr ? detectBrandImpersonation(ocr) : [];
+  const intel = lookupAllIntel(
+    instructions,
+    [...(ocr?.domains ?? []), ...(textSurface?.domains ?? [])],
+    textSurface?.wallets ?? [],
+  );
+  const mergedSurface = mergeSurfaces(ocr, textSurface);
+  const impersonations = mergedSurface
+    ? detectBrandImpersonation(mergedSurface)
+    : [];
   const level = pickLevel(
     instructions,
     simFailed,
     intel,
     impersonations,
+    scamPatterns,
     !!input.image,
+    !!textSurface,
   );
   const summary = buildSummary(
     instructions,
@@ -124,24 +177,36 @@ export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
     simFailed,
     intel,
     impersonations,
+    scamPatterns,
     !!input.image,
+    !!textSurface,
   );
   const citations = buildCitations(
     instructions,
     deltas,
     simFailed,
+    decodeFailed,
     intel,
     ocr,
+    textSurface,
     impersonations,
+    scamPatterns,
   );
-  const history = await personalHistorySignal({ summary, citations, instructions });
+  const history = await personalHistorySignal({
+    summary,
+    citations,
+    instructions,
+  });
   citations.push(historySignalCitation(history));
   const meta = buildMeta(
     instructions,
     simFailed,
+    decodeFailed,
     intel,
     impersonations,
+    scamPatterns,
     !!input.image,
+    !!textSurface,
     history,
   );
   const explanation = await explainVerdict({
@@ -172,11 +237,12 @@ export async function reviewTransaction(input: ReviewInput): Promise<Verdict> {
 
 function lookupAllIntel(
   ix: DecodedInstruction[],
-  ocrDomains: string[],
+  domains: string[],
+  extraWallets: string[] = [],
 ): IntelHits {
   const programIds = ix.map((i) => i.programId);
 
-  const wallets = new Set<string>();
+  const wallets = new Set<string>(extraWallets);
   const mints = new Set<string>();
   for (const i of ix) {
     switch (i.kind) {
@@ -184,13 +250,16 @@ function lookupAllIntel(
         if (typeof i.details.to === "string") wallets.add(i.details.to);
         break;
       case "spl-transfer":
-        if (typeof i.details.destination === "string") wallets.add(i.details.destination);
+        if (typeof i.details.destination === "string")
+          wallets.add(i.details.destination);
         break;
       case "spl-approve":
-        if (typeof i.details.delegate === "string") wallets.add(i.details.delegate);
+        if (typeof i.details.delegate === "string")
+          wallets.add(i.details.delegate);
         break;
       case "spl-close-account":
-        if (typeof i.details.destination === "string") wallets.add(i.details.destination);
+        if (typeof i.details.destination === "string")
+          wallets.add(i.details.destination);
         break;
       default:
         break;
@@ -201,7 +270,7 @@ function lookupAllIntel(
     program: lookupProgramIntel(programIds),
     wallet: lookupWalletIntel([...wallets]),
     mint: lookupMintIntel([...mints]),
-    url: lookupDomains(ocrDomains),
+    url: lookupDomains(domains),
   };
 }
 
@@ -214,14 +283,19 @@ function pickLevel(
   simFailed: string | null,
   intel: IntelHits,
   impersonations: BrandImpersonation[],
+  scamPatterns: ScamPattern[],
   hasImage: boolean,
+  hasText: boolean,
 ): VerdictLevel {
+  if (scamPatterns.some((p) => p.severity === "RED")) return "RED";
   if (simFailed) return "RED";
   if (anyDanger(intel)) return "RED";
   // Brand mention + a danger-flagged competing domain → impersonation, RED.
   if (
     impersonations.some((imp) =>
-      imp.competing.some((c) => intel.url.some((u) => u.domain === c && u.severity === "danger")),
+      imp.competing.some((c) =>
+        intel.url.some((u) => u.domain === c && u.severity === "danger"),
+      ),
     )
   ) {
     return "RED";
@@ -231,7 +305,7 @@ function pickLevel(
   if (anyCaution(intel)) return "YELLOW";
   if (impersonations.length > 0) return "YELLOW";
   if (ix.some((i) => i.kind === "unknown")) return "YELLOW";
-  if (ix.length === 0 && !hasImage) return "YELLOW";
+  if (ix.length === 0 && !hasImage && !hasText) return "YELLOW";
   return "YELLOW"; // see DESIGN-PRINCIPLES §3 — never overclaim certainty
 }
 
@@ -258,11 +332,17 @@ function buildSummary(
   simFailed: string | null,
   intel: IntelHits,
   impersonations: BrandImpersonation[],
+  scamPatterns: ScamPattern[],
   hasImage: boolean,
+  hasText: boolean,
 ): string {
-  if (level === "RED" && simFailed) return "Refuse to sign — simulation rejected.";
+  if (scamPatterns.some((p) => p.severity === "RED")) {
+    return "Refuse to engage — this asks for a recovery phrase or private key.";
+  }
+  if (level === "RED" && simFailed)
+    return "Refuse to sign — simulation rejected.";
   if (level === "RED" && intel.url.some((u) => u.severity === "danger")) {
-    return "Refuse to engage — screenshot shows a domain on the local URL blocklist.";
+    return "Refuse to engage — a provided domain is on the local URL blocklist.";
   }
   if (level === "RED" && impersonations.length > 0) {
     const imp = impersonations[0]!;
@@ -277,7 +357,8 @@ function buildSummary(
   if (level === "RED" && intel.mint.some((m) => m.severity === "danger")) {
     return "Refuse to sign — token mint is on the local scam-intel blocklist.";
   }
-  if (ix.length === 0 && hasImage) return "Screenshot reviewed; no transaction submitted.";
+  if (ix.length === 0 && (hasImage || hasText))
+    return "Checked the provided details; no transaction submitted.";
   if (ix.length === 0) return "Empty transaction.";
   if (ix.length === 1) return ix[0]!.summary;
   const head = ix[0]!.summary;
@@ -288,26 +369,40 @@ function buildCitations(
   ix: DecodedInstruction[],
   deltas: Verdict["deltas"],
   simFailed: string | null,
+  decodeFailed: string | null,
   intel: IntelHits,
   ocr: OcrSurface | null,
+  textSurface: TextSurface | null,
   impersonations: BrandImpersonation[],
+  scamPatterns: ScamPattern[],
 ): string[] {
   const out: string[] = [];
+
+  if (decodeFailed) {
+    out.push(`Input was not a signable Solana transaction: ${decodeFailed}.`);
+  }
 
   if (ix.length > 0) {
     if (simFailed) {
       out.push(`Simulation rejected: ${simFailed}.`);
     } else {
-      out.push(`Simulation passed (${ix.length} instruction${ix.length === 1 ? "" : "s"}).`);
+      out.push(
+        `Simulation passed (${ix.length} instruction${ix.length === 1 ? "" : "s"}).`,
+      );
     }
     for (const i of ix.slice(0, 3)) out.push(i.summary);
   }
 
   if (ix.length > 0) out.push(buildOnchainIntelCitation(ix, intel));
 
+  if (textSurface) out.push(buildTextCitation(intel, textSurface));
+
   if (ocr) out.push(buildUrlCitation(intel, ocr));
 
-  if (impersonations.length > 0) out.push(buildImpersonationCitation(impersonations));
+  for (const pattern of scamPatterns) out.push(pattern.citation);
+
+  if (impersonations.length > 0)
+    out.push(buildImpersonationCitation(impersonations));
 
   const unknownCount = ix.filter((i) => i.kind === "unknown").length;
   if (unknownCount > 0) {
@@ -326,7 +421,8 @@ function buildCitations(
   }
 
   // DESIGN-PRINCIPLES.md §2 — at least one citation, always.
-  if (out.length === 0) out.push("No verifiable signals were extracted from the inputs.");
+  if (out.length === 0)
+    out.push("No verifiable signals were extracted from the inputs.");
 
   return out;
 }
@@ -336,18 +432,30 @@ function buildOnchainIntelCitation(
   intel: IntelHits,
 ): string {
   const danger = [
-    ...intel.wallet.filter((w) => w.severity === "danger").map((w) => `recipient ${w.label}`),
-    ...intel.program.filter((p) => p.severity === "danger").map((p) => `program ${p.label}`),
-    ...intel.mint.filter((m) => m.severity === "danger").map((m) => `mint ${m.label}`),
+    ...intel.wallet
+      .filter((w) => w.severity === "danger")
+      .map((w) => `recipient ${w.label}`),
+    ...intel.program
+      .filter((p) => p.severity === "danger")
+      .map((p) => `program ${p.label}`),
+    ...intel.mint
+      .filter((m) => m.severity === "danger")
+      .map((m) => `mint ${m.label}`),
   ];
   if (danger.length > 0) {
     return `Local scam-intel flagged ${danger.slice(0, 3).join(", ")}.`;
   }
 
   const caution = [
-    ...intel.wallet.filter((w) => w.severity === "caution").map((w) => `recipient ${w.label}`),
-    ...intel.program.filter((p) => p.severity === "caution").map((p) => `program ${p.label}`),
-    ...intel.mint.filter((m) => m.severity === "caution").map((m) => `mint ${m.label}`),
+    ...intel.wallet
+      .filter((w) => w.severity === "caution")
+      .map((w) => `recipient ${w.label}`),
+    ...intel.program
+      .filter((p) => p.severity === "caution")
+      .map((p) => `program ${p.label}`),
+    ...intel.mint
+      .filter((m) => m.severity === "caution")
+      .map((m) => `mint ${m.label}`),
   ];
   if (caution.length > 0) {
     return `Local scam-intel recognises ${caution.slice(0, 3).join(", ")}; verify the on-screen terms before signing.`;
@@ -360,12 +468,18 @@ function buildOnchainIntelCitation(
 function buildUrlCitation(intel: IntelHits, ocr: OcrSurface): string {
   const danger = intel.url.filter((u) => u.severity === "danger");
   if (danger.length > 0) {
-    const sample = danger.slice(0, 3).map((u) => `${u.domain} (${u.label})`).join(", ");
+    const sample = danger
+      .slice(0, 3)
+      .map((u) => `${u.domain} (${u.label})`)
+      .join(", ");
     return `OCR found ${danger.length} blocked domain${danger.length === 1 ? "" : "s"}: ${sample}.`;
   }
   const allow = intel.url.filter((u) => u.severity === "allow");
   if (allow.length > 0) {
-    const sample = allow.slice(0, 3).map((u) => u.domain).join(", ");
+    const sample = allow
+      .slice(0, 3)
+      .map((u) => u.domain)
+      .join(", ");
     return `OCR recognised canonical Solana dApp${allow.length === 1 ? "" : "s"}: ${sample}.`;
   }
   if (ocr.domains.length > 0) {
@@ -374,17 +488,62 @@ function buildUrlCitation(intel: IntelHits, ocr: OcrSurface): string {
   return `OCR extracted no domains from the screenshot.`;
 }
 
+function buildTextCitation(intel: IntelHits, text: TextSurface): string {
+  const parts: string[] = [];
+  if (text.domains.length > 0) {
+    const danger = intel.url.filter((u) => u.severity === "danger");
+    if (danger.length > 0) {
+      const sample = danger
+        .slice(0, 3)
+        .map((u) => `${u.domain} (${u.label})`)
+        .join(", ");
+      parts.push(
+        `pasted text contains ${danger.length} blocked domain${danger.length === 1 ? "" : "s"}: ${sample}`,
+      );
+    } else {
+      parts.push(
+        `pasted text contains ${text.domains.length} domain${text.domains.length === 1 ? "" : "s"}; no exact URL blocklist match`,
+      );
+    }
+  }
+  if (text.wallets.length > 0) {
+    const danger = intel.wallet.filter((w) => w.severity === "danger");
+    if (danger.length > 0) {
+      parts.push(
+        `wallet blocklist matched ${danger
+          .slice(0, 3)
+          .map((w) => w.label)
+          .join(", ")}`,
+      );
+    } else {
+      parts.push(
+        `checked ${text.wallets.length} Solana address${text.wallets.length === 1 ? "" : "es"} against local wallet intel`,
+      );
+    }
+  }
+  if (parts.length === 0)
+    return "Pasted text reviewed for URLs, Solana addresses, and scam patterns.";
+  return parts.join("; ") + ".";
+}
+
 function buildMeta(
   ix: DecodedInstruction[],
   simFailed: string | null,
+  decodeFailed: string | null,
   intel: IntelHits,
   impersonations: BrandImpersonation[],
+  scamPatterns: ScamPattern[],
   hasImage: boolean,
+  hasText: boolean,
   history: HistoryRagSignal,
 ): string {
   const parts: string[] = [];
-  if (ix.length > 0) parts.push(simFailed ? "Simulation · rejected" : "Simulation");
+  if (ix.length > 0)
+    parts.push(simFailed ? "Simulation · rejected" : "Simulation");
+  if (decodeFailed) parts.push("Informational");
   parts.push(anyDanger(intel) ? "Intel · flagged" : "Intel");
+  if (scamPatterns.length > 0) parts.push("Pattern · secret request");
+  if (hasText) parts.push("Text");
   if (hasImage) parts.push("OCR");
   if (impersonations.length > 0) parts.push("Brand · impersonation");
   parts.push(history.hits.length > 0 ? "History · match" : "History");
@@ -418,11 +577,81 @@ function detectBrandImpersonation(ocr: OcrSurface): BrandImpersonation[] {
   return out;
 }
 
-function buildImpersonationCitation(impersonations: BrandImpersonation[]): string {
+function buildImpersonationCitation(
+  impersonations: BrandImpersonation[],
+): string {
   const first = impersonations[0]!;
   const competing = first.competing.slice(0, 2).join(", ");
-  const more = impersonations.length > 1 ? ` (+${impersonations.length - 1} more)` : "";
+  const more =
+    impersonations.length > 1 ? ` (+${impersonations.length - 1} more)` : "";
   return `Brand-impersonation: screenshot mentions ${first.brand} but the URL is ${competing}, not ${first.canonical}${more}.`;
+}
+
+// ---------------------------------------------------------------------------
+
+function extractTextSurface(input: string): TextSurface {
+  const text = input.trim();
+  return {
+    text,
+    domains: extractDomains(text),
+    brands: extractBrands(text),
+    wallets: extractSolanaAddresses(text),
+  };
+}
+
+function mergeSurfaces(
+  ocr: OcrSurface | null,
+  text: TextSurface | null,
+): Pick<OcrSurface, "text" | "domains" | "brands"> | null {
+  if (!ocr && !text) return null;
+  return {
+    text: [text?.text ?? "", ocr?.text ?? ""].filter(Boolean).join("\n"),
+    domains: [...new Set([...(ocr?.domains ?? []), ...(text?.domains ?? [])])],
+    brands: [...new Set([...(ocr?.brands ?? []), ...(text?.brands ?? [])])],
+  };
+}
+
+function extractSolanaAddresses(text: string): string[] {
+  const out = new Set<string>();
+  for (const raw of text.match(/[1-9A-HJ-NP-Za-km-z]{32,44}/g) ?? []) {
+    try {
+      const key = new PublicKey(raw);
+      out.add(key.toBase58());
+    } catch {
+      // Valid base58 can still be the wrong byte length for a public key.
+    }
+  }
+  return [...out];
+}
+
+function detectScamPatterns(text: string): ScamPattern[] {
+  if (!text.trim()) return [];
+  const lower = text.toLowerCase();
+  const out: ScamPattern[] = [];
+
+  if (
+    /\b(seed phrase|secret phrase|recovery phrase|mnemonic|12 or 24 mnemonic|private key)\b/i.test(
+      lower,
+    )
+  ) {
+    out.push({
+      label: "secret-request",
+      severity: "RED",
+      citation:
+        "The provided content asks for a recovery phrase, mnemonic, or private key. Legitimate wallets never need that to connect.",
+    });
+  }
+
+  if (/\b(airdrop|claim|reward|bonus|mint|whitelist)\b/i.test(lower)) {
+    out.push({
+      label: "claim-language",
+      severity: "YELLOW",
+      citation:
+        "The provided content uses high-pressure claim or reward language; verify the official domain before connecting a wallet.",
+    });
+  }
+
+  return out;
 }
 
 // ---------------------------------------------------------------------------

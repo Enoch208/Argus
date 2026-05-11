@@ -23,6 +23,12 @@
 
 import type * as QvacSdk from "@qvac/sdk";
 import { Buffer, type Buffer as NodeBuffer } from "node:buffer";
+import { execSync } from "node:child_process";
+import { readdirSync } from "node:fs";
+import { stat, unlink } from "node:fs/promises";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { nativeImage, type Rectangle } from "electron";
 import { logger } from "@/main/log";
 import { isAlreadyComplete, loadManifest, modelPath } from "@/main/models/store";
 
@@ -46,6 +52,12 @@ let stopped = false;
 function loadRuntime(): Promise<QvacRuntime | null> {
   if (runtimePromise) return runtimePromise;
   runtimePromise = (async () => {
+    // A crashed previous dev / app run will leave the SDK's RocksDB LOCK
+    // and `~/.qvac/.worker.lock` behind; the next `startQVACProvider()` then
+    // hangs on `fd-lock` retries (we saw this in the wild during pre-demo
+    // smoke tests). Clean stale locks before booting so the demo doesn't
+    // require a manual `pkill` between runs.
+    await cleanupStaleQvacLocks();
     try {
       const sdk = await import("@qvac/sdk");
       await sdk.startQVACProvider();
@@ -67,13 +79,94 @@ function loadRuntime(): Promise<QvacRuntime | null> {
 }
 
 /**
+ * Best-effort cleanup of orphaned QVAC locks. If a Bare worker is *still*
+ * running from a prior session, we leave the locks alone — the new
+ * `startQVACProvider()` will surface the conflict honestly. If no worker is
+ * alive, the locks are stale and we remove them so the SDK can boot.
+ */
+async function cleanupStaleQvacLocks(): Promise<void> {
+  const qvacDir = join(homedir(), ".qvac");
+  try {
+    await stat(qvacDir);
+  } catch {
+    return; // No ~/.qvac yet — first boot, nothing to clean.
+  }
+
+  if (hasLiveQvacWorker()) {
+    logger.info("qvac worker already alive; not touching locks");
+    return;
+  }
+
+  let cleaned = 0;
+  const workerLock = join(qvacDir, ".worker.lock");
+  try {
+    await unlink(workerLock);
+    cleaned += 1;
+  } catch {
+    /* missing is fine */
+  }
+  cleaned += removeRocksDbLocks(join(qvacDir, "registry-corestore"));
+  if (cleaned > 0) {
+    logger.info("qvac stale locks cleared at boot", { cleaned });
+  }
+}
+
+function hasLiveQvacWorker(): boolean {
+  try {
+    // `pgrep -f` returns 0 if any process matches the pattern. We grep for
+    // the worker.js path so this only catches QVAC workers (not other Bare
+    // apps on the system).
+    execSync("pgrep -f '@qvac/sdk/dist/server/worker.js'", {
+      stdio: "ignore",
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function removeRocksDbLocks(rootDir: string): number {
+  let removed = 0;
+  const stack: string[] = [rootDir];
+  while (stack.length > 0) {
+    const dir = stack.pop()!;
+    let entries: { name: string; isDirectory: () => boolean }[];
+    try {
+      entries = readdirSync(dir, { withFileTypes: true }) as unknown as {
+        name: string;
+        isDirectory: () => boolean;
+      }[];
+    } catch {
+      continue;
+    }
+    for (const entry of entries) {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(path);
+      } else if (entry.name === "LOCK") {
+        try {
+          // Synchronous because we're inside an async boot path that's
+          // already gated behind a single-flight latch — the extra await
+          // adds nothing.
+          execSync(`rm -f ${JSON.stringify(path)}`);
+          removed += 1;
+        } catch {
+          /* ignore — best-effort */
+        }
+      }
+    }
+  }
+  return removed;
+}
+
+/**
  * Ensure a manifest model is loaded into QVAC. Returns the SDK model id, or
  * `null` if the manifest entry is missing, the file isn't downloaded, or the
  * SDK rejects the load.
  */
 async function ensureLoaded(
   manifestId: string,
-  modelType: "llm" | "embeddings" | "whisper",
+  modelType: "llamacpp-completion" | "llamacpp-embedding" | "whispercpp-transcription",
 ): Promise<{ runtime: QvacRuntime; modelId: string } | null> {
   if (stopped) return null;
   const runtime = await loadRuntime();
@@ -117,7 +210,7 @@ export async function complete(
   userPrompt: string,
   opts: { temperature?: number; maxTokens?: number } = {},
 ): Promise<string | null> {
-  const handle = await ensureLoaded(manifestId, "llm");
+  const handle = await ensureLoaded(manifestId, "llamacpp-completion");
   if (!handle) return null;
   try {
     const run = await handle.runtime.sdk.completion({
@@ -152,7 +245,7 @@ export async function embed(
   manifestId: string,
   text: string,
 ): Promise<Float32Array | null> {
-  const handle = await ensureLoaded(manifestId, "embeddings");
+  const handle = await ensureLoaded(manifestId, "llamacpp-embedding");
   if (!handle) return null;
   try {
     const { embedding } = await handle.runtime.sdk.embed({
@@ -186,11 +279,17 @@ async function ensureOcrLoaded(runtime: QvacRuntime): Promise<string | null> {
   runtime.ocrLoading = (async () => {
     try {
       const id = await runtime.sdk.loadModel({
-        modelSrc: runtime.sdk.OCR_LATIN_RECOGNIZER,
+        modelSrc: runtime.sdk.OCR_LATIN_RECOGNIZER_1,
         modelType: "ocr",
         modelConfig: {
           langList: ["en"],
-          detectorModelSrc: runtime.sdk.OCR_CRAFT_DETECTOR,
+          useGPU: true,
+          timeout: 30_000,
+          magRatio: 1.5,
+          defaultRotationAngles: [90, 180, 270],
+          contrastRetry: false,
+          lowConfidenceThreshold: 0.5,
+          recognizerBatchSize: 1,
         },
       });
       runtime.ocrModelId = id;
@@ -222,19 +321,90 @@ export async function ocrImage(
   if (!runtime) return null;
   const modelId = await ensureOcrLoaded(runtime);
   if (!modelId) return null;
-  try {
-    const { blocks } = runtime.sdk.ocr({
-      modelId,
-      image: Buffer.from(image),
-    });
-    const resolved = await blocks;
-    return resolved.map((b) => ({ text: b.text, confidence: b.confidence }));
-  } catch (err) {
-    logger.warn("qvac ocr failed", {
-      msg: err instanceof Error ? err.message : "?",
-    });
+
+  const variants = buildOcrImageVariants(Buffer.from(image));
+  const allBlocks: OcrBlock[] = [];
+  const seen = new Set<string>();
+  for (const variant of variants) {
+    try {
+      const { blocks } = runtime.sdk.ocr({
+        modelId,
+        image: variant.bytes,
+      });
+      const resolved = await blocks;
+      logger.info("qvac ocr variant complete", {
+        variant: variant.label,
+        blocks: resolved.length,
+      });
+      for (const block of resolved) {
+        const text = block.text.trim();
+        if (!text || seen.has(text.toLowerCase())) continue;
+        seen.add(text.toLowerCase());
+        allBlocks.push({ text, confidence: block.confidence });
+      }
+    } catch (err) {
+      logger.warn("qvac ocr variant failed", {
+        variant: variant.label,
+        msg: err instanceof Error ? err.message : "?",
+      });
+    }
+  }
+  if (allBlocks.length === 0) {
+    logger.warn("qvac ocr found no text across image variants");
     return null;
   }
+  return allBlocks;
+}
+
+interface OcrImageVariant {
+  label: string;
+  bytes: Buffer;
+}
+
+function buildOcrImageVariants(input: Buffer): OcrImageVariant[] {
+  const img = nativeImage.createFromBuffer(input);
+  const size = img.getSize();
+  if (size.width <= 0 || size.height <= 0) return [{ label: "original", bytes: input }];
+
+  const variants: OcrImageVariant[] = [];
+  const add = (label: string, source: Electron.NativeImage): void => {
+    if (source.isEmpty()) return;
+    const resized = source.resize({ width: 512, height: 512, quality: "best" });
+    variants.push({ label, bytes: resized.toPNG() });
+  };
+  const crop = (label: string, rect: Rectangle): void => {
+    const x = clampInt(rect.x, 0, size.width - 1);
+    const y = clampInt(rect.y, 0, size.height - 1);
+    const width = clampInt(rect.width, 1, size.width - x);
+    const height = clampInt(rect.height, 1, size.height - y);
+    add(label, img.crop({ x, y, width, height }));
+  };
+
+  add("full", img);
+  crop("browser-url-bar", {
+    x: Math.round(size.width * 0.04),
+    y: 0,
+    width: Math.round(size.width * 0.92),
+    height: Math.round(size.height * 0.09),
+  });
+  crop("center-modal", {
+    x: Math.round(size.width * 0.28),
+    y: Math.round(size.height * 0.18),
+    width: Math.round(size.width * 0.44),
+    height: Math.round(size.height * 0.58),
+  });
+  crop("upper-page", {
+    x: 0,
+    y: 0,
+    width: size.width,
+    height: Math.round(size.height * 0.45),
+  });
+
+  return variants;
+}
+
+function clampInt(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }
 
 // ---------------------------------------------------------------------------
@@ -256,7 +426,7 @@ const WHISPER_MODEL_ID = "whisper-base-en";
 export async function transcribeAudio(
   audio: NodeBuffer | Uint8Array,
 ): Promise<string | null> {
-  const handle = await ensureLoaded(WHISPER_MODEL_ID, "whisper");
+  const handle = await ensureLoaded(WHISPER_MODEL_ID, "whispercpp-transcription");
   if (!handle) return null;
   try {
     const text = await handle.runtime.sdk.transcribe({
@@ -291,11 +461,20 @@ async function ensureTtsLoaded(runtime: QvacRuntime): Promise<string | null> {
   const cached = runtime.loaded.get(cacheKey);
   if (cached) return cached;
   try {
-    // Descriptor-based overload: `modelType` is inferred from the descriptor's
-    // `addon` field. We don't pass it explicitly — the SDK's overload picker
-    // narrows based on the descriptor literal type.
     const id = await runtime.sdk.loadModel({
-      modelSrc: runtime.sdk.TTS_EN_ES_CHATTERBOX_Q4F16,
+      modelSrc: runtime.sdk.TTS_TOKENIZER_EN_CHATTERBOX.src,
+      modelType: "onnx-tts",
+      modelConfig: {
+        ttsEngine: "chatterbox",
+        language: "en",
+        ttsTokenizerSrc: runtime.sdk.TTS_TOKENIZER_EN_CHATTERBOX.src,
+        ttsSpeechEncoderSrc: runtime.sdk.TTS_SPEECH_ENCODER_EN_CHATTERBOX_FP32.src,
+        ttsEmbedTokensSrc: runtime.sdk.TTS_EMBED_TOKENS_EN_CHATTERBOX_FP32.src,
+        ttsConditionalDecoderSrc:
+          runtime.sdk.TTS_CONDITIONAL_DECODER_EN_CHATTERBOX_FP32.src,
+        ttsLanguageModelSrc: runtime.sdk.TTS_LANGUAGE_MODEL_EN_CHATTERBOX_FP32.src,
+        referenceAudioSrc: "node_modules/@qvac/tts-onnx/test/reference-audio/jfk.wav",
+      },
     });
     runtime.loaded.set(cacheKey, id);
     logger.info("qvac tts pipeline loaded", { id });
@@ -344,17 +523,30 @@ export async function synthesizeSpeech(text: string): Promise<TtsAudio | null> {
   }
 }
 
-/** Registered in main/index.ts under `app.on("before-quit")`. */
+/** Registered in main/index.ts under `app.on("before-quit")`. Bounded by a
+ *  3-second timeout: if the QVAC worker is wedged (we observed this in
+ *  pre-demo smoke when the Bare worker was hot-spinning at 98 % CPU and
+ *  ignored its IPC stop request), we still return so `app.quit()` can
+ *  proceed. Stale locks left behind will be cleaned by
+ *  `cleanupStaleQvacLocks()` on the next boot. */
 export async function shutdownQvac(): Promise<void> {
   stopped = true;
   if (!runtimePromise) return;
   const runtime = await runtimePromise;
   if (!runtime) return;
   try {
-    await runtime.sdk.stopQVACProvider();
+    await Promise.race([
+      runtime.sdk.stopQVACProvider(),
+      new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("qvac stopQVACProvider timed out after 3s")),
+          3_000,
+        ),
+      ),
+    ]);
     logger.info("qvac provider stopped");
   } catch (err) {
-    logger.warn("qvac provider stop failed", {
+    logger.warn("qvac provider stop failed (cleanup will run on next boot)", {
       msg: err instanceof Error ? err.message : "?",
     });
   }

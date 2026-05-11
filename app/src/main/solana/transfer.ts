@@ -15,7 +15,6 @@
  */
 
 import { Buffer } from "node:buffer";
-import bs58 from "bs58";
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -24,6 +23,7 @@ import {
 } from "@solana/web3.js";
 import { ArgusError } from "@/shared/errors";
 import { logger } from "@/main/log";
+import { bs58 } from "@/main/solana/base58";
 import { getConnection } from "@/main/solana/rpc";
 
 export interface BuildTransferInput {
@@ -35,7 +35,9 @@ export interface BuildTransferInput {
   amountSol: number;
 }
 
-export async function buildSolTransfer(input: BuildTransferInput): Promise<string> {
+export async function buildSolTransfer(
+  input: BuildTransferInput,
+): Promise<string> {
   const fromKey = parseAddress(input.from, "from");
   const toKey = parseAddress(input.to, "to");
   if (fromKey.equals(toKey)) {
@@ -77,7 +79,10 @@ export async function buildSolTransfer(input: BuildTransferInput): Promise<strin
     }),
   );
 
-  const wire = tx.serialize({ requireAllSignatures: false, verifySignatures: false });
+  const wire = tx.serialize({
+    requireAllSignatures: false,
+    verifySignatures: false,
+  });
   const base58 = bs58.encode(Buffer.from(wire));
   logger.info("transfer constructed", {
     lamports,

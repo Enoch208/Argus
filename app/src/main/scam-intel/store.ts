@@ -20,7 +20,7 @@
  *   drainer / scam).
  */
 
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { app } from "electron";
 import Database from "better-sqlite3";
@@ -99,6 +99,7 @@ const SEED_UPDATED_AT = 1_762_646_400_000; // 2025-11-09T00:00:00Z
 const ARGUS_REGISTRY_SOURCE = "Argus bundled registry";
 const MANDIANT_CLINKSINK = "mandiant/clinksink-2024";
 const SOLANAFM_FLAGGED = "solanafm/scam-token-wallets-2024";
+const LOCAL_WALLET_BLACKLIST = "local/wallet-blacklist-jsonl";
 const ARGUS_URL_ALLOWLIST = "argus-allowlist";
 const PHANTOM_BLOCKLIST = "phantom/blocklist";
 
@@ -255,43 +256,42 @@ const WALLET_SEEDS: WalletIntel[] = [
   // a wallet rotation (e.g., `cheetah` + `cheetah2`, `lick` × 3). All flow
   // 80% to the affiliate and 20% to the primary operator wallet above.
   ...clinksinkAffiliates([
-      ["AVvCiPrjR3es4NHnA4HrUXVsYFbyeasDBzWhywH7pCtC", "analosdev"],
-      ["EHPGHGnFVYMZhc9xHF597yHC19odPHP6Kn2nmvkkWCWk", "asdasdgasdgf"],
-      ["7tCSWUZYKRvx1obdFB6hwFJRN7gFEadE3dFX4fsJ1nPz", "biggynow"],
-      ["8qezdtS9eP3GvSuFdYd11cLB84pD8siwjBvTqyBxfxKk", "cheetah2"],
-      ["4qzye6MmnyFkLKGq2yM64QpUgv3TyefwwR9zHrS6LThb", "cheetah2 (alt)"],
-      ["Fxm4yyVLSuWGhKNyJtr93VA6feJkjTjirTca78vpUVFe", "example29020208"],
-      ["3Xoki5GPu2t4h7b2x2jAARARwcFLZ1CCxyPv43ePm3nS", "fatyyban"],
-      ["GvKQzXo9RDcZowAXvAxxB9XHWo9EAXYUY6af5NoFms1r", "fatyyban (alt)"],
-      ["D9HYCccL2TcmiWhyoXqTHgbFtWvfQG8a5ZfHYieAWyLa", "gangster"],
-      ["HFgFGQS9NmvFzG7dSH8sMRTEeKi793uB8fzgmaoDxBei", "gangster (alt)"],
-      ["FJLztLtZfjYAtwJYjg3ZNsqMHAJwtHc1xYS5AZwLu9PN", "GateDev"],
-      ["HpTvuyVxwy7nK8AXCZqMHV1wiup3yvvsjpB5L2AHTGMc", "gostxast"],
-      ["FF1iEduHrvJChE7anZbxDn7gSKefT46xBaBcuuiqMxo9", "hahahahahahahaha"],
-      ["DYFKcauBDmbj29x9jucNsAYxmWv423GjCN4ZbjvDWX9e", "kndawd"],
-      ["bkfS3Mo8surQ3RKSm55GHjouHyqGPgFZebQJASDdFWf", "lgbtq_monkey"],
-      ["5NM4zTiCqHCtF88qxUw4CSTUEb1yA5P4Q1icStXyXdoX", "lick"],
-      ["HVR8U9zaPES2Zb7hFGVsqt2HLpxFc2jpZxnk3d1km4kY", "lick (alt 1)"],
-      ["T3KNsTzkiyW2gxfbqkbHxfGr7ciFzBpDTkV2UAJgd3x", "lick (alt 2)"],
-      ["Aidf4FyS42q6TeMtSmJmB3goGLmNuVrhgr4LCyb8HceM", "milahRyuk"],
-      ["Bw1ktx1MjzQjWEEinJGQ1kHK8CjCZ2ZLnS3hYmfN5yBE", "mistake"],
-      ["8nnMe1cGJpr2wUaVH4LbAut6Zka7vewZs9oQkc5H4JN7", "mr_jord"],
-      ["5G6VsUNdMcMJZit2y2p9kAaVXf43PUu96uNJkoWDWPXr", "mr_jord (alt)"],
-      ["Fte4wZgKApNbsbzbKpyJyjnautjrr6diovgzVHwX2PFE", "nftkhufu2"],
-      ["EjfTahgtoRxzeaPsWuMwouZbqAw3tZAXyQeyGwUVN9hw", "nftkhufu2 (alt)"],
-      ["FDLuQRg6yYENo4Q75HJ4RdF6wZhNeSW9HjUGD1eoDGG1", "null_fed"],
-      ["CuWXwbstHKkhFLbGDAWpF7rbiRvfQpPSo4uFMnYyhDSx", "orgifox"],
-      ["8Vc4R5gHEZs6PxA3uRmYVyqFRZgSmRV866UTvfeyc4VA", "outsmart"],
-      ["HVHAGvL8HCByevnep9jgSYdr5Eq1wFFBwbq2jFVqoxNh", "pitbull"],
-      ["7XAgCsWMwfuzi1LLvXmpFMaXLQSoc4D6QJ5YyKhCUaSu", "pitbull_idk"],
-      ["13XC9hfTu2f2e7wzrfVugbCqnWcG27XJwyhrBFff3GAr", "randomized9992342324"],
-      ["5pKrMXARbv6iNbtp2uEsZhyyTpR85jRrEny5fSCydvbW", "shudsidj"],
-      ["EhunAZL5v7r14Di9DGjW55dHLKzKJjHutpWKHZ9yDNbs", "sleepzzz35"],
-      ["BYQsPKfFznw1kyTysBX9GAYCUpsStFiwQbCBS2AMeJd7", "stuntin1121"],
-      ["5ubbRtLvoVmbN6LVthcmMGTB8nxShE5dRZtuZTgFVLNs", "stuntin1121 (alt)"],
-      ["4gRHwBUz9VKGgRWL9UAjFEAdR63D5GHA3z6A9ny2ww8V", "suki6969"],
-    ],
-  ),
+    ["AVvCiPrjR3es4NHnA4HrUXVsYFbyeasDBzWhywH7pCtC", "analosdev"],
+    ["EHPGHGnFVYMZhc9xHF597yHC19odPHP6Kn2nmvkkWCWk", "asdasdgasdgf"],
+    ["7tCSWUZYKRvx1obdFB6hwFJRN7gFEadE3dFX4fsJ1nPz", "biggynow"],
+    ["8qezdtS9eP3GvSuFdYd11cLB84pD8siwjBvTqyBxfxKk", "cheetah2"],
+    ["4qzye6MmnyFkLKGq2yM64QpUgv3TyefwwR9zHrS6LThb", "cheetah2 (alt)"],
+    ["Fxm4yyVLSuWGhKNyJtr93VA6feJkjTjirTca78vpUVFe", "example29020208"],
+    ["3Xoki5GPu2t4h7b2x2jAARARwcFLZ1CCxyPv43ePm3nS", "fatyyban"],
+    ["GvKQzXo9RDcZowAXvAxxB9XHWo9EAXYUY6af5NoFms1r", "fatyyban (alt)"],
+    ["D9HYCccL2TcmiWhyoXqTHgbFtWvfQG8a5ZfHYieAWyLa", "gangster"],
+    ["HFgFGQS9NmvFzG7dSH8sMRTEeKi793uB8fzgmaoDxBei", "gangster (alt)"],
+    ["FJLztLtZfjYAtwJYjg3ZNsqMHAJwtHc1xYS5AZwLu9PN", "GateDev"],
+    ["HpTvuyVxwy7nK8AXCZqMHV1wiup3yvvsjpB5L2AHTGMc", "gostxast"],
+    ["FF1iEduHrvJChE7anZbxDn7gSKefT46xBaBcuuiqMxo9", "hahahahahahahaha"],
+    ["DYFKcauBDmbj29x9jucNsAYxmWv423GjCN4ZbjvDWX9e", "kndawd"],
+    ["bkfS3Mo8surQ3RKSm55GHjouHyqGPgFZebQJASDdFWf", "lgbtq_monkey"],
+    ["5NM4zTiCqHCtF88qxUw4CSTUEb1yA5P4Q1icStXyXdoX", "lick"],
+    ["HVR8U9zaPES2Zb7hFGVsqt2HLpxFc2jpZxnk3d1km4kY", "lick (alt 1)"],
+    ["T3KNsTzkiyW2gxfbqkbHxfGr7ciFzBpDTkV2UAJgd3x", "lick (alt 2)"],
+    ["Aidf4FyS42q6TeMtSmJmB3goGLmNuVrhgr4LCyb8HceM", "milahRyuk"],
+    ["Bw1ktx1MjzQjWEEinJGQ1kHK8CjCZ2ZLnS3hYmfN5yBE", "mistake"],
+    ["8nnMe1cGJpr2wUaVH4LbAut6Zka7vewZs9oQkc5H4JN7", "mr_jord"],
+    ["5G6VsUNdMcMJZit2y2p9kAaVXf43PUu96uNJkoWDWPXr", "mr_jord (alt)"],
+    ["Fte4wZgKApNbsbzbKpyJyjnautjrr6diovgzVHwX2PFE", "nftkhufu2"],
+    ["EjfTahgtoRxzeaPsWuMwouZbqAw3tZAXyQeyGwUVN9hw", "nftkhufu2 (alt)"],
+    ["FDLuQRg6yYENo4Q75HJ4RdF6wZhNeSW9HjUGD1eoDGG1", "null_fed"],
+    ["CuWXwbstHKkhFLbGDAWpF7rbiRvfQpPSo4uFMnYyhDSx", "orgifox"],
+    ["8Vc4R5gHEZs6PxA3uRmYVyqFRZgSmRV866UTvfeyc4VA", "outsmart"],
+    ["HVHAGvL8HCByevnep9jgSYdr5Eq1wFFBwbq2jFVqoxNh", "pitbull"],
+    ["7XAgCsWMwfuzi1LLvXmpFMaXLQSoc4D6QJ5YyKhCUaSu", "pitbull_idk"],
+    ["13XC9hfTu2f2e7wzrfVugbCqnWcG27XJwyhrBFff3GAr", "randomized9992342324"],
+    ["5pKrMXARbv6iNbtp2uEsZhyyTpR85jRrEny5fSCydvbW", "shudsidj"],
+    ["EhunAZL5v7r14Di9DGjW55dHLKzKJjHutpWKHZ9yDNbs", "sleepzzz35"],
+    ["BYQsPKfFznw1kyTysBX9GAYCUpsStFiwQbCBS2AMeJd7", "stuntin1121"],
+    ["5ubbRtLvoVmbN6LVthcmMGTB8nxShE5dRZtuZTgFVLNs", "stuntin1121 (alt)"],
+    ["4gRHwBUz9VKGgRWL9UAjFEAdR63D5GHA3z6A9ny2ww8V", "suki6969"],
+  ]),
 
   // ── SolanaFM-flagged deployer / treasury wallets ──────────────────────
   // Deployers of confirmed scam tokens — sending to these wallets is the
@@ -380,6 +380,66 @@ const WALLET_SEEDS: WalletIntel[] = [
     updatedAt: SEED_UPDATED_AT,
   },
 ];
+
+interface WalletBlacklistRow {
+  addr?: unknown;
+  ts?: unknown;
+  hash?: unknown;
+}
+
+function loadWalletBlacklist(): WalletIntel[] {
+  const file = walletBlacklistPath();
+  if (!file || !existsSync(file)) {
+    logger.warn("wallet blacklist jsonl missing", { path: file ?? "?" });
+    return [];
+  }
+
+  const rows: WalletIntel[] = [];
+  const seen = new Set<string>();
+  for (const [index, line] of readFileSync(file, "utf8")
+    .split(/\r?\n/)
+    .entries()) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    try {
+      const row = JSON.parse(trimmed) as WalletBlacklistRow;
+      if (typeof row.addr !== "string" || row.addr.length === 0) continue;
+      if (seen.has(row.addr)) continue;
+      seen.add(row.addr);
+      rows.push({
+        address: row.addr,
+        label: "Local wallet blacklist match",
+        severity: "danger",
+        source: LOCAL_WALLET_BLACKLIST,
+        note: `Bundled wallet blacklist entry${typeof row.hash === "string" ? ` · hash ${row.hash}` : ""}.`,
+        updatedAt: typeof row.ts === "number" ? row.ts : SEED_UPDATED_AT,
+      });
+    } catch (err) {
+      logger.warn("wallet blacklist row skipped", {
+        line: index + 1,
+        msg: err instanceof Error ? err.message : "?",
+      });
+    }
+  }
+  return rows;
+}
+
+function walletBlacklistPath(): string | null {
+  const candidates = app.isPackaged
+    ? [
+        join(process.resourcesPath, "wallet-blacklist.jsonl"),
+        join(process.resourcesPath, "data", "wallet-blacklist.jsonl"),
+      ]
+    : [
+        join(__dirname, "../../resources/data/wallet-blacklist.jsonl"),
+        join(process.cwd(), "resources/data/wallet-blacklist.jsonl"),
+      ];
+  return (
+    candidates.find((candidate) => existsSync(candidate)) ??
+    candidates[0] ??
+    null
+  );
+}
 
 const MINT_SEEDS: MintIntel[] = [
   // ── Canonical infra ─────────────────────────────────────────────────────
@@ -562,6 +622,7 @@ export function normaliseDomain(input: string): string {
 }
 
 let cachedDb: Database.Database | null = null;
+let walletBlacklistSeedCount = 0;
 
 export function lookupProgramIntel(programIds: string[]): ProgramIntel[] {
   const unique = [...new Set(programIds)].filter(Boolean);
@@ -609,7 +670,9 @@ export function lookupMintIntel(mints: string[]): MintIntel[] {
 export function lookupUrlIntel(domains: string[]): UrlIntel[] {
   // Caller may pass raw URLs; we normalise on the way in so lookup is one
   // exact-match query per domain regardless of input shape.
-  const unique = [...new Set(domains.map((d) => normaliseDomain(d)))].filter(Boolean);
+  const unique = [...new Set(domains.map((d) => normaliseDomain(d)))].filter(
+    Boolean,
+  );
   if (unique.length === 0) return [];
   const stmt = openDb().prepare<[string], UrlRow>(
     "SELECT domain, label, severity, source, note, updated_at FROM url_intel WHERE domain = ?",
@@ -705,7 +768,8 @@ function openDb(): Database.Database {
   logger.info("scam intel db opened", {
     path: dbPath,
     programs: PROGRAM_SEEDS.length,
-    wallets: WALLET_SEEDS.length,
+    wallets: WALLET_SEEDS.length + walletBlacklistSeedCount,
+    walletBlacklist: walletBlacklistSeedCount,
     mints: MINT_SEEDS.length,
     urls: URL_SEEDS.length,
   });
@@ -733,7 +797,7 @@ function seedAll(db: Database.Database): void {
       source = excluded.source,
       note = excluded.note,
       updated_at = excluded.updated_at
-    WHERE wallet_intel.source = '${ARGUS_REGISTRY_SOURCE}'
+    WHERE wallet_intel.source IN ('${ARGUS_REGISTRY_SOURCE}', '${LOCAL_WALLET_BLACKLIST}')
   `);
   const insertMint = db.prepare(`
     INSERT INTO mint_intel (address, label, severity, source, note, updated_at)
@@ -759,8 +823,12 @@ function seedAll(db: Database.Database): void {
   `);
 
   const tx = db.transaction(() => {
+    const walletBlacklist = loadWalletBlacklist();
+    walletBlacklistSeedCount = walletBlacklist.length;
+
     for (const p of PROGRAM_SEEDS) insertProgram.run(p);
     for (const w of WALLET_SEEDS) insertWallet.run(w);
+    for (const w of walletBlacklist) insertWallet.run(w);
     for (const m of MINT_SEEDS) insertMint.run(m);
     for (const u of URL_SEEDS) insertUrl.run(u);
   });
