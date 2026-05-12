@@ -24,7 +24,7 @@ Argus is a self-custodial desktop wallet whose every transaction — including t
 | **Local on-chain intelligence** | **35 entries** (19 wallets / 6 programs / 10 mints from Mandiant CLINKSINK + SolanaFM) |
 | **Network at runtime** | Solana RPC + a one-time model CDN fetch. No telemetry, no analytics, no error reporting, no cloud inference. |
 | **Wallet stack** | WDK (Tether) — Argon2id keystore, AES-256-GCM at rest, ed25519 signing, seed never crosses IPC |
-| **Cluster default** | Devnet — judges can airdrop test SOL in one click, broadcasts produce real Solscan-resolvable links |
+| **Cluster default** | Devnet — one-click airdrop funds a fresh wallet, broadcasts produce real Solscan-resolvable links |
 | **License** | MIT |
 
 ---
@@ -61,28 +61,26 @@ Argus returns a verdict — **RED / YELLOW / GREEN** — and every level carries
 
 Every verdict is grounded. The renderer refuses to display a verdict without citations.
 
-## Why this wins on the Tether Frontier rubric
+## What's notable
 
-The track scores on four criteria. Here is how Argus addresses each:
+A few engineering choices distinguish Argus from a thin AI wrapper.
 
-1. **Technical depth of QVAC integration · 40 %.**
-   - 4 SDK capabilities are *actively on the call path* of every demo review: `completion` (explainer), `embed` (personal-history RAG), `ocr` (screenshot text), `transcribe` (voice command).
-   - 1 more capability (`textToSpeech`) is wired in main (`voice.speak` IPC + `synthesizeSpeech()` against the Chatterbox descriptor), with the default user button using Web Speech for instant playback rather than the multi-GB cold-start.
-   - The QVAC SDK lifecycle is owned end-to-end: `startQVACProvider()` on first call, `loadModel({ modelSrc, modelType })` for each capability, `stopQVACProvider()` registered to Electron's `before-quit` with a 3-second timeout and automatic stale-lock cleanup at next boot.
-   - All failure modes degrade gracefully — every QVAC helper returns `null` on error, never throws to its caller. Verdicts always emit.
-2. **Product value · 30 %.**
-   - $2.1B/year problem. Real intel sources (Mandiant CLINKSINK, SolanaFM, Phantom's own blocklist). Real WDK keystore. Real Solana RPC. Real broadcast.
-   - The Send flow is the proof: the wallet cannot sign without first passing its own transaction through the AI gate. No other Solana wallet ships this exact data-flow constraint today.
-3. **Innovation · 20 %.**
-   - **Verdict-first design with mandatory citations.** Most "AI wallet" pitches are GPT wrappers; Argus inverts it — the model rewrites grounded facts, the deterministic pipeline owns truth.
-   - **Personal-history RAG.** Cloud AI literally cannot do this — your prior signed/blocked reviews aren't training data anywhere else. Cosine ranking against `bge-small` embeddings flags outliers that exact-match blocklists miss.
-   - **Brand-impersonation cross-reference.** Novel signal: a screenshot mentioning a brand without surfacing that brand's canonical domain is a RED-eligible citation even when the impostor URL isn't yet in any blocklist.
-4. **Demo quality · 10 %.**
-   - Three working demo scripts (`demo:phishing`, `demo:safe`, `demo:approve`).
-   - Devnet airdrop button so a fresh wallet funds itself in one click.
-   - Mermaid architecture + sequence diagrams in this README. Sixteen ADRs in [`app/docs/decisions/`](app/docs/decisions/) documenting every material choice.
+**The QVAC integration is structural.** Four `@qvac/sdk` capabilities — `completion`, `embed`, `ocr`, `transcribe` — sit directly on the call path of every review. The SDK's lifecycle is owned end-to-end: `startQVACProvider()` on first call, `loadModel({ modelSrc, modelType })` per capability, `stopQVACProvider()` registered to `before-quit` with a 3-second timeout and automatic stale-lock cleanup at next boot. Every helper degrades gracefully — it returns `null` on error rather than throwing, so the verdict pipeline always produces output even when a model is unavailable.
 
----
+**The threat intelligence is assembled and verified, not imported wholesale.** No single public corpus covers Solana drainers cleanly, so the bundled data stitches four sources, each checked before it shipped:
+
+- **Mandiant CLINKSINK** — drainer hot-wallets named in Google's 2024 incident report on the Solana-targeted "CLINKSINK" drainer campaign. Each address was spot-checked on Solscan to confirm on-chain scam activity before inclusion, and labelled with the report's attribution so the citation surfaces "Mandiant CLINKSINK" rather than an opaque flag.
+- **SolanaFM flagged registry** — scam-token mints and deployer wallets named in SolanaFM's public scam roundup, manually transcribed with explicit `label` and `mimics` fields. The verdict reads "mint copy of USDC by <deployer>" instead of a hash.
+- **`github.com/phantom/blocklist`** — Phantom's production blocklist (2,247 unique phishing domains after normalisation), pulled by [`scripts/refresh-url-blocklist.ts`](app/scripts/refresh-url-blocklist.ts). The script inline-parses the upstream YAML so no YAML dependency enters the wallet's supply chain, dedupes against the hand-curated seeds, and pins the upstream commit SHA + commit date in the JSON output. Reviewers can verify provenance with `git -C <phantom-clone> show <sha>`.
+- **Hand-curated typo-squat seed** — 17 high-risk look-alikes (`magic-edenn.io`, `solflare.asia`, `tensor-airdrop.com`, …), each labelled with the canonical domain it mimics so the citation reads "typo-squat of magiceden.io" rather than a generic flag.
+
+A fifth candidate — ScamSniffer's bulk address blacklist — was investigated and dropped: their 2,530-entry address list is EVM-only (`0x…` hex), so it doesn't apply to Solana base58 addresses. Argus only ships what was actually verifiable for Solana.
+
+The wallet itself uses Tether's WDK with a real Argon2id-encrypted keystore; transfers broadcast to a real Solana cluster and produce Solscan-resolvable signatures.
+
+**Three signals are local-only by design.** *Verdict-first reasoning* puts the deterministic pipeline in charge of truth and limits the model to rewriting grounded facts — the inverse of GPT-wrapper patterns where the model owns the conclusion. *Personal-history retrieval* embeds prior signed and blocked reviews with bge-small (384-d cosine) so unusual transactions stand out — a signal that cloud AI structurally cannot produce, because the data never leaves the device. *Brand-impersonation cross-reference* flags screenshots that mention a brand without surfacing its canonical domain, catching look-alike phishing kits even when the impostor URL hasn't reached any blocklist yet.
+
+**Reproducibility ships with the app.** Three demo scripts (`demo:phishing`, `demo:safe`, `demo:approve`) exercise the full pipeline end-to-end with real decode, real simulation, and real intel — not mocked fixtures. A devnet airdrop button funds a fresh wallet in one click. Sixteen ADRs in [`app/docs/decisions/`](app/docs/decisions/) record every material choice, and the Mermaid diagrams below lay out the architecture and the verdict flow.
 
 ## Technical architecture
 
@@ -259,7 +257,7 @@ The unsigned transaction sits in the review ledger between Build and Approve. If
 │   ├── scripts/        demo + intel-refresh scripts
 │   └── docs/           ARCHITECTURE, SECURITY, DESIGN-PRINCIPLES, 16 ADRs
 ├── landing_page/       Next.js 16 marketing site
-└── prd.md              canonical hackathon-scoped V1 PRD
+└── prd.md              V1 product requirements
 ```
 
 ## Quick start
@@ -328,15 +326,6 @@ npm run refresh:intel     # re-scrape Phantom blocklist; updates the bundled sna
 - **Honest uncertainty.** Unknown programs force YELLOW — never silent green. See [DESIGN-PRINCIPLES.md](app/docs/DESIGN-PRINCIPLES.md) §3.
 
 Full threat model: [SECURITY.md](app/docs/SECURITY.md). Material architectural decisions: 16 ADRs in [docs/decisions/](app/docs/decisions/).
-
-## Hackathon
-
-Submitted to:
-
-- **Tether Frontier Side Track** ($10K USDt) — 4 `@qvac/sdk` capabilities live on the demo path, 1 wired, 1 queued. Meaningful integration as defined by the rubric: not a wrapper, not a demo, structurally on the call path of every verdict.
-- **Solana Frontier Hackathon** main pool.
-
-Deadline: **May 11, 2026, 23:59 UTC**.
 
 ## License
 

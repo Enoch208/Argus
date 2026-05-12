@@ -22,7 +22,7 @@ asarUnpack:
 mac:
   target:
     - target: dmg
-      arch: [arm64, x64]
+      arch: [arm64]
   category: public.app-category.finance
   icon: resources/icon.icns
   hardenedRuntime: true

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Electron + native bindings + V8 JIT -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+    <true/>
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+    <key>com.apple.security.cs.disable-executable-page-protection</key>
+    <true/>
+
+    <!-- Electron's renderer fork needs to inherit the hardened runtime entitlements -->
+    <key>com.apple.security.inherit</key>
+    <true/>
+
+    <!-- Network: Solana RPC + model CDN on first launch; nothing else at runtime -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- Microphone: optional voice-command flow (Whisper STT via @qvac/sdk) -->
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+
+    <!-- Files: user picks screenshot drops; no broad disk access required -->
+    <key>com.apple.security.files.user-selected.read-only</key>
+    <true/>
+</dict>
+</plist>
