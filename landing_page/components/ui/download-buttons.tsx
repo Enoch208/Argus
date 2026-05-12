@@ -23,7 +23,11 @@ function DownloadButton({
     <Link
       href={href}
       className={cn(
-        "group relative inline-flex min-h-14 min-w-[180px] cursor-pointer items-center gap-3 overflow-hidden rounded-lg border px-4 py-3 transition-all duration-200 active:translate-y-px",
+        // `sm:flex-1 sm:basis-0` makes both buttons split the row equally on
+        // desktop so longer labels (e.g. "Download for Windows") don't make
+        // one button visually wider than the other. Mobile stays stacked +
+        // full-width via the parent's flex-col.
+        "group relative inline-flex min-h-14 min-w-[180px] cursor-pointer items-center gap-3 overflow-hidden rounded-lg border px-4 py-3 transition-all duration-200 active:translate-y-px sm:flex-1 sm:basis-0",
         "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-white/70",
         "after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgba(255,255,255,0.26),rgba(255,255,255,0)_42%)]",
         isPrimary
@@ -68,8 +72,12 @@ export function DownloadButtons({
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row items-stretch gap-2.5",
-        align === "center" ? "justify-center" : "justify-start",
+        // `max-w-[600px]` + `mx-auto` (when centered) keeps the two equal-width
+        // buttons from stretching the full hero column width on large
+        // displays. Together with `sm:flex-1` on each button, the pair always
+        // matches in width regardless of label length.
+        "flex flex-col sm:flex-row items-stretch gap-2.5 w-full max-w-[600px]",
+        align === "center" ? "justify-center mx-auto" : "justify-start",
         className,
       )}
     >
