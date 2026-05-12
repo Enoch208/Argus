@@ -322,7 +322,7 @@ export const FOOTER = {
       heading: "Repository",
       items: [
         { label: "GitHub", href: BRAND.github },
-        { label: "PRD", href: "https://github.com/yourname/Argus/blob/main/prd.md" },
+        { label: "PRD", href: "https://github.com/Enoch208/Argus/blob/main/prd.md" },
         { label: "Demo video", href: "#" },
         { label: "Architecture", href: "#" },
       ],
