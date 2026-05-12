@@ -58,7 +58,7 @@ export const DOWNLOADS = {
     href: RELEASE_PAGE,
   },
   win: {
-    label: "Download for Windows",
+    label: "Download for Win",
     sub: "x64 · portable",
     href: RELEASE_PAGE,
   },
