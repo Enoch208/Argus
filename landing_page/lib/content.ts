@@ -45,21 +45,22 @@ export const NAV_LINKS = [
   { label: "Threats", href: "#threats" },
 ] as const;
 
-// macOS DMG + Windows portable ZIP, hosted as assets on the v0.1.0 GitHub
-// Release at `github.com/Enoch208/Argus/releases/tag/v0.1.0`. Each click
-// hits GitHub's CDN — no extra hosting layer, signed URLs, or build step.
-const RELEASE = "https://github.com/Enoch208/Argus/releases/download/v0.1.0";
+// Releases page on GitHub — binaries (Mac DMG, Windows portable ZIP) attach
+// as assets as they finish uploading. Pointing at the page (not direct asset
+// URLs) keeps the buttons functional whether or not a given asset has
+// finished uploading at the moment a visitor clicks.
+const RELEASE_PAGE = "https://github.com/Enoch208/Argus/releases/tag/v0.1.0";
 
 export const DOWNLOADS = {
   mac: {
     label: "Download for Mac",
-    sub: "Apple Silicon · DMG · 1.3 GB",
-    href: `${RELEASE}/Argus-0.1.0-arm64.dmg`,
+    sub: "Apple Silicon",
+    href: RELEASE_PAGE,
   },
   win: {
     label: "Download for Windows",
-    sub: "x64 · portable ZIP · 946 MB",
-    href: `${RELEASE}/Argus-0.1.0-win-x64-portable.zip`,
+    sub: "x64 · portable",
+    href: RELEASE_PAGE,
   },
 } as const;
 
