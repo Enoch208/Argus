@@ -18,6 +18,13 @@ extraResources:
 
 asarUnpack:
   - "**/*.{node,dll}"
+  # The `@qvac/sdk` spawns the platform-specific Bare runtime binary as a
+  # subprocess. The OS cannot exec files from inside an asar virtual fs, so
+  # these directories must live as real files at `app.asar.unpacked/`.
+  - "**/bare-runtime-*/**"
+  # ONNX runtimes ship as `.dylib` / `.so` shared libraries (not `.node`);
+  # asar virtual paths break `dlopen`, so unpack them too.
+  - "**/*.{dylib,so}"
 
 mac:
   target:
