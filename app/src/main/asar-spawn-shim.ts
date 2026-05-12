@@ -34,6 +34,19 @@ function rewriteAsarPath(value: unknown): unknown {
   return value.replace(ASAR_SEGMENT, UNPACKED_SEGMENT);
 }
 
+/**
+ * Rewrite the args array passed to `spawn` / `execFile`. Many native runtimes
+ * (Bare, llama.cpp servers, ffmpeg shims) receive script-paths or asset-paths
+ * as positional CLI args. When those paths point inside `app.asar`, the child
+ * process's own filesystem (which doesn't understand Electron's asar shim)
+ * can't open them. Rewriting each string element to its `.asar.unpacked`
+ * sibling keeps third-party code working without patching it.
+ */
+function rewriteAsarPathsInArgs(args: unknown): unknown {
+  if (!Array.isArray(args)) return args;
+  return args.map((arg) => rewriteAsarPath(arg));
+}
+
 type SpawnFn = typeof childProcess.spawn;
 type SpawnSyncFn = typeof childProcess.spawnSync;
 type ExecFileFn = typeof childProcess.execFile;
@@ -52,9 +65,14 @@ const originalExecFileSync: ExecFileSyncFn = childProcess.execFileSync;
 // (spawn alone has 4 signatures) and the goal is a one-line path rewrite, not
 // re-specifying the full Node typings. The cast keeps the public type intact.
 
+// Both the command path (args[0]) AND the second positional — which is the
+// args array passed to the child — get the asar→asar.unpacked rewrite. The
+// rest of the call signature (options, callbacks) is passed through.
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (childProcess as { spawn: SpawnFn }).spawn = function patchedSpawn(...args: any[]) {
   if (args.length > 0) args[0] = rewriteAsarPath(args[0]);
+  if (args.length > 1) args[1] = rewriteAsarPathsInArgs(args[1]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (originalSpawn as any).apply(childProcess, args);
 } as SpawnFn;
@@ -64,6 +82,7 @@ const originalExecFileSync: ExecFileSyncFn = childProcess.execFileSync;
   ...args: any[]
 ) {
   if (args.length > 0) args[0] = rewriteAsarPath(args[0]);
+  if (args.length > 1) args[1] = rewriteAsarPathsInArgs(args[1]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (originalSpawnSync as any).apply(childProcess, args);
 } as SpawnSyncFn;
@@ -73,6 +92,7 @@ const originalExecFileSync: ExecFileSyncFn = childProcess.execFileSync;
   ...args: any[]
 ) {
   if (args.length > 0) args[0] = rewriteAsarPath(args[0]);
+  if (args.length > 1) args[1] = rewriteAsarPathsInArgs(args[1]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (originalExecFile as any).apply(childProcess, args);
 } as ExecFileFn;
@@ -82,6 +102,7 @@ const originalExecFileSync: ExecFileSyncFn = childProcess.execFileSync;
   ...args: any[]
 ) {
   if (args.length > 0) args[0] = rewriteAsarPath(args[0]);
+  if (args.length > 1) args[1] = rewriteAsarPathsInArgs(args[1]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (originalExecFileSync as any).apply(childProcess, args);
 } as ExecFileSyncFn;

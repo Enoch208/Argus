@@ -328,8 +328,6 @@ export const FOOTER = {
       items: [
         { label: "GitHub", href: BRAND.github },
         { label: "X", href: BRAND.x },
-        { label: "PRD", href: "https://github.com/Enoch208/Argus/blob/main/prd.md" },
-        { label: "Architecture", href: "https://github.com/Enoch208/Argus/blob/main/README.md" },
       ],
     },
     {

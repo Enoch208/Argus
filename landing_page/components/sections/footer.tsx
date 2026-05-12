@@ -60,15 +60,20 @@ export function Footer() {
                 <span className="text-[11px] uppercase tracking-[0.2em] text-white/35 font-mono mb-1">
                   {col.heading}
                 </span>
-                {col.items.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-[13.5px] text-white/55 font-light hover:text-white transition-colors w-max"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {col.items.map((item) => {
+                  const external = item.href.startsWith("http");
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noreferrer" : undefined}
+                      className="text-[13.5px] text-white/55 font-light hover:text-white transition-colors w-max"
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
               </div>
             ))}
           </div>

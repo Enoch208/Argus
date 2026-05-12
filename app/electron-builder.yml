@@ -17,14 +17,19 @@ extraResources:
     to: "data/wallet-blacklist.jsonl"
 
 asarUnpack:
-  - "**/*.{node,dll}"
+  - "**/*.{node,dll,dylib,so}"
   # The `@qvac/sdk` spawns the platform-specific Bare runtime binary as a
   # subprocess. The OS cannot exec files from inside an asar virtual fs, so
-  # these directories must live as real files at `app.asar.unpacked/`.
+  # the binary directory must live as real files at `app.asar.unpacked/`.
   - "**/bare-runtime-*/**"
-  # ONNX runtimes ship as `.dylib` / `.so` shared libraries (not `.node`);
-  # asar virtual paths break `dlopen`, so unpack them too.
-  - "**/*.{dylib,so}"
+  # Once the Bare worker subprocess is running, it loads `worker.js` and
+  # everything it transitively requires through Bare's own filesystem (not
+  # Node's). Bare doesn't understand Electron's asar shim — it reads from
+  # disk directly. Keeping all runtime node_modules outside the asar avoids
+  # an endless chase of QVAC/Bare transitive packages (sodium-universal,
+  # safety-catch, queue-tick, etc.) that otherwise make the worker start but
+  # never complete its RPC handshake in the packaged app.
+  - "node_modules/**"
 
 mac:
   target:
