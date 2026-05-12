@@ -28,7 +28,27 @@ export function Footer() {
               {BRAND.tagline} Self-custodial Solana wallet with a local AI
               co-pilot in front of every signature.
             </p>
-            <div className="flex flex-col gap-1 text-[10px] font-mono text-white/35 uppercase tracking-[0.2em] mt-1">
+            <div className="flex items-center gap-2 mt-1">
+              <a
+                href={BRAND.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Argus on GitHub"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/[0.025] text-white/55 transition-colors hover:border-white/25 hover:bg-white/[0.05] hover:text-white"
+              >
+                <Github size={14} />
+              </a>
+              <a
+                href={BRAND.x}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Argus on X"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/[0.025] text-white/55 transition-colors hover:border-white/25 hover:bg-white/[0.05] hover:text-white"
+              >
+                <X size={14} />
+              </a>
+            </div>
+            <div className="flex flex-col gap-1 text-[10px] font-mono text-white/35 uppercase tracking-[0.2em] mt-3">
               <span>{FOOTER.hackathon.label}</span>
               <span>{FOOTER.hackathon.deadline}</span>
             </div>
