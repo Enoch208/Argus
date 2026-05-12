@@ -1,3 +1,10 @@
+// Must be the first import — patches `child_process.spawn` to rewrite
+// `app.asar/` paths to `app.asar.unpacked/`. Without this the Bare runtime
+// binary spawn fails with `ENOTDIR` in the packaged build because
+// `bare-runtime-<platform>-<arch>` resolves the binary path off of
+// `__filename`, which sits inside the asar.
+import "./asar-spawn-shim";
+
 import { app, BrowserWindow } from "electron";
 import { join } from "node:path";
 import { logger } from "./log";
