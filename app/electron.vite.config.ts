@@ -34,6 +34,11 @@ export default defineConfig({
   },
   renderer: {
     root: resolve(__dirname, "src/renderer"),
+    // Relative base — production builds load via Electron's `file://` protocol,
+    // where absolute `/asset.png` resolves to the filesystem root and breaks
+    // every static asset. `./` makes Vite emit relative URLs that work under
+    // both `file://` (packaged) and `http://localhost` (dev).
+    base: "./",
     resolve: { alias: aliases },
     plugins: [react(), tailwindcss()],
     build: {

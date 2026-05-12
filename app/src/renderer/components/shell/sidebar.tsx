@@ -1,3 +1,4 @@
+import logoMark from "@/renderer/assets/logo-mark.png";
 import { useUi, type Route } from "@/renderer/stores/ui";
 import {
   ArrowUpRight,
@@ -63,7 +64,7 @@ export function Sidebar() {
           className="group flex w-full items-center gap-2.5 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white/[0.03]"
         >
           <img
-            src="/logo-mark.png"
+            src={logoMark}
             alt=""
             width={18}
             height={18}
