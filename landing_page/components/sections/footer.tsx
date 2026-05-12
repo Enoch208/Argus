@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BRAND, FOOTER } from "@/lib/content";
+import { Github, X } from "@/lib/icons";
 
 export function Footer() {
   return (

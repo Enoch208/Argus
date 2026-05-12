@@ -35,6 +35,7 @@ export const BRAND = {
   name: "Argus",
   tagline: "Local AI in front of every signature.",
   github: "https://github.com/Enoch208/Argus",
+  x: "https://x.com/use_argus",
   builtWith: "Built on @qvac/sdk + WDK",
 } as const;
 
@@ -44,18 +45,21 @@ export const NAV_LINKS = [
   { label: "Threats", href: "#threats" },
 ] as const;
 
-// macOS / Windows download metadata. Replace `href` with the signed-installer
-// URLs when builds are uploaded; the UI is shape-stable.
+// macOS DMG + Windows portable ZIP, hosted as assets on the v0.1.0 GitHub
+// Release at `github.com/Enoch208/Argus/releases/tag/v0.1.0`. Each click
+// hits GitHub's CDN — no extra hosting layer, signed URLs, or build step.
+const RELEASE = "https://github.com/Enoch208/Argus/releases/download/v0.1.0";
+
 export const DOWNLOADS = {
   mac: {
     label: "Download for Mac",
-    sub: "macOS 13+",
-    href: "/downloads/Argus.dmg",
+    sub: "Apple Silicon · DMG · 1.3 GB",
+    href: `${RELEASE}/Argus-0.1.0-arm64.dmg`,
   },
   win: {
-    label: "Download for Win",
-    sub: "Windows 11",
-    href: "/downloads/Argus.exe",
+    label: "Download for Windows",
+    sub: "x64 · portable ZIP · 946 MB",
+    href: `${RELEASE}/Argus-0.1.0-win-x64-portable.zip`,
   },
 } as const;
 
@@ -322,9 +326,9 @@ export const FOOTER = {
       heading: "Repository",
       items: [
         { label: "GitHub", href: BRAND.github },
+        { label: "X", href: BRAND.x },
         { label: "PRD", href: "https://github.com/Enoch208/Argus/blob/main/prd.md" },
-        { label: "Demo video", href: "#" },
-        { label: "Architecture", href: "#" },
+        { label: "Architecture", href: "https://github.com/Enoch208/Argus/blob/main/README.md" },
       ],
     },
     {

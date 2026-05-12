@@ -30,6 +30,7 @@ import {
   MapPinIcon,
   Menu01Icon,
   Mic01Icon,
+  NewTwitterIcon,
   RefreshIcon,
   SecurityIcon,
   Shield01Icon,
@@ -88,6 +89,7 @@ export const Windows: Icon = ({ size = 18, ...rest }) => (
   </svg>
 );
 export const Github = wrap(Github01Icon);
+export const X = wrap(NewTwitterIcon);
 
 // --- UI controls --------------------------------------------------------
 export const ArrowRight = wrap(ArrowRight01Icon);
