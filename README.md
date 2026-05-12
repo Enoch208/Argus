@@ -265,7 +265,7 @@ The unsigned transaction sits in the review ledger between Build and Approve. If
 ## Quick start
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Enoch208/Argus.git
 cd Argus/app
 npm install                # pulls @qvac/sdk + WDK + better-sqlite3, rebuilt for Electron
 npm run dev                # boots Electron with HMR

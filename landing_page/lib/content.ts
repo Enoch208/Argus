@@ -34,7 +34,7 @@ import {
 export const BRAND = {
   name: "Argus",
   tagline: "Local AI in front of every signature.",
-  github: "https://github.com/yourname/Argus",
+  github: "https://github.com/Enoch208/Argus",
   builtWith: "Built on @qvac/sdk + WDK",
 } as const;
 
